@@ -1,3 +1,6 @@
+# TODO:
+# - make it simply build...
+# - make pre/post for apache
 %include	/usr/lib/rpm/macros.perl
 Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
@@ -14,9 +17,9 @@ BuildRequires:	fakeroot
 BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
-Requires:	tar > 1.13
 Requires:	samba-clients
 Requires:	sperl
+Requires:	tar > 1.13
 Requires:	webserver
 Obsoletes:	BackupPC
 BuildArch:	noarch
@@ -81,24 +84,34 @@ zapasowych:
 %setup -q -n BackupPC-%{version}
 %patch0 -p1
 
+%build
+sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
+sed -i -e 's#!/bin/perl#!%{__perl}#' {bin,cgi-bin,doc}/*
+sed -i -e 's#!/bin/perl#!%{__perl}#' */src/*
+sed -i -e 's#!/bin/perl#!%{__perl}#' */*/*/*.pm
+
+pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
+perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,backuppc,httpd/httpd.conf} \
 	$RPM_BUILD_ROOT/var/lib/backuppc/pc/localhost
 
-echo "y" | \
-fakeroot DEBIANDEST=$RPM_BUILD_ROOT %{__perl} configure.pl
+# Does not work, yet... some voodoo-magic is needed
+echo "y" | fakeroot DEBIANDEST=$RPM_BUILD_ROOT configure.pl
 
-pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
-perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
-rm -f $RPM_BUILD_ROOT%{_datadir}/backuppc/doc/*
 mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/* $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
-install --mode=644 conf/hosts $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-install --mode=644 debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-install --mode=644 debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/BackupPC_Admin $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
+install conf/hosts $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+install debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+install debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+
+# Cleanups:
+rm -f $RPM_BUILD_ROOT%{_datadir}/backuppc/doc/*
 rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
 
+# Linking cgi:
 cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin
 ln -s ../image
 
@@ -110,6 +123,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*.html
 %attr(750,root,root) %dir %{_sysconfdir}/backuppc
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/backuppc/*
+%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %attr(755,root,root) %{_bindir}/*
 %attr(750,root,root) %dir %{_var}/lib/backuppc
 %{_mandir}/man?/*
