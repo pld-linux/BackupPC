@@ -1,6 +1,6 @@
 
-%define BPCuser backuppc
-%define BPCgroup backuppc
+%define		BPCuser		backuppc
+%define		BPCgroup	backuppc
 %include	/usr/lib/rpm/macros.perl
 
 Summary:	A high-performance, enterprise-grade system for backing up PCs
@@ -17,15 +17,15 @@ Source2:	%{name}_htaccess
 Patch0:		%{name}-usernotexist.patch
 URL:		http://backuppc.sourceforge.net/
 #BuildRequires:	fakeroot
-BuildRequires:	perl-base
-BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
+BuildRequires:	perl-base
+BuildRequires:	perl-devel >= 1:5.6.0
+Requires:	apache
 Requires:	samba-client
 # lets check if it's really needed
 #Requires:	sperl
 Requires:	tar > 1.13
-Requires:	apache
 Obsoletes:	BackupPC
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -35,24 +35,25 @@ BackupPC is disk based and not tape based. This particularity allows
 features not found in any other backup solution:
 - Clever pooling scheme minimizes disk storage and disk I/O. Identical
   files across multiple backups of the same or different PC are stored
-  only once (using hard links), resulting in substantial savings in disk
-  storage and disk writes.
+  only once (using hard links), resulting in substantial savings in
+  disk storage and disk writes.
 - Optional compression provides additional reductions in storage. CPU
   impact of compression is low since only new files (those not already
   in the pool) need to be compressed.
 - A powerful http/cgi user interface allows administrators to view log
-  files, configuration, current status and allows users to initiate and
-  cancel backups and browse and restore files from backups very quickly.
+  files, configuration, current status and allows users to initiate
+  and cancel backups and browse and restore files from backups very
+  quickly.
 - No client-side software is needed. On WinXX the SMB protocol is
-  used. On Linux or unix clients, rsync or tar (over ssh/rsh/NFS) can be
-  used.
+  used. On Linux or unix clients, rsync or tar (over ssh/rsh/NFS) can
+  be used.
 - Flexible restore options. Single files can be downloaded from any
   backup directly from the CGI interface. Zip or Tar archives for
   selected files or directories can also be downloaded from the CGI
   interface.
 - BackupPC supports mobile environments where laptops are only
-  intermittently connected to the network and have dynamic IP addresses
-  (DHCP).
+  intermittently connected to the network and have dynamic IP
+  addresses (DHCP).
 - Flexible configuration parameters allow multiple backups to be
   performed in parallel.
 - and more to discover in the manual...
@@ -69,15 +70,15 @@ zapasowych:
   Obci±¿enie procesora jest ma³e, poniewa¿ tylko nowe pliki musz± byæ
   kompresowane.
 - Potê¿ny interfejs u¿ytkownika HTTP/CGI pozwala administratorom
-  przegl±daæ pliki logów, konfiguracjê i aktualny stan oraz u¿ytkownikom
-  rozpoczynaæ lub przerywaæ tworzenie kopii oraz szybko przegl±daæ i
-  odtwarzaæ pliki z kopii zapasowych.
+  przegl±daæ pliki logów, konfiguracjê i aktualny stan oraz
+  u¿ytkownikom rozpoczynaæ lub przerywaæ tworzenie kopii oraz szybko
+  przegl±daæ i odtwarzaæ pliki z kopii zapasowych.
 - Nie jest wymagane oprogramowanie po stronie klienta. Na WinXX
   u¿ywany jest protokó³ SMB. Na klientach linuksowych lub uniksowych
   mo¿na u¿ywaæ rsynca lub tara (po ssh/rsh/NFS).
 - Dostêpne s± elastyczne opcje odzyskiwania. Mo¿na ¶ci±gaæ pojedyncze
-  pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub tar
-  z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
+  pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub
+  tar z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
   interfejsu CGI.
 - BackupPC obs³uguje ¶rodowiska przeno¶ne, gdzie laptopy s± pod³±czane
   do sieci tylko z przerwami i maj± dynamiczne adresy IP (z DHCP).
@@ -86,7 +87,6 @@ zapasowych:
 - Wiele wiêcej mo¿na odkryæ w manualu...
 
 %prep
-
 %setup -q -n BackupPC-%{version}
 %patch0 -p1
 
@@ -148,24 +148,22 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
 %pre
 # Add the "backuppc" user and group
 if [ -n "`/usr/bin/getgid %{BPCgroup}`" ]; then
-		if [ "`/usr/bin/getgid %{BPCgroup}`" != "150" ]; then
-			echo "Error: group %{BPCgroup} doesn't have gid=150. Correct this before installing %{name}." 1>&2
-			exit 1
-		fi
-	else
+	if [ "`/usr/bin/getgid %{BPCgroup}`" != "150" ]; then
+		echo "Error: group %{BPCgroup} doesn't have gid=150. Correct this before installing %{name}." 1>&2
+		exit 1
+	fi
+else
 	/usr/sbin/groupadd -g 150 %{BPCgroup}
 fi
-
 if [ -n "`/bin/id -u %{BPCuser} 2>/dev/null`" ]; then
-		if [ "`/bin/id -u %{BPCuser}`" != 150 ]; then
-			echo "Error: user %{BPCuser} doesn't have uid=150. Correct this before installing %{name}." 1>&2
-			exit 1
-		fi
-	else
-		/usr/sbin/useradd -c "systemowy u¿ytkownik dla %{name}" -u 150 -r -d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser} 1>&2
+	if [ "`/bin/id -u %{BPCuser}`" != 150 ]; then
+		echo "Error: user %{BPCuser} doesn't have uid=150. Correct this before installing %{name}." 1>&2
+		exit 1
+	fi
+else
+	/usr/sbin/useradd -c "system user for %{name}" -u 150 \
+		-d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser} 1>&2
 fi
-
-
 
 %post
 ln -s %{_var}/lib/%{name}/conf/ %{_sysconfdir}/backuppc
