@@ -7,7 +7,7 @@ Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
 Version:	2.1.0
-Release:	0.4
+Release:	0.5
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
@@ -109,25 +109,25 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,%{name},httpd/httpd.conf} \
 	--batch \
 	--bin-path perl=%{__perl} \
 	--bin-path tar=/bin/tar \
-	--bin-path smbclient=/usr/bin/smbclient \
-	--bin-path nmblookup=/usr/bin/nmblookup \
-	--bin-path rsync=/usr/bin/rsync \
+	--bin-path smbclient=%{_bindir}/smbclient \
+	--bin-path nmblookup=%{_bindir}/nmblookup \
+	--bin-path rsync=%{_bindir}/rsync \
 	--bin-path ping=/bin/ping \
 	--bin-path df=/bin/df \
-	--bin-path ssh=/usr/bin/ssh \
-	--bin-path sendmail=/usr/sbin/sendmail \
+	--bin-path ssh=%{_bindir}/ssh \
+	--bin-path sendmail=%{_sbindir}/sendmail \
 	--bin-path hostname=/bin/hostname \
-	--bin-path split=/usr/bin/split \
+	--bin-path split=%{_bindir}/split \
 	--bin-path cat=/bin/cat \
 	--bin-path gzip=/bin/gzip \
-	--bin-path bzip2=/usr/bin/bzip2 \
-	--cgi-dir %{_backuppcdir}/www/cgi-bin \
-	--data-dir %{_var}/lib/%{name} \
+	--bin-path bzip2=%{_bindir}/bzip2 \
+	--cgi-dir %{_datadir}/BackupPC/cgi-bin \
+	--data-dir %{_var}/lib/BackupPC \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
-	--html-dir %{_backuppcdir}/www/html \
+	--html-dir %{_usr}/share/BackupPC/www/html \
 	--html-dir-url /BackupPC \
-	--install-dir %{_backuppcdir} \
+	--install-dir  %{_usr} \
 	--uid-ignore
 #	--config-path %{_sysconfdir}/backuppc \
 
@@ -155,5 +155,4 @@ rm -rf $RPM_BUILD_ROOT
 #%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/backuppc/*
 #%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 #%attr(755,root,root) %{_bindir}/*
-#%attr(750,root,root) %dir %{_var}/lib/backuppc
-#%{_mandir}/man?/*
+%attr(750,root,root) %dir %{_var}/lib/backuppc
