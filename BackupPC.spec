@@ -78,8 +78,9 @@ zapasowych:
   u¿ytkownikom rozpoczynaæ lub przerywaæ tworzenie kopii oraz szybko
   przegl±daæ i odtwarzaæ pliki z kopii zapasowych.
 - Nie jest wymagane oprogramowanie po stronie klienta. Na WinXX
-  u¿ywany jest protokó³ SMB. Na klientach linuksowych lub uniksowych
-  mo¿na u¿ywaæ rsynca lub tara (po ssh/rsh/NFS).
+  u¿ywany jest protokó³ SMB lub rsync (specjalnie przygotowana wersja
+  pod cygwinem). Na klientach linuksowych lub uniksowych mo¿na u¿ywaæ
+  rsynca lub tara (po ssh/rsh/NFS).
 - Dostêpne s± elastyczne opcje odzyskiwania. Mo¿na ¶ci±gaæ pojedyncze
   pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub
   tar z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
@@ -147,13 +148,14 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
 
 # symlinks
 cd $RPM_BUILD_ROOT%{_sysconfdir}
-ln -s %{_var}/lib/%{name}/conf %{name}
+ln -sf %{_var}/lib/%{name}/conf %{name}
 
 cd $RPM_BUILD_ROOT%{_var}/log
-ln -s %{_var}/lib/%{name}/log %{name}
+ln -sf %{_var}/lib/%{name}/log %{name}
 
 cd $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}
-ln -s /home/services/httpd/cgi-bin/%{name}/BackupPC_Admin index.cgi
+ln -sf /home/services/httpd/cgi-bin/%{name}/BackupPC_Admin index.cgi
+
 %pre
 # Add the "backuppc" user and group
 if [ -n "`/usr/bin/getgid %{BPCgroup}`" ]; then
@@ -205,6 +207,11 @@ rm -rf $RPM_BUILD_ROOT
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
+%{_libdir}/BackupPC/Attrib.pm
+%{_libdir}/BackupPC/FileZIO.pm
+%{_libdir}/BackupPC/Lib.pm
+%{_libdir}/BackupPC/PoolWrite.pm
+%{_libdir}/BackupPC/View.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc/
