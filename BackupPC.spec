@@ -1,4 +1,7 @@
 
+#TO DO:
+# - polish translation %{_libdir}/BackupPC/Lang/pl.pm
+
 %define		BPCuser		backuppc
 %define		BPCgroup	backuppc
 %include	/usr/lib/rpm/macros.perl
@@ -102,11 +105,11 @@ perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backu
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd.conf} \
+install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} \
 			$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/html \
-			$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost \
+			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/pc/localhost,log} \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
-			$RPM_BUILD_ROOT%/home/services/httpd/cgi-bin/%{name}
+			$RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}
 
 %{__perl} configure.pl \
 	--batch \
@@ -142,6 +145,15 @@ install %{SOURCE2} $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}/.htaccess
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
 
+# symlinks
+cd $RPM_BUILD_ROOT%{_sysconfdir}
+ln -s %{_var}/lib/%{name}/conf %{name}
+
+cd $RPM_BUILD_ROOT%{_var}/log
+ln -s %{_var}/lib/%{name}/log %{name}
+
+cd $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}
+ln -s /home/services/httpd/cgi-bin/%{name}/BackupPC_Admin index.cgi
 %pre
 # Add the "backuppc" user and group
 if [ -n "`/usr/bin/getgid %{BPCgroup}`" ]; then
@@ -163,9 +175,7 @@ else
 fi
 
 %post
-ln -s %{_var}/lib/%{name}/conf %{_sysconfdir}/%{name}
-ln -s %{_var}/lib/%{name}/log %{_var}/log/%{name}
-ln -s /home/services/httpd/cgi-bin/%{name}/BackupPC_Admin /home/services/httpd/cgi-bin/%{name}/index.cgi
+/etc/init.d/backuppc restart
 
 %postun
 if [ "$1" = "0" ]; then
@@ -186,14 +196,24 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_usr}/share/%{name}/www/html/
 %{_usr}/share/%{name}/www/html/*
 %dir %{_libdir}/BackupPC/
-%{_libdir}/BackupPC/*
+%{_libdir}/BackupPC/CGI/*
+%{_libdir}/BackupPC/Xfer/*
+%{_libdir}/BackupPC/Zip/*
+%lang(en) %{_libdir}/BackupPC/Lang/en.pm
+%lang(de) %{_libdir}/BackupPC/Lang/de.pm
+%lang(fr) %{_libdir}/BackupPC/Lang/fr.pm
+%lang(es) %{_libdir}/BackupPC/Lang/es.pm
+%lang(it) %{_libdir}/BackupPC/Lang/it.pm
+%lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pool/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash/
 %dir %{_var}/lib/%{name}/conf/
+%dir %{_var}/log/%{name}
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+%dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) /home/services/httpd/cgi-bin/%{name}/.htaccess
 %config(noreplace) %verify(not md5 size mtime) %{_var}/lib/%{name}/conf/*
