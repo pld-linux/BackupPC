@@ -16,7 +16,6 @@ Source1:	%{name}_apache.conf
 Source2:	%{name}_htaccess
 Patch0:		%{name}-usernotexist.patch
 URL:		http://backuppc.sourceforge.net/
-#BuildRequires:	fakeroot
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
@@ -107,9 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd.conf} \
 	$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/html \
 	$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost \
-	$RPM_BUILD_ROOT%{_datadir}/%{name}/conf
+	$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
+	$RPM_BUILD_ROOT%/home/services/httpd/cgi-bin/%{name}
 
-# Does not work, yet... some voodoo-magic is needed
 %{__perl} configure.pl \
 	--batch \
 	--bin-path perl=%{__perl} \
@@ -126,7 +125,7 @@ install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd
 	--bin-path cat=/bin/cat \
 	--bin-path gzip=/bin/gzip \
 	--bin-path bzip2=%{_bindir}/bzip2 \
-	--cgi-dir %{_datadir}/%{name}/cgi-bin \
+	--cgi-dir /home/services/httpd/cgi-bin/%{name} \
 	--data-dir %{_var}/lib/%{name} \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
@@ -134,13 +133,12 @@ install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd
 	--html-dir-url /BackupPC \
 	--install-dir  %{_usr} \
 	--uid-ignore
-
 #	--config-path
 
 install init.d/linux-backuppc $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/backuppc
 install conf/BackupPC_stnd.css  $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/BackupPC_stnd.css
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/cgi-bin/.htaccess
+install %{SOURCE2} $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}/.htaccess
 
 #mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
 #mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/BackupPC_Admin $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
@@ -169,7 +167,7 @@ else
 fi
 
 %post
-ln -s %{_var}/lib/%{name}/conf/ %{_sysconfdir}/backuppc
+ln -s %{_var}/lib/%{name}/conf/ %{_sysconfdir}/%{name}
 
 %postun
 if [ "$1" = "0" ]; then
@@ -185,8 +183,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %doc %{_usr}/doc/*.html
 %doc %{_usr}/doc/BackupPC.pod
-%dir %{_datadir}/%{name}/cgi-bin/
-%{_datadir}/%{name}/cgi-bin/*
+%dir /home/services/httpd/cgi-bin/%{name}/
+%attr(755,root,root)/home/services/httpd/cgi-bin/%{name}/*
 %dir %{_usr}/share/%{name}/www/html/
 %{_usr}/share/%{name}/www/html/*
 %dir %{_libdir}/BackupPC/
@@ -199,5 +197,5 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf/
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_datadir}/%{name}/cgi-bin/.htaccess
+%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) /home/services/httpd/cgi-bin/%{name}/.htaccess
 %config(noreplace) %verify(not md5 size mtime) %attr(640,%{BPCuser},%{BPCgroup})  %{_var}/lib/%{name}/conf/*
