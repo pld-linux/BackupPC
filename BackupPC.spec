@@ -28,8 +28,6 @@ Obsoletes:	BackupPC
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_backuppcdir	%{_datadir}/%{name}
-
 %description
 BackupPC is disk based and not tape based. This particularity allows
 features not found in any other backup solution:
@@ -101,10 +99,10 @@ perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backu
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,%{name},httpd/httpd.conf} \
-	$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost
+	$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost \
+	$RPM_BUILD_ROOT%{_datadir}/%{name}/conf/
 
 # Does not work, yet... some voodoo-magic is needed
-#echo "y" | fakeroot DEBIANDEST=$RPM_BUILD_ROOT configure.pl
 %{__perl} configure.pl \
 	--batch \
 	--bin-path perl=%{__perl} \
@@ -121,11 +119,11 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,%{name},httpd/httpd.conf} \
 	--bin-path cat=/bin/cat \
 	--bin-path gzip=/bin/gzip \
 	--bin-path bzip2=%{_bindir}/bzip2 \
-	--cgi-dir %{_datadir}/BackupPC/cgi-bin \
-	--data-dir %{_var}/lib/BackupPC \
+	--cgi-dir %{_datadir}/%{name}/cgi-bin \
+	--data-dir %{_var}/lib/%{name} \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
-	--html-dir %{_usr}/share/BackupPC/www/html \
+	--html-dir %{_usr}/share/%{name}/www/html \
 	--html-dir-url /BackupPC \
 	--install-dir  %{_usr} \
 	--uid-ignore
@@ -140,19 +138,30 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,%{name},httpd/httpd.conf} \
 # Cleanups:
 #rm -f $RPM_BUILD_ROOT%{_datadir}/backuppc/doc/*
 #rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
+rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
 
 # Linking cgi:
 #cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin
 #ln -s ../image
+
+%post
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/*.html
-#%attr(750,root,root) %dir %{_sysconfdir}/backuppc
-#%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/backuppc/*
+%attr(755,root,root) %{_bindir}/*
+%doc %{_usr}/doc/*.html
+%doc %{_usr}/doc/BackupPC.pod
+#%dir %attr(750,root,root) %{_var}/lib/%{name}/
+#%{_var}/lib/%{name}/*
+%dir %{_datadir}/%{name}/cgi-bin/
+%{_datadir}/%{name}/cgi-bin/*
+%dir %{_usr}/share/%{name}/www/html/
+%{_usr}/share/%{name}/www/html/*
+%dir %{_libdir}/BackupPC/
+%{_libdir}/BackupPC/*
+%dir %{_var}/lib/%{name}/conf/
+%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root)  %{_var}/lib/%{name}/conf/*
 #%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-#%attr(755,root,root) %{_bindir}/*
-%attr(750,root,root) %dir %{_var}/lib/backuppc
