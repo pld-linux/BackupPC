@@ -26,28 +26,28 @@ $Lang{Admin_Options_Page} = <<EOF;
 \${h2("Kontrola serwera")}
 <form action="\$MyURL" method="get">
 <table class="tableStnd">
-  <!--<tr><td>Zatrzymaj serwer:<td><input type="submit" name="action" value="Stop">-->
-  <tr><td>Wczytaj ponownie konfiguracje:<td><input type="submit" name="action" value="Reload">
+  <!--<tr><td>Zatrzymanie serwera:<td><input type="submit" name="action" value="Stop">-->
+  <tr><td>Wczytaj ponownie konfiguracjê:<td><input type="submit" name="action" value="Reload">
 </table>
 </form>
 <!--
 \${h2("Konfiguracja serwera")}
 <ul>
-  <li><i>Other options can go here... e.g.,</i>
+  <li><i>Inne opcje mog± znajdowaæ siê tu:... n.p.,</i>
   <li>Edycja konfiguracji serwera
 </ul>
 -->
 EOF
 $Lang{Unable_to_connect_to_BackupPC_server} = "Nie mo¿na uzyskaæ po³±czenia z serwerem BackupPC",
-            "Skrypt CGI (\$MyURL) nie mo¿e uzyskaæ po³±czenia z BackupPC"
-          . " server na \$Conf{ServerHost} port \$Conf{ServerPort}. B³±d"
-          . " was: \$err.",
+            "Skrypt CGI (\$MyURL) nie mo¿e uzyskaæ po³±czenia z serwerem"
+          . " BackupPC na \$Conf{ServerHost} port \$Conf{ServerPort}. Wyst±pi³"
+          . " b³±d: \$err.",
             "Byæ mo¿e serwer BackupPC nie jest uruchomiony lub jest to "
           . " b³±d konfiguracji. Zawiadom administratora systemu.";
 $Lang{Admin_Start_Server} = <<EOF;
 \${h1(qq{$Lang{Unable_to_connect_to_BackupPC_server}})}
 <form action="\$MyURL" method="get">
-BackupPC serwer na <tt>\$Conf{ServerHost}</tt> port <tt>\$Conf{ServerPort}</tt>
+Serwer BackupPC na <tt>\$Conf{ServerHost}</tt> port <tt>\$Conf{ServerPort}</tt>
 nie jest aktualnie uruchomiony (mo¿liwe, ¿e go tylko zatrzyma³e¶ lub jeszcze nie uruchomi³e¶).<br>
 Czy chcesz uruchomiæ serwer?
 <input type="hidden" name="action" value="startServer">
@@ -70,9 +70,9 @@ $Lang{BackupPC_Server_Status_General_Info}= <<EOF;
 <li> Komputery sprawdzaj± obecno¶æ nowych zleceñ co \$nextWakeupTime.
 <li> Pozosta³e informacje:
     <ul>
-        <li>\$numBgQueue pending backup requests from last scheduled wakeup,
-        <li>\$numUserQueue pending user backup requests,
-        <li>\$numCmdQueue pending command requests,
+        <li>\$numBgQueue oczekuj±ce zlecenia archiwizacji from last scheduled wakeup,
+        <li>\$numUserQueue oczekuj±ce zlecenia u¿ytkownika,
+        <li>\$numCmdQueue oczekuj±ce zlecenia,
         \$poolInfo
         <li>Pool file system was recently at \$Info{DUlastValue}%
             (\$DUlastTime), dzi¶ maksymalnie jest \$Info{DUDailyMax}% (\$DUmaxTime)
@@ -94,7 +94,7 @@ $Lang{BackupPC_Server_Status} = <<EOF;
     <td> Typ </td>
     <td> U¿ytkownik </td>
     <td> Rozpoczêcie </td>
-    <td> Command </td>
+    <td> Polecenie </td>
     <td align="center"> PID </td>
     <td align="center"> Xfer PID </td>
     </tr>
@@ -102,7 +102,7 @@ $Lang{BackupPC_Server_Status} = <<EOF;
 </table>
 <p>
 
-\${h2("Failures that need attention")}
+\${h2("B³êdy wymagaj±ce bli¿szej analizy")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3">
 <tr class="tableheader"><td align="center"> Host </td>
@@ -145,8 +145,8 @@ Jest \$hostCntGood komputerów, na których dokonano archiwizacji, ³±cznie:
     <td align="center"> Szybko¶æ MB/sec </td>
     <td align="center"> #Przyrostowy </td>
     <td align="center"> Incr Age/days </td>
-    <td align="center"> State </td>
-    <td align="center"> Last attempt </td></tr>
+    <td align="center"> Status </td>
+    <td align="center"> Ostatnia próba </td></tr>
 \$strGood
 </table>
 <br><br>
@@ -219,7 +219,7 @@ EOF
 
 $Lang{BackupPC_Archive2} = <<EOF;
 \${h1(qq{$Lang{BackupPC__Archive}})}
-About to archive the following hosts
+Archiwizacja nastêpuj±cych komputerów
 <ul>
 \$HostListStr
 </ul>
@@ -286,7 +286,7 @@ $Lang{BackupPC__Backup_Requested_on__host} = "BackupPC: Tworzenie kopii zapasowe
 $Lang{REPLY_FROM_SERVER} = <<EOF;
 \${h1(\$str)}
 <p>
-Reply from server was: \$reply
+Odpowied¼ od serwera: \$reply
 <p>
 Powrót na <a href="\$MyURL?host=\$host">\$host stronê domow±</a>.
 EOF
@@ -296,26 +296,26 @@ $Lang{BackupPC__Start_Backup_Confirm_on__host} = "BackupPC: Potwierdzenie tworze
 $Lang{Are_you_sure_start} = <<EOF;
 \${h1("Jeste¶ pewien?")}
 <p>
-You are about to start a \$type backup on \$host.
+Rozpoczêcie archiwizacji \$type dla \$host.
 
 <form action="\$MyURL" method="get">
 <input type="hidden" name="host" value="\$host">
 <input type="hidden" name="hostIP" value="\$ipAddr">
 <input type="hidden" name="doit" value="1">
-Do you really want to do this?
+Czy chcesz to na pewno zrobiæ?
 <input type="submit" value="\$In{action}" name="action">
 <input type="submit" value="No" name="">
 </form>
 EOF
 # --------------------------------
-$Lang{BackupPC__Stop_Backup_Confirm_on__host} = "BackupPC: Stop Backup Confirm on \$host";
+$Lang{BackupPC__Stop_Backup_Confirm_on__host} = "BackupPC: Potwierdzenie zatrzymania archiwizacji dla \$host";
 # --------------------------------
 $Lang{Are_you_sure_stop} = <<EOF;
 
 \${h1("Czy jeste¶ pewny?")}
 
 <p>
-You are about to stop/dequeue backups on \$host;
+Zatrzymanie archiwizacji dla \$host;
 
 <form action="\$MyURL" method="get">
 <input type="hidden" name="host" value="\$host">
@@ -330,7 +330,7 @@ Do you really want to do this?
 
 EOF
 # --------------------------------
-$Lang{Only_privileged_users_can_view_queues_} = "Only privileged users can view queues.";
+$Lang{Only_privileged_users_can_view_queues_} = "Tylko uprzywilejowani u¿ytkownicy mog± przegl±daæ kolejki";
 # --------------------------------
 $Lang{Only_privileged_users_can_archive} = "Tylko U¿ytkownik z odpowiednimi uprawnieniami mo¿e archiwizowaæ.";
 # --------------------------------
