@@ -159,7 +159,7 @@ install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
 install backuppc.8	$RPM_BUILD_ROOT%{_mandir}/man8
-cp %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
+install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
 
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
