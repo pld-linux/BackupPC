@@ -2,7 +2,6 @@
 # - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
 # TODO:
 # - patch for service user - now is static backuppc
-# - polish translation - cvs -z3 -d:pserver:anonymous@cvs.pld-linux.org:/gnomepl co gnomepl/others/BackupPC-pl.pm
 # - edit apache configuration, autorizations - SOURCES: backuppc_apache.conf
 # - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
 # - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540
@@ -24,6 +23,7 @@ Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
 # Source0-md5:	fadbce1c3d4679dffc98514e48ed7917
 Source1:	%{name}_apache.conf
 Source2:	%{name}_htaccess
+Source3:	%{name}-pl.pm
 Patch0:		%{name}-usernotexist.patch
 URL:		http://backuppc.sourceforge.net/
 BuildRequires:	perl-Compress-Zlib
@@ -159,6 +159,7 @@ install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
 install backuppc.8	$RPM_BUILD_ROOT%{_mandir}/man8
+cp %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
 
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
@@ -237,6 +238,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
+%lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc
