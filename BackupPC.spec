@@ -2,26 +2,26 @@
 # - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
 # TODO:
 # - patch for service user - now is static backuppc
-# - polish translation - cvs -z3 -d:pserver:anonymous@cvs.pld-linux.org:/gnomepl co gnomepl/backuppc/pl.pm
+# - polish translation - cvs -z3 -d:pserver:anonymous@cvs.pld-linux.org:/gnomepl co gnomepl/others/BackupPC-pl.pm
 # - edit apache configuration, autorizations - SOURCES: backuppc_apache.conf
 # - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
 # - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540
 # - change or/and add Requires for  --bin-path sendmail=%{_sbindir}/sendmail
 # - ping not working --bin-path ping=/bin/ping
 
-%define		BPCuser	http
+%define		BPCuser		http
 %define		BPCgroup	http
 %include	/usr/lib/rpm/macros.perl
 
 Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
-Version:	2.1.0
-Release:	0.5
+Version:	2.1.1
+Release:	0.1
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
-# Source0-md5:	4e201f00842c88cf241e0429643c6ec4
+# Source0-md5:	fadbce1c3d4679dffc98514e48ed7917
 Source1:	%{name}_apache.conf
 Source2:	%{name}_htaccess
 Patch0:		%{name}-usernotexist.patch
