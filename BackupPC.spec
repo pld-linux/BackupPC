@@ -21,11 +21,14 @@ BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
 BuildRequires:	perl-devel >= 1:5.6.0
+BuildRequires:	rpmbuild(macros) >= 1.159
 Requires:	apache
 Requires:	samba-client
 # lets check if it's really needed
 #Requires:	sperl
 Requires:	tar > 1.13
+Provides:	group(%{BPCgroup})
+Provides:	user(%{BPCuser})
 Obsoletes:	BackupPC
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -167,6 +170,12 @@ fi
 
 %post
 ln -s %{_var}/lib/%{name}/conf/ %{_sysconfdir}/backuppc
+
+%postun
+if [ "$1" = "0" ]; then
+	%userremove %{BPCuser}
+	%groupremove %{BPCgroup}
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
