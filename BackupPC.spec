@@ -154,7 +154,7 @@ cd $RPM_BUILD_ROOT%{_var}/log
 ln -sf %{_var}/lib/%{name}/log %{name}
 
 cd $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}
-ln -sf /home/services/httpd/cgi-bin/%{name}/BackupPC_Admin index.cgi
+ln -sf BackupPC_Admin index.cgi
 
 %pre
 # Add the "backuppc" user and group
