@@ -5,25 +5,28 @@
 Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
-Version:	2.0.2
-Release:	2
+Version:	2.1.0
+Release:	0.1
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
-# Source0-md5:	d60aacbf46eb83a7e4ffbbe9e4f72c11
-Patch0:		%{name}-debian.patch
+# Source0-md5:	4e201f00842c88cf241e0429643c6ec4
 URL:		http://backuppc.sourceforge.net/
-BuildRequires:	fakeroot
+#BuildRequires:	fakeroot
+BuildRequires:	perl-base
 BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
 Requires:	samba-clients
-Requires:	sperl
+# lets check if it's really needed
+#Requires:	sperl
 Requires:	tar > 1.13
 Requires:	webserver
 Obsoletes:	BackupPC
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_backuppcdir	%{_datadir}/%{name}
 
 %description
 BackupPC is disk based and not tape based. This particularity allows
@@ -82,7 +85,7 @@ zapasowych:
 
 %prep
 %setup -q -n BackupPC-%{version}
-%patch0 -p1
+#%patch0 -p1
 
 %build
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
@@ -95,25 +98,50 @@ perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backu
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,backuppc,httpd/httpd.conf} \
-	$RPM_BUILD_ROOT/var/lib/backuppc/pc/localhost
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,%{name},httpd/httpd.conf} \
+	$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost
 
 # Does not work, yet... some voodoo-magic is needed
-echo "y" | fakeroot DEBIANDEST=$RPM_BUILD_ROOT configure.pl
+#echo "y" | fakeroot DEBIANDEST=$RPM_BUILD_ROOT configure.pl
+%{__perl} configure.pl \
+	--batch \
+	--bin-path perl=%{__perl} \
+	--bin-path tar=/bin/tar \
+	--bin-path smbclient=/usr/bin/smbclient \
+	--bin-path nmblookup=/usr/bin/nmblookup \
+	--bin-path rsync=/usr/bin/rsync \
+	--bin-path ping=/bin/ping \
+	--bin-path df=/bin/df \
+	--bin-path ssh=/usr/bin/ssh \
+	--bin-path sendmail=/usr/sbin/sendmail \
+	--bin-path hostname=/bin/hostname \
+	--bin-path split=/usr/bin/split \
+	--bin-path cat=/bin/cat \
+	--bin-path gzip=/bin/gzip \
+	--bin-path bzip2=/usr/bin/bzip2 \
+	--cgi-dir %{_backuppcdir}/www/cgi-bin \
+	--data-dir %{_var}/lib/%{name} \
+	--dest-dir $RPM_BUILD_ROOT \
+	--hostname localhost \
+	--html-dir %{_backuppcdir}/www/html \
+	--html-dir-url /BackupPC \
+	--install-dir %{_backuppcdir} \
+	--uid-ignore
+#	--config-path %{_sysconfdir}/backuppc \
 
-mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/BackupPC_Admin $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
-install conf/hosts $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-install debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-install debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+#mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+#mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/BackupPC_Admin $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
+#install conf/hosts $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+#install debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+#install debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 
 # Cleanups:
-rm -f $RPM_BUILD_ROOT%{_datadir}/backuppc/doc/*
-rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
+#rm -f $RPM_BUILD_ROOT%{_datadir}/backuppc/doc/*
+#rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
 
 # Linking cgi:
-cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin
-ln -s ../image
+#cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin
+#ln -s ../image
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -121,9 +149,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/*.html
-%attr(750,root,root) %dir %{_sysconfdir}/backuppc
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/backuppc/*
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-%attr(755,root,root) %{_bindir}/*
-%attr(750,root,root) %dir %{_var}/lib/backuppc
-%{_mandir}/man?/*
+#%attr(750,root,root) %dir %{_sysconfdir}/backuppc
+#%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/backuppc/*
+#%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+#%attr(755,root,root) %{_bindir}/*
+#%attr(750,root,root) %dir %{_var}/lib/backuppc
+#%{_mandir}/man?/*
