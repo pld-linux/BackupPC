@@ -1,9 +1,16 @@
 
+# - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
 #TO DO:
-# - polish translation %{_libdir}/BackupPC/Lang/pl.pm
+# - patch for service user - now is static backuppc
+# - polish translation - cvs -z3 -d:pserver:anonymous@cvs.pld-linux.org:/gnomepl co gnomepl/backuppc/pl.pm
+# - edit apache configuration, autorizations - SOURCES: backuppc_apache.conf
+# - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
+# - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540
+# - change or/and add Requires for  --bin-path sendmail=%{_sbindir}/sendmail
+# - ping not working --bin-path ping=/bin/ping
 
-%define		BPCuser		backuppc
-%define		BPCgroup	backuppc
+%define		BPCuser	http
+%define		BPCgroup	http
 %include	/usr/lib/rpm/macros.perl
 
 Summary:	A high-performance, enterprise-grade system for backing up PCs
@@ -101,6 +108,8 @@ sed -i -e 's#!/bin/perl#!%{__perl}#' {bin,cgi-bin,doc}/*
 sed -i -e 's#!/bin/perl#!%{__perl}#' */src/*
 sed -i -e 's#!/bin/perl#!%{__perl}#' */*/*/*.pm
 
+
+
 pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
 perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
 
@@ -118,7 +127,7 @@ install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} 
 	--bin-path smbclient=%{_bindir}/smbclient \
 	--bin-path nmblookup=%{_bindir}/nmblookup \
 	--bin-path rsync=%{_bindir}/rsync \
-	--bin-path ping=/bin/ping \
+	--bin-path ping=/bin/echo \
 	--bin-path df=/bin/df \
 	--bin-path ssh=%{_bindir}/ssh \
 	--bin-path sendmail=%{_sbindir}/sendmail \
@@ -137,8 +146,13 @@ install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} 
 	--uid-ignore
 #	--config-path
 
+#change user in init script
+sed -i -e 's#--user backuppc#--user %{BPCuser}#' init.d/linux-backuppc
+#change user in config file
+sed -i -e "s#'backuppc';#'%{BPCuser}';#" $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/config.pl
+sed -i -e 's/$Conf{SendmailPath} =/#$Conf{SendmailPath} =/' $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/config.pl
+
 install init.d/linux-backuppc $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/backuppc
-install conf/BackupPC_stnd.css $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/BackupPC_stnd.css
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_usr}/share/%{name}/www/cgi-bin/.htaccess
 
@@ -155,25 +169,28 @@ ln -sf %{_var}/lib/%{name}/log %{name}
 cd $RPM_BUILD_ROOT%{_usr}/share/%{name}/www/cgi-bin
 ln -sf BackupPC_Admin index.cgi
 
+cd $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
+ln -sf %{_usr}/share/%{name}/www/html/BackupPC_stnd.css BackupPC_stnd.css
+
 %pre
 # Add the "backuppc" user and group
-if [ -n "`/usr/bin/getgid %{BPCgroup}`" ]; then
-	if [ "`/usr/bin/getgid %{BPCgroup}`" != "150" ]; then
-		echo "Error: group %{BPCgroup} doesn't have gid=150. Correct this before installing %{name}." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/groupadd -g 150 %{BPCgroup}
-fi
-if [ -n "`/bin/id -u %{BPCuser} 2>/dev/null`" ]; then
-	if [ "`/bin/id -u %{BPCuser}`" != 150 ]; then
-		echo "Error: user %{BPCuser} doesn't have uid=150. Correct this before installing %{name}." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/useradd -c "system user for %{name}" -u 150 \
-		-d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser} 1>&2
-fi
+#if [ -n "`/usr/bin/getgid %{BPCgroup}`" ]; then
+#	if [ "`/usr/bin/getgid %{BPCgroup}`" != "150" ]; then
+#		echo "Error: group %{BPCgroup} doesn't have gid=150. Correct this before installing %{name}." 1>&2
+#		exit 1
+#	fi
+#else
+#	/usr/sbin/groupadd -g 150 %{BPCgroup}
+#fi
+#if [ -n "`/bin/id -u %{BPCuser} 2>/dev/null`" ]; then
+#	if [ "`/bin/id -u %{BPCuser}`" != 150 ]; then
+#		echo "Error: user %{BPCuser} doesn't have uid=150. Correct this before installing %{name}." 1>&2
+#		exit 1
+#	fi
+#else
+#	/usr/sbin/useradd -c "system user for %{name}" -u 150 \
+#		-d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser} 1>&2
+#fi
 
 %post
 /etc/init.d/backuppc restart
@@ -194,8 +211,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_usr}/doc/BackupPC.pod
 %dir %{_usr}/share/%{name}/www/cgi-bin
 %attr(755,root,root)%{_usr}/share/%{name}/www/cgi-bin/BackupPC_Admin
+%config(noreplace) %verify(not md5 size mtime) %{_usr}/share/%{name}/www/cgi-bin/.htaccess
 %dir %{_usr}/share/%{name}/www/html
-%{_usr}/share/%{name}/www/html/*
+%{_usr}/share/%{name}/www/html/*.gif
+%config(noreplace) %verify(not md5 size mtime) %{_usr}/share/%{name}/www/html/BackupPC_stnd.css
 %dir %{_libdir}/BackupPC
 %{_libdir}/BackupPC/Attrib.pm
 %{_libdir}/BackupPC/FileZIO.pm
@@ -215,6 +234,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
+#%lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc
@@ -225,5 +245,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) /home/services/httpd/cgi-bin/%{name}/.htaccess
 %config(noreplace) %verify(not md5 size mtime) %{_var}/lib/%{name}/conf/*
