@@ -211,10 +211,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %doc %{_usr}/doc/*.html
 %doc %{_usr}/doc/BackupPC.pod
-%dir %{_datadir}/%{name}/www/cgi-bin
 %attr(755,root,root) %{_datadir}/%{name}/www/cgi-bin/BackupPC_Admin
 %config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/cgi-bin/.htaccess
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/www
 %dir %{_datadir}/%{name}/www/html
+%dir %{_datadir}/%{name}/www/cgi-bin
 %{_datadir}/%{name}/www/html/*.gif
 %config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/html/BackupPC_stnd.css
 %dir %{_libdir}/BackupPC
