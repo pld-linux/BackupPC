@@ -201,6 +201,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/BackupPC/CGI/*
 %{_libdir}/BackupPC/Xfer/*
 %{_libdir}/BackupPC/Zip/*
+%dir %{_libdir}/BackupPC/Lang/
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
 %lang(fr) %{_libdir}/BackupPC/Lang/fr.pm
