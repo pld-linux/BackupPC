@@ -118,6 +118,7 @@ pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d		$RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
+			$RPM_BUILD_ROOT%{_mandir}/man8 \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/www/{html,cgi-bin} \
 			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/pc/localhost,log} \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
@@ -157,6 +158,7 @@ sed -i -e 's/$Conf{SendmailPath} =/#$Conf{SendmailPath} =/' $RPM_BUILD_ROOT%{_va
 install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
+install backuppc.8	$RPM_BUILD_ROOT%{_mandir}/man8
 
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
@@ -225,12 +227,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/BackupPC/Lib.pm
 %{_libdir}/BackupPC/PoolWrite.pm
 %{_libdir}/BackupPC/View.pm
-%dir %{_libdir}/BackupPC/CGI
-%{_libdir}/BackupPC/CGI/*
-%dir %{_libdir}/BackupPC/Xfer
-%{_libdir}/BackupPC/Xfer/*
-%dir %{_libdir}/BackupPC/Zip
-%{_libdir}/BackupPC/Zip/*
+%{_libdir}/BackupPC/CGI
+%{_libdir}/BackupPC/Xfer
+%{_libdir}/BackupPC/Zip
 %dir %{_libdir}/BackupPC/Lang
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
@@ -238,7 +237,6 @@ rm -rf $RPM_BUILD_ROOT
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
-#%lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc
@@ -251,3 +249,4 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/%{name}
 %dir %{_var}/lib/%{name}
 %config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup})  %{_var}/lib/%{name}/conf/*
+%{_mandir}/man8/backuppc*
