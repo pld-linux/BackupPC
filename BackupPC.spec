@@ -1,16 +1,18 @@
 # TODO:
 # - make it simply build...
 # - make pre/post for apache
+# - correct patch0 because of it`s now works only on systems where builders are on "builder" account
 %include	/usr/lib/rpm/macros.perl
 Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
 Version:	2.1.0
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
 # Source0-md5:	4e201f00842c88cf241e0429643c6ec4
+Patch0:		%{name}-stupid-user.patch
 URL:		http://backuppc.sourceforge.net/
 #BuildRequires:	fakeroot
 BuildRequires:	perl-base
@@ -85,7 +87,7 @@ zapasowych:
 
 %prep
 %setup -q -n BackupPC-%{version}
-#%patch0 -p1
+%patch0 -p1
 
 %build
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
