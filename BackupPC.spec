@@ -107,10 +107,9 @@ perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backu
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} \
-			$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/html \
+			$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/{html,cgi-bin} \
 			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/pc/localhost,log} \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
-			$RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}
 
 %{__perl} configure.pl \
 	--batch \
@@ -128,7 +127,7 @@ install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} 
 	--bin-path cat=/bin/cat \
 	--bin-path gzip=/bin/gzip \
 	--bin-path bzip2=%{_bindir}/bzip2 \
-	--cgi-dir /home/services/httpd/cgi-bin/%{name} \
+	--cgi-dir %{_usr}/share/%{name}/www/cgi-bin \
 	--data-dir %{_var}/lib/%{name} \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
@@ -141,7 +140,7 @@ install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} 
 install init.d/linux-backuppc $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/backuppc
 install conf/BackupPC_stnd.css $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/BackupPC_stnd.css
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-install %{SOURCE2} $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}/.htaccess
+install %{SOURCE2} $RPM_BUILD_ROOT%{_usr}/share/%{name}/www/cgi-bin/.htaccess
 
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
@@ -153,7 +152,7 @@ ln -sf %{_var}/lib/%{name}/conf %{name}
 cd $RPM_BUILD_ROOT%{_var}/log
 ln -sf %{_var}/lib/%{name}/log %{name}
 
-cd $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}
+cd $RPM_BUILD_ROOT%{_usr}/share/%{name}/www/cgi-bin
 ln -sf BackupPC_Admin index.cgi
 
 %pre
@@ -193,8 +192,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %doc %{_usr}/doc/*.html
 %doc %{_usr}/doc/BackupPC.pod
-%dir /home/services/httpd/cgi-bin/%{name}
-%attr(755,root,root)/home/services/httpd/cgi-bin/%{name}/*
+%dir %{_usr}/share/%{name}/www/cgi-bin
+%attr(755,root,root)%{_usr}/share/%{name}/www/cgi-bin/BackupPC_Admin
 %dir %{_usr}/share/%{name}/www/html
 %{_usr}/share/%{name}/www/html/*
 %dir %{_libdir}/BackupPC
