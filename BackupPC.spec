@@ -25,27 +25,26 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 BackupPC is disk based and not tape based. This particularity allows
 features not found in any other backup solution:
-- Clever pooling scheme minimizes disk storage and disk I/O.
-  Identical files across multiple backups of the same or different PC
-  are stored only once (using hard links), resulting in substantial
-  savings in disk storage and disk writes.
-- Optional compression provides additional reductions in storage.
-  CPU impact of compression is low since only new files (those not
-  already in the pool) need to be compressed.
-- A powerful http/cgi user interface allows administrators to view
-  log files, configuration, current status and allows users to
-  initiate and cancel backups and browse and restore files from
-  backups very quickly.
+- Clever pooling scheme minimizes disk storage and disk I/O. Identical
+  files across multiple backups of the same or different PC are stored
+  only once (using hard links), resulting in substantial savings in disk
+  storage and disk writes.
+- Optional compression provides additional reductions in storage. CPU
+  impact of compression is low since only new files (those not already
+  in the pool) need to be compressed.
+- A powerful http/cgi user interface allows administrators to view log
+  files, configuration, current status and allows users to initiate and
+  cancel backups and browse and restore files from backups very quickly.
 - No client-side software is needed. On WinXX the SMB protocol is
-  used. On Linux or unix clients, rsync or tar (over ssh/rsh/NFS) can
-  be used.
+  used. On Linux or unix clients, rsync or tar (over ssh/rsh/NFS) can be
+  used.
 - Flexible restore options. Single files can be downloaded from any
   backup directly from the CGI interface. Zip or Tar archives for
   selected files or directories can also be downloaded from the CGI
   interface.
 - BackupPC supports mobile environments where laptops are only
-  intermittently connected to the network and have dynamic IP
-  addresses (DHCP).
+  intermittently connected to the network and have dynamic IP addresses
+  (DHCP).
 - Flexible configuration parameters allow multiple backups to be
   performed in parallel.
 - and more to discover in the manual...
@@ -59,22 +58,21 @@ zapasowych:
   przechowywane tylko raz (przy u¿yciu twardych dowi±zañ), co daje
   znacz±c± oszczêdno¶æ w miejscu na dysku i czasie zapisu.
 - Opcjonalna kompresja pozwala na dalsze ograniczenie rozmiaru.
-  Obci±¿enie procesora jest ma³e, poniewa¿ tylko nowe pliki musz±
-  byæ kompresowane.
+  Obci±¿enie procesora jest ma³e, poniewa¿ tylko nowe pliki musz± byæ
+  kompresowane.
 - Potê¿ny interfejs u¿ytkownika HTTP/CGI pozwala administratorom
-  przegl±daæ pliki logów, konfiguracjê i aktualny stan oraz
-  u¿ytkownikom rozpoczynaæ lub przerywaæ tworzenie kopii oraz
-  szybko przegl±daæ i odtwarzaæ pliki z kopii zapasowych.
+  przegl±daæ pliki logów, konfiguracjê i aktualny stan oraz u¿ytkownikom
+  rozpoczynaæ lub przerywaæ tworzenie kopii oraz szybko przegl±daæ i
+  odtwarzaæ pliki z kopii zapasowych.
 - Nie jest wymagane oprogramowanie po stronie klienta. Na WinXX
   u¿ywany jest protokó³ SMB. Na klientach linuksowych lub uniksowych
   mo¿na u¿ywaæ rsynca lub tara (po ssh/rsh/NFS).
 - Dostêpne s± elastyczne opcje odzyskiwania. Mo¿na ¶ci±gaæ pojedyncze
-  pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub
-  tar z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
+  pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub tar
+  z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
   interfejsu CGI.
-- BackupPC obs³uguje ¶rodowiska przeno¶ne, gdzie laptopy s±
-  pod³±czane do sieci tylko z przerwami i maj± dynamiczne adresy IP
-  (z DHCP).
+- BackupPC obs³uguje ¶rodowiska przeno¶ne, gdzie laptopy s± pod³±czane
+  do sieci tylko z przerwami i maj± dynamiczne adresy IP (z DHCP).
 - Elastyczna konfiguracja parametrów pozwala na wykonywanie wielu
   kopii równolegle.
 - Wiele wiêcej mo¿na odkryæ w manualu...
@@ -92,15 +90,15 @@ fakeroot DEBIANDEST=$RPM_BUILD_ROOT %{__perl} configure.pl
 
 pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
 perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
-rm -f $RPM_BUILD_ROOT/usr/share/backuppc/doc/*
-mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT/etc/backuppc
-mv -f $RPM_BUILD_ROOT/usr/share/backuppc/cgi-bin/* $RPM_BUILD_ROOT/usr/share/backuppc/cgi-bin/index.cgi
-install --mode=644 conf/hosts $RPM_BUILD_ROOT/etc/backuppc
-install --mode=644 debian/localhost.pl $RPM_BUILD_ROOT/etc/backuppc
-install --mode=644 debian/apache.conf $RPM_BUILD_ROOT/etc/httpd/httpd.conf/93_backuppc.conf
+rm -f $RPM_BUILD_ROOT%{_datadir}/backuppc/doc/*
+mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/* $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
+install --mode=644 conf/hosts $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+install --mode=644 debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
+install --mode=644 debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
 install -d $RPM_BUILD_ROOT/var/lib/backuppc/pc/localhost
-(cd $RPM_BUILD_ROOT/usr/share/backuppc/cgi-bin; ln -s ../image)
+(cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin; ln -s ../image)
 
 %clean
 rm -rf $RPM_BUILD_ROOT
