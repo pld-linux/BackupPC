@@ -1,0 +1,92 @@
+diff -urN BUILD/orginal/configure.pl BUILD/BackupPC-2.1.0/configure.pl
+--- BackupPC-2.1.0/configure.pl	2004-06-20 04:28:08.000000000 +0200
++++ BackupPC-2.1.0/configure.pl	2004-11-27 23:29:05.343933152 +0100
+@@ -1,4 +1,4 @@
+-#!/bin/perl
++#!/usr/bin/perl
+ #============================================================= -*-perl-*-
+ #
+ # configure.pl: Configuration and installation program for BackupPC
+@@ -248,20 +248,18 @@
+ 
+ EOF
+ my($name, $passwd, $Uid, $Gid);
+-while ( 1 ) {
+-    $Conf{BackupPCUser} = prompt("--> BackupPC should run as user",
+-                                 $Conf{BackupPCUser} || "backuppc",
+-                                 "username");
+-    ($name, $passwd, $Uid, $Gid) = getpwnam($Conf{BackupPCUser});
+-    last if ( $name ne "" );
++#while ( 1 ) {
++    $Conf{BackupPCUser} =  "backuppc";	
++ 	$name = "backuppc"; $passwd = ""; $Uid = "150"; $Gid = "150";
++ #    last if ( $name ne "" );
+     print <<EOF;
+ 
+ getpwnam() says that user $Conf{BackupPCUser} doesn't exist.  Please check the
+ name and verify that this user is in the passwd file.
+ 
+ EOF
+-    exit(1) if ( $opts{batch} );
+-}
++#    exit(1) if ( $opts{batch} );
++#}
+ 
+ print <<EOF;
+ 
+@@ -451,7 +449,7 @@
+     mkpath("$DestDir$Conf{InstallDir}/$dir", 0, 0775);
+     if ( !-d "$DestDir$Conf{InstallDir}/$dir"
+             || !chown($Uid, $Gid, "$DestDir$Conf{InstallDir}/$dir") ) {
+-        die("Failed to create or chown $DestDir$Conf{InstallDir}/$dir\n");
++#        die("Failed to create or chown $DestDir$Conf{InstallDir}/$dir\n");
+     } else {
+         print("Created $DestDir$Conf{InstallDir}/$dir\n");
+     }
+@@ -464,7 +462,7 @@
+     next if ( $dir eq "" || -d $dir );
+     mkpath("$DestDir$dir", 0, 0775);
+     if ( !-d "$DestDir$dir" || !chown($Uid, $Gid, "$DestDir$dir") ) {
+-        die("Failed to create or chown $DestDir$dir");
++#        die("Failed to create or chown $DestDir$dir");
+     } else {
+         print("Created $DestDir$dir\n");
+     }
+@@ -477,7 +475,7 @@
+     mkpath("$DestDir$Conf{TopDir}/$dir", 0, 0750) if ( !-d "$DestDir$Conf{TopDir}/$dir" );
+     if ( !-d "$DestDir$Conf{TopDir}/$dir"
+             || !chown($Uid, $Gid, "$DestDir$Conf{TopDir}/$dir") ) {
+-        die("Failed to create or chown $DestDir$Conf{TopDir}/$dir\n");
++#        die("Failed to create or chown $DestDir$Conf{TopDir}/$dir\n");
+     } else {
+         print("Created $DestDir$Conf{TopDir}/$dir\n");
+     }
+@@ -700,8 +698,8 @@
+     my $uid  = $stat[4];
+     my $gid  = $stat[5];
+     die("can't copy($dest, $confCopy)\n")  unless copy($dest, $confCopy);
+-    die("can't chown $uid, $gid $confCopy\n")
+-                                           unless chown($uid, $gid, $confCopy);
++#    die("can't chown $uid, $gid $confCopy\n")
++#                                           unless chown($uid, $gid, $confCopy);
+     die("can't chmod $mode $confCopy\n")   unless chmod($mode, $confCopy);
+ }
+ open(OUT, ">", $dest) || die("can't open $dest for writing\n");
+@@ -724,7 +722,7 @@
+ close(OUT);
+ if ( !defined($oldConf) ) {
+     die("can't chmod 0640 mode $dest\n")  unless chmod(0640, $dest);
+-    die("can't chown $Uid, $Gid $dest\n") unless chown($Uid, $Gid, $dest);
++#    die("can't chown $Uid, $Gid $dest\n") unless chown($Uid, $Gid, $dest);
+ }
+ 
+ if ( $Conf{CgiDir} ne "" ) {
+@@ -829,7 +827,7 @@
+ 	close(PROG);
+ 	close(OUT);
+     }
+-    die("can't chown $uid, $gid $dest") unless chown($uid, $gid, $dest);
++#    die("can't chown $uid, $gid $dest") unless chown($uid, $gid, $dest);
+     die("can't chmod $mode $dest")      unless chmod($mode, $dest);
+ }
+ 
