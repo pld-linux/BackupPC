@@ -198,8 +198,16 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_usr}/share/%{name}/www/html/
 %{_usr}/share/%{name}/www/html/*
 %dir %{_libdir}/BackupPC/
+%{_libdir}/BackupPC/Attrib.pm
+%{_libdir}/BackupPC/FileZIO.pm
+%{_libdir}/BackupPC/Lib.pm
+%{_libdir}/BackupPC/PoolWrite.pm
+%{_libdir}/BackupPC/View.pm
+%dir %{_libdir}/BackupPC/CGI/
 %{_libdir}/BackupPC/CGI/*
+%dir %{_libdir}/BackupPC/Xfer/
 %{_libdir}/BackupPC/Xfer/*
+%dir %{_libdir}/BackupPC/Zip/
 %{_libdir}/BackupPC/Zip/*
 %dir %{_libdir}/BackupPC/Lang/
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
@@ -208,11 +216,6 @@ rm -rf $RPM_BUILD_ROOT
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
-%{_libdir}/BackupPC/Attrib.pm
-%{_libdir}/BackupPC/FileZIO.pm
-%{_libdir}/BackupPC/Lib.pm
-%{_libdir}/BackupPC/PoolWrite.pm
-%{_libdir}/BackupPC/View.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc/
