@@ -98,7 +98,9 @@ install --mode=644 debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
 install --mode=644 debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
 install -d $RPM_BUILD_ROOT/var/lib/backuppc/pc/localhost
-(cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin; ln -s ../image)
+
+cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin
+ln -s ../image
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -106,8 +108,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/*.html
-%attr(750,root,root) %dir %{_var}/lib/backuppc
 %attr(750,root,root) %dir %{_sysconfdir}/backuppc
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/backuppc/*
 %attr(755,root,root) %{_bindir}/*
+%attr(750,root,root) %dir %{_var}/lib/backuppc
 %{_mandir}/man?/*
