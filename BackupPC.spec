@@ -23,8 +23,7 @@ BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpmbuild(macros) >= 1.159
 Requires:	apache
 Requires:	samba-client
-# lets check if it's really needed
-#Requires:	sperl
+Requires:	sperl
 Requires:	tar > 1.13
 Provides:	group(%{BPCgroup})
 Provides:	user(%{BPCuser})
@@ -103,11 +102,11 @@ perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backu
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd.conf} \
-	$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/html \
-	$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost \
-	$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
-	$RPM_BUILD_ROOT%/home/services/httpd/cgi-bin/%{name}
+install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd.conf} \
+			$RPM_BUILD_ROOT%/home/services/httpd/html/BackupPC \
+			$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost \
+			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
+			$RPM_BUILD_ROOT%/home/services/httpd/cgi-bin/%{name}
 
 %{__perl} configure.pl \
 	--batch \
@@ -129,8 +128,8 @@ install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd
 	--data-dir %{_var}/lib/%{name} \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
-	--html-dir /home/services/httpd/html/%{name} \
-	--html-dir-url /%{name} \
+	--html-dir /home/services/httpd/html/BackupPC \
+	--html-dir-url /BackupPC \
 	--install-dir  %{_usr} \
 	--uid-ignore
 #	--config-path
@@ -139,9 +138,6 @@ install init.d/linux-backuppc $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/backuppc
 install conf/BackupPC_stnd.css  $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/BackupPC_stnd.css
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}/.htaccess
-
-#mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-#mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/BackupPC_Admin $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
 
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
@@ -167,7 +163,9 @@ else
 fi
 
 %post
-ln -s %{_var}/lib/%{name}/conf/ %{_sysconfdir}/%{name}
+ln -s %{_var}/lib/%{name}/conf %{_sysconfdir}/%{name}
+ln -s %{_var}/lib/%{name}/log %{_var}/log/%{name}
+ln -s /home/services/httpd/cgi-bin/%{name}/BackupPC_Admin /home/services/httpd/cgi-bin/%{name}/index.cgi
 
 %postun
 if [ "$1" = "0" ]; then
@@ -185,8 +183,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_usr}/doc/BackupPC.pod
 %dir /home/services/httpd/cgi-bin/%{name}/
 %attr(755,root,root)/home/services/httpd/cgi-bin/%{name}/*
-%dir /home/services/httpd/html/%{name}/
-/home/services/httpd/html/%{name}/*
+%dir /home/services/httpd/html/BackupPC/
+/home/services/httpd/html/BackupPC/*
 %dir %{_libdir}/BackupPC/
 %{_libdir}/BackupPC/*
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
