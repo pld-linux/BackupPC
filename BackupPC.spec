@@ -52,7 +52,7 @@ features not found in any other backup solution:
 
 %description -l pl
 BackupPC jest oparty na dyskach, a nie ta¶mach. Ta osobliwo¶æ daje
-mozliwo¶ci, których nie maj± inne rozwi±zania problemu kopii
+mo¿liwo¶ci, których nie maj± inne rozwi±zania problemu kopii
 zapasowych:
  - Inteligentny schemat ¶ci±gania minimalizuje zajmowane miejsce i
    ilo¶æ operacji wej¶cia/wyj¶cia na dysku. Takie same pliki s±
