@@ -129,8 +129,8 @@ install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd
 	--data-dir %{_var}/lib/%{name} \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
-	--html-dir %{_usr}/share/%{name}/www/html \
-	--html-dir-url /BackupPC \
+	--html-dir /home/services/httpd/html/%{name} \
+	--html-dir-url /%{name} \
 	--install-dir  %{_usr} \
 	--uid-ignore
 #	--config-path
@@ -185,8 +185,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_usr}/doc/BackupPC.pod
 %dir /home/services/httpd/cgi-bin/%{name}/
 %attr(755,root,root)/home/services/httpd/cgi-bin/%{name}/*
-%dir %{_usr}/share/%{name}/www/html/
-%{_usr}/share/%{name}/www/html/*
+%dir /home/services/httpd/html/%{name}/
+/home/services/httpd/html/%{name}/*
 %dir %{_libdir}/BackupPC/
 %{_libdir}/BackupPC/*
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
@@ -194,8 +194,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pool/
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash/
-%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf/
+%dir %{_var}/lib/%{name}/conf/
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) /home/services/httpd/cgi-bin/%{name}/.htaccess
-%config(noreplace) %verify(not md5 size mtime) %attr(640,%{BPCuser},%{BPCgroup})  %{_var}/lib/%{name}/conf/*
+%config(noreplace) %verify(not md5 size mtime) %{_var}/lib/%{name}/conf/*
