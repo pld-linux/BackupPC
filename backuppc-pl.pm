@@ -105,12 +105,12 @@ $Lang{BackupPC_Server_Status} = <<EOF;
 \${h2("B³êdy wymagaj±ce bli¿szej analizy")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3">
-<tr class="tableheader"><td align="center"> Host </td>
+<tr class="tableheader"><td align="center"> Komputer </td>
     <td align="center"> Typ </td>
     <td align="center"> U¿ytkownik </td>
     <td align="center"> Ostatnia próba </td>
     <td align="center"> Szczegó³y </td>
-    <td align="center"> Error Time </td>
+    <td align="center"> B³±d o godzinie </td>
     <td> Ostatni b³±d (inny ni¿ brak ping) </td></tr>
 \$statusStr
 </table>
@@ -140,11 +140,11 @@ Jest \$hostCntGood komputerów, na których dokonano archiwizacji, ³±cznie:
 <tr class="tableheader"><td> Komputer </td>
     <td align="center"> U¿ytkownik </td>
     <td align="center"> #Pe³ny </td>
-    <td align="center"> Full Age/days </td>
+    <td align="center"> Pe³ny Age/days </td>
     <td align="center"> Wielko¶æ/GB </td>
     <td align="center"> Szybko¶æ MB/sec </td>
     <td align="center"> #Przyrostowy </td>
-    <td align="center"> Incr Age/days </td>
+    <td align="center"> Przyrost. Age/days </td>
     <td align="center"> Status </td>
     <td align="center"> Ostatnia próba </td></tr>
 \$strGood
@@ -158,11 +158,11 @@ Jest \$hostCntNone komputerów bez kopii zapasowych.
 <tr class="tableheader"><td> Komputer </td>
     <td align="center"> U¿ytkownik </td>
     <td align="center"> #Pe³ny </td>
-    <td align="center"> Full Age/days </td>
+    <td align="center"> Pe³ny Age/days </td>
     <td align="center"> Wielko¶æ/GB </td>
     <td align="center"> Szybko¶æ MB/sec </td>
     <td align="center"> #Przyrostowy </td>
-    <td align="center"> Incr Age/days </td>
+    <td align="center"> Przyrost. Age/days </td>
     <td align="center"> Aktualny stan </td>
     <td align="center"> Ostatnia próba archiwizacji </td></tr>
 \$strNone
@@ -258,7 +258,7 @@ EOF
 
 $Lang{BackupPC_Archive2_parity} = <<EOF;
 <tr>
-    <td>Percentage of Parity Data (0 = wy³±czony 5 = normalny)</td>
+    <td>Ilo¶æ danych kontrolnych (parzysto¶ci) (0 = brak ... 5 = normalna)</td>
     <td><input type="numeric" value="\$ArchivePar" name="par"></td>
 </tr>
 EOF
@@ -321,7 +321,7 @@ Zatrzymanie archiwizacji dla \$host;
 <input type="hidden" name="host" value="\$host">
 <input type="hidden" name="doit" value="1">
 Also, please don\'t start another backup for
-<input type="text" name="backoff" size="10" value="\$backoff"> hours.
+<input type="text" name="backoff" size="10" value="\$backoff"> godzin.
 <p>
 Czy na prawdê chcesz to zrobiæ?
 <input type="submit" value="\$In{action}" name="action">
@@ -334,7 +334,7 @@ $Lang{Only_privileged_users_can_view_queues_} = "Tylko uprzywilejowani u¿ytkowni
 # --------------------------------
 $Lang{Only_privileged_users_can_archive} = "Tylko U¿ytkownik z odpowiednimi uprawnieniami mo¿e archiwizowaæ.";
 # --------------------------------
-$Lang{BackupPC__Queue_Summary} = "BackupPC: Queue Summary";
+$Lang{BackupPC__Queue_Summary} = "BackupPC: Podsumowanie kolejek";
 # --------------------------------
 $Lang{Backup_Queue_Summary} = <<EOF;
 \${h1("Backup Queue Summary")}
@@ -397,7 +397,7 @@ $Lang{Log_File_History__hdr} = <<EOF;
 \${h1("Plik logu \$hdr")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr class="tableheader"><td align="center"> File </td>
+<tr class="tableheader"><td align="center"> Plik </td>
     <td align="center"> Rozmiar </td>
     <td align="center"> Ostatnia modyfikacja </td></tr>
 \$str
@@ -454,7 +454,7 @@ zostan± nadpisane!
 <input type="hidden" value="\$In{action}" name="action">
 <table border="0">
 <tr>
-    <td>Odzyskiwanie plików komputera</td>
+    <td>Odzyskiwanie plików z komputera</td>
     <td><!--<input type="text" size="40" value="\${EscHTML(\$host)}"
 	 name="hostDest">-->
 	 <select name="hostDest" onChange="document.direct.shareDest.value=''">
@@ -488,7 +488,7 @@ EOF
 # ------------------------------
 $Lang{Option_2__Download_Zip_archive} = <<EOF;
 <p>
-\${h2("Option 2: ¦ci±gnij jako archiwum Zip")}
+\${h2("Opcja 2: ¦ci±gnij jako archiwum Zip")}
 <p>
 Mo¿esz ¶ci±gn±æ archiwum Zip zawieraj±ce wszystkie pliki/katalogi, które 
 wybra³e¶
@@ -507,9 +507,9 @@ mo¿e zaj±æ kilka minut, ponadto bêdziesz potrzebowa³ wystarczaj±co wolnego miejs
 \$hiddenStr
 <input type="hidden" value="\$In{action}" name="action">
 <input type="checkbox" value="1" name="relative" checked> Tworzenie archiwum zale¿nego od \${EscHTML(\$pathHdr eq "" ? "/" : \$pathHdr)}
-(w przeciwnym razie archiwum bêdzie zawiera³o pe³ne paths [BUM CYK CYK]).
+(w przeciwnym razie archiwum bêdzie zawiera³o pe³ne ¶cie¿ki do plików).
 <br>
-Compression (0=off, 1=fast,...,9=best)
+Kompresja (0=brak, 1=szybka,...,9=najlepsza)
 <input type="text" size="6" value="5" name="compressLevel">
 <br>
 <input type="submit" value="¦ci±ganie pliku Zip" name="">
@@ -522,9 +522,9 @@ $Lang{Option_2__Download_Zip_archive2} = <<EOF;
 <p>
 \${h2("Option 2: ¦ci±gnij jako archiwum Zip")}
 <p>
-Archiwum::Zip nie jest zainstalowane. ¦ci±gniêcie jako archiwum Zip bêdzie 
+Modu³ Perl-a Archiwum::Zip nie jest zainstalowany. ¦ci±gniêcie jako archiwum Zip bêdzie 
 niemo¿liwe.
-Popro¶ o zainstalowanie Archiwum::Zip administratora systemu z
+Popro¶ o zainstalowanie Modu³u Perl-a Archiwum::Zip administratora systemu z
 <a href="http://www.cpan.org">www.cpan.org</a>.
 </p>
 EOF
@@ -632,7 +632,7 @@ Kliknij na numer archiwum w celu przejrzenia i odzyskania plików.
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3">
 <tr class="tableheader"><td align="center"> Backup# </td>
-    <td align="center"> Type </td>
+    <td align="center"> Typ </td>
     <td align="center"> Filled </td>
     <td align="center"> Start Date </td>
     <td align="center"> Duration/mins </td>
@@ -650,7 +650,7 @@ Kliknij na numer archiwum w celu przejrzenia i odzyskania plików.
 <br><br>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td align="center"> Backup# </td>
-    <td align="center"> Type </td>
+    <td align="center"> Typ </td>
     <td align="center"> View </td>
     <td align="center"> #Xfer errs </td>
     <td align="center"> #bad files </td>
@@ -669,20 +669,20 @@ Empty files and SMB errors aren\'t counted in the reuse and new counts.
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td colspan="2" bgcolor="#ffffff"></td>
-    <td align="center" colspan="3"> Totals </td>
-    <td align="center" colspan="2"> Existing Files </td>
-    <td align="center" colspan="2"> New Files </td>
+    <td align="center" colspan="3"> £±cznie </td>
+    <td align="center" colspan="2"> Istniej±ce pliki </td>
+    <td align="center" colspan="2"> Nowe pliki </td>
 </tr>
 <tr class="tableheader">
     <td align="center"> Backup# </td>
-    <td align="center"> Type </td>
-    <td align="center"> #Files </td>
-    <td align="center"> Size/MB </td>
+    <td align="center"> Typ </td>
+    <td align="center"> #Pliki </td>
+    <td align="center"> Wielko¶æ/MB </td>
     <td align="center"> MB/sec </td>
-    <td align="center"> #Files </td>
-    <td align="center"> Size/MB </td>
-    <td align="center"> #Files </td>
-    <td align="center"> Size/MB </td>
+    <td align="center"> #Pliki </td>
+    <td align="center"> Wielko¶æ/MB </td>
+    <td align="center"> #Pliki </td>
+    <td align="center"> Wielko¶æ/MB </td>
 </tr>
 \$sizeStr
 </table>
@@ -695,25 +695,25 @@ compressed files.
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td colspan="3" bgcolor="#ffffff"></td>
-    <td align="center" colspan="3"> Existing Files </td>
-    <td align="center" colspan="3"> New Files </td>
+    <td align="center" colspan="3"> Istniej±ce pliki </td>
+    <td align="center" colspan="3"> Nowe pliki </td>
 </tr>
 <tr class="tableheader"><td align="center"> Backup# </td>
-    <td align="center"> Type </td>
-    <td align="center"> Comp Level </td>
-    <td align="center"> Size/MB </td>
-    <td align="center"> Comp/MB </td>
-    <td align="center"> Comp </td>
-    <td align="center"> Size/MB </td>
-    <td align="center"> Comp/MB </td>
-    <td align="center"> Comp </td>
+    <td align="center"> Typ </td>
+    <td align="center"> Poziom kompr. </td>
+    <td align="center"> Wielko¶æ/MB </td>
+    <td align="center"> Kompresja/MB </td>
+    <td align="center"> Kompresja </td>
+    <td align="center"> Wielko¶æ/MB </td>
+    <td align="center"> Kompr./MB </td>
+    <td align="center"> Kompresja</td>
 </tr>
 \$compStr
 </table>
 <br><br>
 EOF
 
-$Lang{Host__host_Archive_Summary} = "BackupPC: Host \$host Archive Summary";
+$Lang{Host__host_Archive_Summary} = "BackupPC: Komputer \$host Archive Summary";
 $Lang{Host__host_Archive_Summary2} = <<EOF;
 \${h1("Host \$host Archive Summary")}
 <p>
@@ -892,7 +892,7 @@ $Lang{Restore___num_details_for__host2} = <<EOF;
 </tr></tr>
 </table>
 </p>
-\${h1("File/Directory list")}
+\${h1("lista plików/katalogów")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="100%">
 <tr class="tableheader"><td>Original file/dir</td><td>Restored to</td></tr>
@@ -936,31 +936,31 @@ $Lang{Email_Summary} = "BackupPC: Email Summary";
 # -----------------------------------
 $Lang{BackupPC__Lib__new_failed__check_apache_error_log} = "BackupPC::Lib->new failed: check apache error_log\n";
 $Lang{Wrong_user__my_userid_is___} =
-              "Wrong user: my userid is \$>, instead of \$uid"
+              "Niew³a¶ciwy u¿ytkownik: my userid is \$>, instead of \$uid"
             . "(\$Conf{BackupPCUser})\n";
 # $Lang{Only_privileged_users_can_view_PC_summaries} = "Only privileged users can view PC summaries.";
 $Lang{Only_privileged_users_can_stop_or_start_backups} =
                   "Only privileged users can stop or start backups on"
 		. " \${EscHTML(\$host)}.";
-$Lang{Invalid_number__num} = "Invalid number \$num";
+$Lang{Invalid_number__num} = "Niepoprawny numer \$num";
 $Lang{Unable_to_open__file__configuration_problem} = "Unable to open \$file: configuration problem?";
 $Lang{Only_privileged_users_can_view_log_or_config_files} = "Only privileged users can view log or config files.";
 $Lang{Only_privileged_users_can_view_log_files} = "Only privileged users can view log files.";
 $Lang{Only_privileged_users_can_view_email_summaries} = "Only privileged users can view email summaries.";
 $Lang{Only_privileged_users_can_browse_backup_files} = "Only privileged users can browse backup files"
-                . " for host \${EscHTML(\$In{host})}.";
-$Lang{Empty_host_name} = "Empty host name.";
-$Lang{Directory___EscHTML} = "Directory \${EscHTML(\"\$TopDir/pc/\$host/\$num\")}"
-		    . " is empty";
+                . " dla komputera \${EscHTML(\$In{host})}.";
+$Lang{Empty_host_name} = "Pusta nazwa komputera.";
+$Lang{Directory___EscHTML} = "Katalog \${EscHTML(\"\$TopDir/pc/\$host/\$num\")}"
+		    . " jest pusty";
 $Lang{Can_t_browse_bad_directory_name2} = "Can\'t browse bad directory name"
 	            . " \${EscHTML(\$relDir)}";
 $Lang{Only_privileged_users_can_restore_backup_files} = "Only privileged users can restore backup files"
                 . " for host \${EscHTML(\$In{host})}.";
 $Lang{Bad_host_name} = "Bad host name \${EscHTML(\$host)}";
 $Lang{You_haven_t_selected_any_files__please_go_Back_to} = "You haven\'t selected any files; please go Back to"
-                . " select some files.";
+                . " wybierz pliki.";
 $Lang{You_haven_t_selected_any_hosts} = "You haven\'t selected any hosts; please go Back to"
-                . " select some hosts.";
+                . " wybierz komputery.";
 $Lang{Nice_try__but_you_can_t_put} = "Nice try, but you can\'t put \'..\' in any of the file names";
 $Lang{Host__doesn_t_exist} = "Host \${EscHTML(\$In{hostDest})} doesn\'t exist";
 $Lang{You_don_t_have_permission_to_restore_onto_host} = "You don\'t have permission to restore onto host"
@@ -968,17 +968,17 @@ $Lang{You_don_t_have_permission_to_restore_onto_host} = "You don\'t have permiss
 $Lang{Can_t_open_create} = "Can\'t open/create "
                     . "\${EscHTML(\"\$TopDir/pc/\$hostDest/\$reqFileName\")}";
 $Lang{Only_privileged_users_can_restore_backup_files2} = "Only privileged users can restore backup files"
-                . " for host \${EscHTML(\$host)}.";
-$Lang{Empty_host_name} = "Empty host name";
-$Lang{Unknown_host_or_user} = "Unknown host or user \${EscHTML(\$host)}";
+                . " dla komputera \${EscHTML(\$host)}.";
+$Lang{Empty_host_name} = "Pusta nazwa komputera";
+$Lang{Unknown_host_or_user} = "Nieznany komputer lub u¿ytkownik \${EscHTML(\$host)}";
 $Lang{Only_privileged_users_can_view_information_about} = "Only privileged users can view information about"
-                . " host \${EscHTML(\$host)}." ;
+                . " komputer \${EscHTML(\$host)}." ;
 $Lang{Only_privileged_users_can_view_archive_information} = "Only privileged users can view archive information.";
 $Lang{Only_privileged_users_can_view_restore_information} = "Only privileged users can view restore information.";
 $Lang{Restore_number__num_for_host__does_not_exist} = "Restore number \$num for host \${EscHTML(\$host)} does"
-	        . " not exist.";
+	        . " nie istnieje.";
 $Lang{Archive_number__num_for_host__does_not_exist} = "Archive number \$num for host \${EscHTML(\$host)} does"
-                . " not exist.";
+                . " nie istnieje.";
 $Lang{Can_t_find_IP_address_for} = "Can\'t find IP address for \${EscHTML(\$host)}";
 $Lang{host_is_a_DHCP_host} = <<EOF;
 \$host is a DHCP host, and I don\'t know its IP address.  I checked the
@@ -1023,9 +1023,9 @@ $Lang{Select_a_host} = "Wybierz komputer...";
 
 $Lang{There_have_been_no_archives} = "<h2> There have been no archives </h2>\n";
 $Lang{This_PC_has_never_been_backed_up} = "<h2> This PC has never been backed up!! </h2>\n";
-$Lang{This_PC_is_used_by} = "<li>This PC is used by \${UserLink(\$user)}";
+$Lang{This_PC_is_used_by} = "<li>Komputer jest u¿ywany przez \${UserLink(\$user)}";
 
-$Lang{Extracting_only_Errors} = "(Extracting only Errors)";
+$Lang{Extracting_only_Errors} = "(Poka¿ tylko b³êdy)";
 $Lang{XferLOG} = "XferLOG";
 $Lang{Errors}  = "B³êdy";
 
@@ -1085,18 +1085,18 @@ EOF
 $Lang{__time0_to__time1_on__days} = "\$t0 to \$t1 on \$days";
 
 $Lang{Backups_are_deferred_for_hours_hours_change_this_number} = <<EOF;
-<li>Backups are deferred for \$hours hours
-(<a href=\"\$MyURL?action=\${EscURI(\$Lang->{Stop_Dequeue_Archive})}&host=\$host\">change this number</a>).
+<li>Backups are deferred for \$hours godzin
+(<a href=\"\$MyURL?action=\${EscURI(\$Lang->{Stop_Dequeue_Archive})}&host=\$host\">Zmieñ numer</a>).
 EOF
 
-$Lang{tryIP} = " and \$StatusHost{dhcpHostIP}";
+$Lang{tryIP} = " i \$StatusHost{dhcpHostIP}";
 
 # $Lang{Host_Inhost} = "Host \$In{host}";
 
 $Lang{checkAll} = <<EOF;
 <tr><td class="fviewborder">
-<input type="checkbox" name="allFiles" onClick="return checkAll('allFiles');">&nbsp;Select all
-</td><td colspan="5" align="center" class="fviewborder">
+<input type="checkbox" name="allFiles" onClick="return checkAll('allFiles');">&nbsp;Wybierz wszystko</td>
+<td colspan="5" align="center" class="fviewborder">
 <input type="submit" name="Submit" value="Restore selected files">
 </td></tr>
 EOF
@@ -1110,12 +1110,12 @@ $Lang{checkAllHosts} = <<EOF;
 EOF
 
 $Lang{fileHeader} = <<EOF;
-    <tr class="fviewheader"><td align=center> Name</td>
-       <td align="center"> Type</td>
-       <td align="center"> Mode</td>
+    <tr class="fviewheader"><td align=center> Nazwa</td>
+       <td align="center"> Typ</td>
+       <td align="center"> Tryb</td>
        <td align="center"> #</td>
-       <td align="center"> Size</td>
-       <td align="center"> Date modified</td>
+       <td align="center"> Wielko¶æ</td>
+       <td align="center"> Data modyfikacji</td>
     </tr>
 EOF
 
@@ -1168,8 +1168,8 @@ EOF
 
 $Lang{BackupPC__Documentation} = "BackupPC: Dokumentacja";
 
-$Lang{No} = "no";
-$Lang{Yes} = "yes";
+$Lang{No} = "nie";
+$Lang{Yes} = "tak";
 
 $Lang{The_directory_is_empty} = <<EOF;
 <tr><td bgcolor="#ffffff">Katalog \${EscHTML(\$dirDisplay)} jest pusty
@@ -1177,7 +1177,7 @@ $Lang{The_directory_is_empty} = <<EOF;
 EOF
 
 #$Lang{on} = "on";
-$Lang{off} = "off";
+$Lang{off} = "wy³±czony";
 
 $Lang{backupType_full}    = "pe³ny";
 $Lang{backupType_incr}    = "przyrostowy";
@@ -1198,14 +1198,14 @@ $Lang{Status_link_pending} = "link pending";
 $Lang{Status_link_running} = "link running";
 
 $Lang{Reason_backup_done}    = "backup ukoñczony";
-$Lang{Reason_restore_done}   = "restore done";
-$Lang{Reason_archive_done}   = "archive done";
+$Lang{Reason_restore_done}   = "odzyskiwanie ukoñczone";
+$Lang{Reason_archive_done}   = "archiwizacja ukoñczona";
 $Lang{Reason_nothing_to_do}  = "nothing to do";
-$Lang{Reason_backup_failed}  = "backup nieudany";
-$Lang{Reason_restore_failed} = "restore failed";
-$Lang{Reason_archive_failed} = "archive failed";
+$Lang{Reason_backup_failed}  = "backup nie powiód³ siê";
+$Lang{Reason_restore_failed} = "odzyskiwanie nie powiod³o siê";
+$Lang{Reason_archive_failed} = "archiwizacja nie powiod³a siê";
 $Lang{Reason_no_ping}        = "no ping";
-$Lang{Reason_backup_canceled_by_user}  = "backup canceled by user";
+$Lang{Reason_backup_canceled_by_user}  = "backup przerwany przez u¿ytkownika";
 $Lang{Reason_restore_canceled_by_user} = "restore canceled by user";
 $Lang{Reason_archive_canceled_by_user} = "archive canceled by user";
 
@@ -1304,4 +1304,4 @@ EOF
 $Lang{howLong_not_been_backed_up} = "not been backed up successfully";
 $Lang{howLong_not_been_backed_up_for_days_days} = "not been backed up for \$days days";
 
-#end of lang_en.pm
+#end of lang_pl.pm
