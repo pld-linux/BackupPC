@@ -83,7 +83,8 @@ zapasowych:
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,backuppc,httpd/httpd.conf}
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,backuppc,httpd/httpd.conf} \
+	$RPM_BUILD_ROOT/var/lib/backuppc/pc/localhost
 
 echo "y" | \
 fakeroot DEBIANDEST=$RPM_BUILD_ROOT %{__perl} configure.pl
@@ -97,7 +98,6 @@ install --mode=644 conf/hosts $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
 install --mode=644 debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
 install --mode=644 debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
-install -d $RPM_BUILD_ROOT/var/lib/backuppc/pc/localhost
 
 cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin
 ln -s ../image
