@@ -323,7 +323,7 @@ Zatrzymanie archiwizacji dla \$host;
 Also, please don\'t start another backup for
 <input type="text" name="backoff" size="10" value="\$backoff"> hours.
 <p>
-Do you really want to do this?
+Czy na prawdê chcesz to zrobiæ?
 <input type="submit" value="\$In{action}" name="action">
 <input type="submit" value="No" name="">
 </form>
@@ -341,7 +341,7 @@ $Lang{Backup_Queue_Summary} = <<EOF;
 <br><br>
 \${h2("User Queue Summary")}
 <p>
-The following user requests are currently queued:
+Aktualnie w kolejce czekaj± nastêpuj±ce zlecenia u¿ytkownika:
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td> Host </td>
@@ -364,7 +364,7 @@ The following background requests are currently queued:
 <br><br>
 \${h2("Command Queue Summary")}
 <p>
-The following command requests are currently queued:
+Aktualnie w kolejce czekaj± nastêpuj±ce polecenia:
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td> Host </td>
@@ -392,9 +392,9 @@ $Lang{skipped__skipped_lines} = "[ Pominiête \$skipped linie ]\n";
 $Lang{_pre___Can_t_open_log_file__file} = "<pre>\nNie mo¿na otworzyæ pliku loguj±cego \$file\n";
 
 # --------------------------------
-$Lang{BackupPC__Log_File_History} = "BackupPC: Log File History";
+$Lang{BackupPC__Log_File_History} = "BackupPC: Plik logu";
 $Lang{Log_File_History__hdr} = <<EOF;
-\${h1("Log File History \$hdr")}
+\${h1("Plik logu \$hdr")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td align="center"> File </td>
@@ -410,9 +410,9 @@ $Lang{Recent_Email_Summary} = <<EOF;
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td align="center"> Recipient </td>
-    <td align="center"> Host </td>
-    <td align="center"> Time </td>
-    <td align="center"> Subject </td></tr>
+    <td align="center"> Komputer </td>
+    <td align="center"> Czas </td>
+    <td align="center"> Temat </td></tr>
 \$str
 </table>
 EOF
@@ -481,24 +481,24 @@ zostan± nadpisane!
 EOF
 
 $Lang{Restore_Options_for__host_Option1_disabled} = <<EOF;
-Bezpo¶rednia przywracanie zosta³o wy³±czone dla komputera \${EscHTML(\$hostDest)}.
+Bezpo¶rednie przywracanie zosta³o wy³±czone dla komputera \${EscHTML(\$hostDest)}.
 Wybierz jedn± z innych mo¿liwo¶ci:
 EOF
 
 # ------------------------------
 $Lang{Option_2__Download_Zip_archive} = <<EOF;
 <p>
-\${h2("Option 2: ¦ci±gnij archiwum Zip")}
+\${h2("Option 2: ¦ci±gnij jako archiwum Zip")}
 <p>
 Mo¿esz ¶ci±gn±æ archiwum Zip zawieraj±ce wszystkie pliki/katalogi, które 
 wybra³e¶
 Mo¿esz u¿ywaæ wtedy lokalnych aplikacji takich jak WinZip,
 do przejrzenia lub wypakowania ka¿dego z plików.
 </p><p>
-<b>Ostrze¿enie:</b> depending upon which files/directories you have selected,
-this archive might be very very large.  It might take many minutes to
-create and transfer the archive, and you will need enough local disk
-space to store it.
+<b>Ostrze¿enie:</b> w zale¿no¶ci od plików/katalogów, które wybra³e¶,
+archiwum to, mo¿e byæ bardzo du¿e. Stworzenie i przeniesienie go
+mo¿e zaj±æ kilka minut, ponadto bêdziesz potrzebowa³ wystarczaj±co wolnego miejsca na dysku, aby je przechowaæ.
+
 </p>
 <form action="\$MyURL" method="post">
 <input type="hidden" name="host" value="\${EscHTML(\$host)}">
@@ -521,11 +521,11 @@ EOF
 
 $Lang{Option_2__Download_Zip_archive2} = <<EOF;
 <p>
-\${h2("Option 2: Download Zip archive")}
+\${h2("Option 2: ¦ci±gnij jako archiwum Zip")}
 <p>
-Archive::Zip is not installed so you will not be able to download a
-zip archive.
-Please ask your system adminstrator to install Archive::Zip from
+Archiwum::Zip nie jest zainstalowane. ¦ci±gniêcie jako archiwum Zip bêdzie 
+niemo¿liwe.
+Popro¶ o zainstalowanie Archiwum::Zip administratora systemu z
 <a href="http://www.cpan.org">www.cpan.org</a>.
 </p>
 EOF
@@ -533,16 +533,17 @@ EOF
 
 # ------------------------------
 $Lang{Option_3__Download_Zip_archive} = <<EOF;
-\${h2("Option 3: Download Tar archive")}
+\${h2("Option 3: ¦ci±gnij jako archiwum Tar")}
 <p>
-You can download a Tar archive containing all the files/directories you
-have selected.  You can then use a local application, such as tar or
-WinZip to view or extract any of the files.
+Mo¿esz ¶ci±gn±æ archiwum Tar zawieraj±ce wszystkie pliki/katalogi, które
+wybra³e¶.
+Bêdziesz móg³ wtedy u¿ywaæ lokalnych aplikacji takich jak Tar lub WinZip, aby
+przejrzeæ lub wypakowaæ ka¿dy z plików.
 </p><p>
-<b>Warning:</b> depending upon which files/directories you have selected,
-this archive might be very very large.  It might take many minutes to
-create and transfer the archive, and you will need enough local disk
-space to store it.
+<b>Ostrze¿enie:</b> w zale¿no¶ci od plików/katalogów, które wybra³e¶
+archiwum to mo¿e byæ bardzo du¿e. Stworzenie i przeniesienie go mo¿e zaj±æ
+kilka minut, ponadto bêdziesz potrzebowa³ wystarczaj±co wolnego miejsca na 
+dysku, aby je przechowaæ.
 </p>
 <form action="\$MyURL" method="post">
 <input type="hidden" name="host" value="\${EscHTML(\$host)}">
@@ -560,10 +561,10 @@ EOF
 
 
 # ------------------------------
-$Lang{Restore_Confirm_on__host} = "BackupPC: Restore Confirm on \$host";
+$Lang{Restore_Confirm_on__host} = "BackupPC: Odzyskiwanie potwierdzone dla \$host";
 
 $Lang{Are_you_sure} = <<EOF;
-\${h1("Are you sure?")}
+\${h1("Jeste¶ pewny?")}
 <p>
 You are about to start a restore directly to the machine \$In{hostDest}.
 The following files will be restored to share \$In{shareDest}, from
@@ -590,19 +591,19 @@ EOF
 
 
 # --------------------------
-$Lang{Restore_Requested_on__hostDest} = "BackupPC: Restore Requested on \$hostDest";
+$Lang{Restore_Requested_on__hostDest} = "BackupPC: Zlecenie odzyskiwania dla \$hostDest";
 $Lang{Reply_from_server_was___reply} = <<EOF;
 \${h1(\$str)}
 <p>
-Reply from server was: \$reply
+Odpowied¼ z serwera: \$reply
 <p>
-Go back to <a href="\$MyURL?host=\$hostDest">\$hostDest home page</a>.
+Wróæ na <a href="\$MyURL?host=\$hostDest">\$hostDest stronê domow±</a>.
 EOF
 
 $Lang{BackupPC_Archive_Reply_from_server} = <<EOF;
 \${h1(\$str)}
 <p>
-Reply from server was: \$reply
+Odpowied¼ z serwera: \$reply
 EOF
 
 
