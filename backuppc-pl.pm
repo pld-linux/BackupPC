@@ -130,7 +130,7 @@ Status wygenerowano o \$now.
 <p>
 Jest \$hostCntGood komputerów, na których dokonano archiwizacji, ³±cznie:
 <ul>
-<li> \$fullTot full backups of total size \${fullSizeTot}GB
+<li> \$fullTot pe³ny rozmiar archiwum: \${fullSizeTot}GB
      (prior to pooling and compression),
 <li> \$incrTot incr backups of total size \${incrSizeTot}GB
      (prior to pooling and compression).
@@ -364,7 +364,7 @@ The following background requests are currently queued:
 <br><br>
 \${h2("Command Queue Summary")}
 <p>
-Aktualnie w kolejce czekaj± nastêpuj±ce polecenia:
+Aktualnie w kolejce oczekuj± nastêpuj±ce polecenia:
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td> Host </td>
@@ -383,7 +383,7 @@ $Lang{Log_File__file__comment} = <<EOF;
 EOF
 # --------------------------------
 $Lang{Contents_of_log_file} = <<EOF;
-Contents of file <tt>\$file</tt>, modified \$mtimeStr \$comment
+Zawarto¶æ pliku <tt>\$file</tt>, zmodyfikiwany o \$mtimeStr \$comment
 EOF
 
 # --------------------------------
@@ -422,12 +422,12 @@ EOF
 $Lang{Browse_backup__num_for__host} = "BackupPC: Browse backup \$num for \$host";
 
 # ------------------------------
-$Lang{Restore_Options_for__host} = "BackupPC: Restore Options for \$host";
+$Lang{Restore_Options_for__host} = "BackupPC: Opcje przywracania dla \$host";
 $Lang{Restore_Options_for__host2} = <<EOF;
-\${h1("Restore Options for \$host")}
+\${h1("Opcje przywracania dla \$host")}
 <p>
 Wybra³e¶ nastêpuj±ce pliki/katalogi z
-udzia³u \$share, backup number #\$num:
+udzia³u \$share, numer archiwum #\$num:
 <ul>
 \$fileListStr
 </ul>
@@ -506,14 +506,13 @@ mo¿e zaj±æ kilka minut, ponadto bêdziesz potrzebowa³ wystarczaj±co wolnego miejs
 <input type="hidden" name="type" value="2">
 \$hiddenStr
 <input type="hidden" value="\$In{action}" name="action">
-<input type="checkbox" value="1" name="relative" checked> Make archive relative
-to \${EscHTML(\$pathHdr eq "" ? "/" : \$pathHdr)}
-(otherwise archive will contain full paths).
+<input type="checkbox" value="1" name="relative" checked> Tworzenie archiwum zale¿nego od \${EscHTML(\$pathHdr eq "" ? "/" : \$pathHdr)}
+(w przeciwnym razie archiwum bêdzie zawiera³o pe³ne paths [BUM CYK CYK]).
 <br>
 Compression (0=off, 1=fast,...,9=best)
 <input type="text" size="6" value="5" name="compressLevel">
 <br>
-<input type="submit" value="Download Zip File" name="">
+<input type="submit" value="¦ci±ganie pliku Zip" name="">
 </form>
 EOF
 
@@ -567,11 +566,11 @@ $Lang{Are_you_sure} = <<EOF;
 \${h1("Jeste¶ pewny?")}
 <p>
 You are about to start a restore directly to the machine \$In{hostDest}.
-The following files will be restored to share \$In{shareDest}, from
-backup number \$num:
+Nastêpuj±ce pliki zostanê odzyskane do udzia³u \$In{shareDest}, z
+archiwum o numerze \$num:
 <p>
 <table border>
-<tr><td>Original file/dir</td><td>Will be restored to</td></tr>
+<tr><td>Oryginalne pliki/katalogi</td><td> zostan± przywrócone do</td></tr>
 \$fileListStr
 </table>
 
@@ -583,7 +582,7 @@ backup number \$num:
 <input type="hidden" name="num" value="\$num">
 <input type="hidden" name="type" value="4">
 \$hiddenStr
-Do you really want to do this?
+Chcesz na pewno to zrobiæ?
 <input type="submit" value="\$In{action}" name="action">
 <input type="submit" value="No" name="">
 </form>
@@ -629,7 +628,7 @@ $Lang{Host__host_Backup_Summary2} = <<EOF;
 </p>
 \${h2("Backup Summary")}
 <p>
-Click on the backup number to browse and restore backup files.
+Kliknij na numer archiwum w celu przejrzenia i odzyskania plików.
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3">
 <tr class="tableheader"><td align="center"> Backup# </td>
