@@ -67,7 +67,7 @@ $Lang{BackupPC_Server_Status_General_Info}= <<EOF;
      wersja \$Info{Version}, uruchomiony o \$serverStartTime.
 <li> Status wygenerowano o \$now.
 <li> Ostatnie wczytanie konfiguracji: \$configLoadTime.
-<li> PCs will be next queued at \$nextWakeupTime.
+<li> Komputery sprawdzaj± obecno¶æ nowych zleceñ co \$nextWakeupTime.
 <li> Pozosta³e informacje:
     <ul>
         <li>\$numBgQueue pending backup requests from last scheduled wakeup,
@@ -128,7 +128,7 @@ Status wygenerowano o \$now.
 
 \${h2("Komputery z dobrymi kopiami zapasowymi")}
 <p>
-There are \$hostCntGood hosts that have been backed up, for a total of:
+Jest \$hostCntGood komputerów, na których dokonano archiwizacji, ³±cznie:
 <ul>
 <li> \$fullTot full backups of total size \${fullSizeTot}GB
      (prior to pooling and compression),
@@ -150,7 +150,7 @@ There are \$hostCntGood hosts that have been backed up, for a total of:
 \$strGood
 </table>
 <br><br>
-\${h2("Komputery bez kopi zapasowych")}
+\${h2("Komputery bez kopii zapasowych")}
 <p>
 Jest \$hostCntNone komputerów bez kopii zapasowych.
 <p>
@@ -163,8 +163,8 @@ Jest \$hostCntNone komputerów bez kopii zapasowych.
     <td align="center"> Szybko¶æ MB/sec </td>
     <td align="center"> #Przyrostowy </td>
     <td align="center"> Incr Age/days </td>
-    <td align="center"> Current State </td>
-    <td align="center"> Last backup attempt </td></tr>
+    <td align="center"> Aktualny stan </td>
+    <td align="center"> Ostatnia próba archiwizacji </td></tr>
 \$strNone
 </table>
 EOF
@@ -198,7 +198,7 @@ $Lang{BackupPC_Archive} = <<EOF;
 //-->
 </script>
 
-There are \$hostCntGood hosts that have been backed up for a total size of \${fullSizeTot}GB
+Jest \$hostCntGood komputerów, na których dokonano archiwizacji, ³±cznie: \${fullSizeTot}GB
 <p>
 <form name="form1" method="post" action="\$MyURL">
 <input type="hidden" name="fcbMax" value="\$checkBoxCnt">
