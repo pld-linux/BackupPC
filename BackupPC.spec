@@ -31,6 +31,7 @@ BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
 BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	sed >= 4.0
 Requires:	apache
 Requires:	apache-mod_perl
 Requires:	samba-client
@@ -112,12 +113,12 @@ sed -i -e 's#!/bin/perl#!%{__perl}#' */*/*/*.pm
 
 
 pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
-perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
+%{__perl} -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} \
-			$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/{html,cgi-bin} \
+install -d		$RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
+			$RPM_BUILD_ROOT%{_datadir}/%{name}/www/{html,cgi-bin} \
 			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/pc/localhost,log} \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
 
@@ -137,11 +138,11 @@ install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} 
 	--bin-path cat=/bin/cat \
 	--bin-path gzip=/bin/gzip \
 	--bin-path bzip2=%{_bindir}/bzip2 \
-	--cgi-dir %{_usr}/share/%{name}/www/cgi-bin \
+	--cgi-dir %{_datadir}/%{name}/www/cgi-bin \
 	--data-dir %{_var}/lib/%{name} \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
-	--html-dir %{_usr}/share/%{name}/www/html \
+	--html-dir %{_datadir}/%{name}/www/html \
 	--html-dir-url /BackupPC \
 	--install-dir %{_usr} \
 	--uid-ignore
@@ -153,9 +154,9 @@ sed -i -e 's#--user backuppc#--user %{BPCuser}#' init.d/linux-backuppc
 sed -i -e "s#'backuppc';#'%{BPCuser}';#" $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/config.pl
 sed -i -e 's/$Conf{SendmailPath} =/#$Conf{SendmailPath} =/' $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/config.pl
 
-install init.d/linux-backuppc $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/backuppc
+install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-install %{SOURCE2} $RPM_BUILD_ROOT%{_usr}/share/%{name}/www/cgi-bin/.htaccess
+install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
 
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
@@ -167,11 +168,11 @@ ln -sf %{_var}/lib/%{name}/conf %{name}
 cd $RPM_BUILD_ROOT%{_var}/log
 ln -sf %{_var}/lib/%{name}/log %{name}
 
-cd $RPM_BUILD_ROOT%{_usr}/share/%{name}/www/cgi-bin
+cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin
 ln -sf BackupPC_Admin index.cgi
 
 cd $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
-ln -sf %{_usr}/share/%{name}/www/html/BackupPC_stnd.css BackupPC_stnd.css
+ln -sf %{_datadir}/%{name}/www/html/BackupPC_stnd.css BackupPC_stnd.css
 
 %pre
 # Add the "backuppc" user and group
@@ -210,12 +211,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %doc %{_usr}/doc/*.html
 %doc %{_usr}/doc/BackupPC.pod
-%dir %{_usr}/share/%{name}/www/cgi-bin
-%attr(755,root,root)%{_usr}/share/%{name}/www/cgi-bin/BackupPC_Admin
-%config(noreplace) %verify(not md5 size mtime) %{_usr}/share/%{name}/www/cgi-bin/.htaccess
-%dir %{_usr}/share/%{name}/www/html
-%{_usr}/share/%{name}/www/html/*.gif
-%config(noreplace) %verify(not md5 size mtime) %{_usr}/share/%{name}/www/html/BackupPC_stnd.css
+%dir %{_datadir}/%{name}/www/cgi-bin
+%attr(755,root,root) %{_datadir}/%{name}/www/cgi-bin/BackupPC_Admin
+%config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/cgi-bin/.htaccess
+%dir %{_datadir}/%{name}/www/html
+%{_datadir}/%{name}/www/html/*.gif
+%config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/html/BackupPC_stnd.css
 %dir %{_libdir}/BackupPC
 %{_libdir}/BackupPC/Attrib.pm
 %{_libdir}/BackupPC/FileZIO.pm
@@ -243,7 +244,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
 %dir %{_var}/log/%{name}
-%attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
+%attr(754,root,root) /etc/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
+%dir %{_var}/lib/%{name}
 %config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup})  %{_var}/lib/%{name}/conf/*
