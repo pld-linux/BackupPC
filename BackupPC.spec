@@ -103,7 +103,7 @@ perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backu
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd.conf} \
-			$RPM_BUILD_ROOT%/home/services/httpd/html/BackupPC \
+			$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/html \
 			$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
 			$RPM_BUILD_ROOT%/home/services/httpd/cgi-bin/%{name}
@@ -128,7 +128,7 @@ install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/http
 	--data-dir %{_var}/lib/%{name} \
 	--dest-dir $RPM_BUILD_ROOT \
 	--hostname localhost \
-	--html-dir /home/services/httpd/html/BackupPC \
+	--html-dir %{_usr}/share/%{name}/www/html \
 	--html-dir-url /BackupPC \
 	--install-dir  %{_usr} \
 	--uid-ignore
@@ -183,8 +183,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_usr}/doc/BackupPC.pod
 %dir /home/services/httpd/cgi-bin/%{name}/
 %attr(755,root,root)/home/services/httpd/cgi-bin/%{name}/*
-%dir /home/services/httpd/html/BackupPC/
-/home/services/httpd/html/BackupPC/*
+%dir %{_usr}/share/%{name}/www/html/
+%{_usr}/share/%{name}/www/html/*
 %dir %{_libdir}/BackupPC/
 %{_libdir}/BackupPC/*
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
