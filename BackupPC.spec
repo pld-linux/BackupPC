@@ -134,12 +134,12 @@ install -d -m 755 	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,httpd/httpd.conf} 
 	--hostname localhost \
 	--html-dir %{_usr}/share/%{name}/www/html \
 	--html-dir-url /BackupPC \
-	--install-dir  %{_usr} \
+	--install-dir %{_usr} \
 	--uid-ignore
 #	--config-path
 
 install init.d/linux-backuppc $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/backuppc
-install conf/BackupPC_stnd.css  $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/BackupPC_stnd.css
+install conf/BackupPC_stnd.css $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/BackupPC_stnd.css
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/home/services/httpd/cgi-bin/%{name}/.htaccess
 
@@ -193,35 +193,35 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %doc %{_usr}/doc/*.html
 %doc %{_usr}/doc/BackupPC.pod
-%dir /home/services/httpd/cgi-bin/%{name}/
+%dir /home/services/httpd/cgi-bin/%{name}
 %attr(755,root,root)/home/services/httpd/cgi-bin/%{name}/*
-%dir %{_usr}/share/%{name}/www/html/
+%dir %{_usr}/share/%{name}/www/html
 %{_usr}/share/%{name}/www/html/*
-%dir %{_libdir}/BackupPC/
+%dir %{_libdir}/BackupPC
 %{_libdir}/BackupPC/Attrib.pm
 %{_libdir}/BackupPC/FileZIO.pm
 %{_libdir}/BackupPC/Lib.pm
 %{_libdir}/BackupPC/PoolWrite.pm
 %{_libdir}/BackupPC/View.pm
-%dir %{_libdir}/BackupPC/CGI/
+%dir %{_libdir}/BackupPC/CGI
 %{_libdir}/BackupPC/CGI/*
-%dir %{_libdir}/BackupPC/Xfer/
+%dir %{_libdir}/BackupPC/Xfer
 %{_libdir}/BackupPC/Xfer/*
-%dir %{_libdir}/BackupPC/Zip/
+%dir %{_libdir}/BackupPC/Zip
 %{_libdir}/BackupPC/Zip/*
-%dir %{_libdir}/BackupPC/Lang/
+%dir %{_libdir}/BackupPC/Lang
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
 %lang(fr) %{_libdir}/BackupPC/Lang/fr.pm
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
-%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
-%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log/
-%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc/
-%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pool/
-%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash/
-%dir %{_var}/lib/%{name}/conf/
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pool
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash
+%dir %{_var}/lib/%{name}/conf
 %dir %{_var}/log/%{name}
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
