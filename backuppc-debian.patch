@@ -1,0 +1,1295 @@
+diff -urN BackupPC-2.0.2.org/cgi-bin/BackupPC_Admin BackupPC-2.0.2/cgi-bin/BackupPC_Admin
+--- BackupPC-2.0.2.org/cgi-bin/BackupPC_Admin	2003-10-17 00:49:12.000000000 +0200
++++ BackupPC-2.0.2/cgi-bin/BackupPC_Admin	2003-10-17 00:49:21.000000000 +0200
+@@ -384,11 +384,11 @@
+         $comment = $Lang->{Extracting_only_Errors};
+     } elsif ( $host ne "" && $type eq "config" ) {
+         $file = "$TopDir/pc/$host/config.pl";
+-        $file = "$TopDir/conf/$host.pl"
+-                    if ( $host ne "config" && -f "$TopDir/conf/$host.pl"
++        $file = "/etc/backuppc/$host.pl"
++                    if ( $host ne "config" && -f "/etc/backuppc/$host.pl"
+                                            && !-f $file );
+     } elsif ( $type eq "docs" ) {
+-        $file = "$BinDir/../doc/BackupPC.html";
++        $file = "/usr/share/doc/backuppc/BackupPC.html";
+         if ( open(LOG, $file) ) {
+ 	    binmode(LOG);
+             Header($Lang->{BackupPC__Documentation});
+@@ -400,9 +400,9 @@
+         }
+         return;
+     } elsif ( $type eq "config" ) {
+-        $file = "$TopDir/conf/config.pl";
++        $file = "/etc/backuppc/config.pl";
+     } elsif ( $type eq "hosts" ) {
+-        $file = "$TopDir/conf/hosts";
++        $file = "/etc/backuppc/hosts";
+     } elsif ( $host ne "" ) {
+         $file = "$TopDir/pc/$host/LOG$ext";
+     } else {
+@@ -1844,7 +1844,7 @@
+             NavLink("?action=view&type=XferErrbad&host=${EscURI($host)}",
+                                 $Lang->{Last_bad_XferLOG_errors_only});
+         }
+-        if ( -f "$TopDir/pc/$host/config.pl" ) {
++        if ( -f "$TopDir/pc/$host/config.pl" || -f "/etc/backuppc/$host.pl" ) {
+             NavLink("?action=view&type=config&host=${EscURI($host)}", $Lang->{Config_file});
+         }
+         NavSectionEnd();
+diff -urN BackupPC-2.0.2.org/conf/config.pl BackupPC-2.0.2/conf/config.pl
+--- BackupPC-2.0.2.org/conf/config.pl	2003-10-17 00:49:12.000000000 +0200
++++ BackupPC-2.0.2/conf/config.pl	2003-10-17 00:49:21.000000000 +0200
+@@ -1242,8 +1242,8 @@
+ #    $Conf{CgiAdminUsers}     = 'craig celia';
+ #    --> administrative users are only craig and celia'.
+ #
+-$Conf{CgiAdminUserGroup} = '';
+-$Conf{CgiAdminUsers}     = '';
++$Conf{CgiAdminUserGroup} = 'backuppc';
++$Conf{CgiAdminUsers}     = 'backuppc';
+ 
+ #
+ # URL of the BackupPC_Admin CGI script.  Used for email messages.
+diff -urN BackupPC-2.0.2.org/conf/hosts BackupPC-2.0.2/conf/hosts
+--- BackupPC-2.0.2.org/conf/hosts	2003-10-17 00:49:12.000000000 +0200
++++ BackupPC-2.0.2/conf/hosts	2003-10-17 00:49:21.000000000 +0200
+@@ -54,3 +54,4 @@
+ host        dhcp    user    moreUsers     # <--- do not edit this line
+ #farside    0       craig   jill,jeff     # <--- example static IP host entry
+ #larson     1       bill                  # <--- example DHCP host entry
++localhost   0       backuppc
+diff -urN BackupPC-2.0.2.org/configure.pl BackupPC-2.0.2/configure.pl
+--- BackupPC-2.0.2.org/configure.pl	2003-10-17 00:49:12.000000000 +0200
++++ BackupPC-2.0.2/configure.pl	2003-10-17 00:52:17.000000000 +0200
+@@ -41,13 +41,21 @@
+ 
+ use strict;
+ no  utf8;
+-use vars qw(%Conf %OrigConf);
++use vars qw(%Conf %OrigConf $dd $isdeb);
+ use lib "./lib";
+ 
+ my @Packages = qw(ExtUtils::MakeMaker File::Path File::Spec File::Copy
+                   DirHandle Digest::MD5 Data::Dumper Getopt::Std
+ 		  BackupPC::Lib BackupPC::FileZIO);
+ 
++# Debian build dest dir
++$dd = $ENV{'DEBIANDEST'};
++$isdeb = 0;
++if ($dd ne "") {
++    $isdeb = 1;
++}
++
++
+ foreach my $pkg ( @Packages ) {
+     eval "use $pkg";
+     next if ( !$@ );
+@@ -86,8 +94,12 @@
+ #
+ my $ConfigPath = "";
+ while ( 1 ) {
+-    $ConfigPath = prompt("--> Full path to existing conf/config.pl",
++    if ($isdeb) {
++      $ConfigPath = "";
++    } else {
++      $ConfigPath = prompt("--> Full path to existing conf/config.pl",
+                                     $ConfigPath);
++    }
+     last if ( $ConfigPath eq ""
+             || ($ConfigPath =~ /^\// && -r $ConfigPath && -w $ConfigPath) );
+     my $problem = "is not an absolute path";
+@@ -133,13 +145,28 @@
+     hostname   => "HostnamePath",
+ );
+ 
+-foreach my $prog ( sort(keys(%Programs)) ) {
++if ($isdeb) {
++  %Conf = (
++    "PerlPath"       => "/usr/bin/perl",
++    "TarClientPath"  => "/bin/tar",
++    "SmbClientPath"  => "/usr/bin/smbclient",
++    "NmbLookupPath"  => "/usr/bin/nmblookup",
++    "RsyncClientPath"=> "/usr/bin/rsync",
++    "PingPath"       => "/bin/ping",
++    "DfPath"         => "/bin/df",
++    "SshPath"        => "/usr/bin/ssh",
++    "SendmailPath"   => "/usr/sbin/sendmail",
++    "HostnamePath"   => "/bin/hostname",
++  );
++} else {
++  foreach my $prog ( sort(keys(%Programs)) ) {
+     my $path;
+     foreach my $subProg ( split(/\//, $prog) ) {
+         $path ||= FindProgram("$ENV{PATH}:/bin:/usr/bin:/sbin:/usr/sbin",
+                               $subProg);
+     }
+     $Conf{$Programs{$prog}} ||= $path;
++  }
+ }
+ 
+ while ( 1 ) {
+@@ -152,6 +179,9 @@
+         printf("    %-11s => %s\n", $prog, $Conf{$Programs{$prog}});
+     }
+     print "\n";
++    if ($isdeb) {
++        last;
++    }
+     last if (prompt('--> Are these paths correct?', 'y') =~ /^y/i);
+     foreach my $prog ( sort(keys(%Programs)) ) {
+         $Conf{$Programs{$prog}} = prompt("--> $prog path",
+@@ -180,7 +210,11 @@
+ EOF
+ chomp($Conf{ServerHost} = `$Conf{HostnamePath}`)
+         if ( defined($Conf{HostnamePath}) && !defined($Conf{ServerHost}) );
+-$Conf{ServerHost} = prompt("--> BackupPC will run on host", $Conf{ServerHost});
++    if ($isdeb) {
++      $Conf{ServerHost} = "XXXXXX";
++    } else {
++      $Conf{ServerHost} = prompt("--> BackupPC will run on host", $Conf{ServerHost});
++}
+ 
+ print <<EOF;
+ 
+@@ -197,13 +231,22 @@
+ EOF
+ my($name, $passwd, $Uid, $Gid);
+ while ( 1 ) {
+-    $Conf{BackupPCUser} = prompt("--> BackupPC should run as user",
++    if ($isdeb) {
++      $Conf{BackupPCUser} = "backuppc";
++      $name = "backuppc";
++      $passwd = "";
++      $Uid = 0;
++      $Gid = 0;
++      last;
++    } else {
++      $Conf{BackupPCUser} = prompt("--> BackupPC should run as user",
+                                  $Conf{BackupPCUser} || "backuppc");
++    }
+     ($name, $passwd, $Uid, $Gid) = getpwnam($Conf{BackupPCUser});
+     last if ( $name ne "" );
+     print <<EOF;
+ 
+-getpwnam() says that user $Conf{BackupPCUser} doesn't exist.  Please check the
++getpwnam() says that user $Conf{BackupPCUser} doesn\'t exist.  Please check the
+ name and verify that this user is in the passwd file.
+ 
+ EOF
+@@ -217,8 +260,12 @@
+ EOF
+ 
+ while ( 1 ) {
+-    $Conf{InstallDir} = prompt("--> Install directory (full path)",
++    if ($isdeb) {
++      $Conf{InstallDir} = "/usr/share/backuppc";
++    } else {
++      $Conf{InstallDir} = prompt("--> Install directory (full path)",
+                                $Conf{InstallDir});
++    }
+     last if ( $Conf{InstallDir} =~ /^\// );
+ }
+ 
+@@ -232,7 +279,11 @@
+ EOF
+ 
+ while ( 1 ) {
+-    $Conf{TopDir} = prompt("--> Data directory (full path)", $Conf{TopDir});
++    if ($isdeb) {
++      $Conf{TopDir} = "/var/lib/backuppc";
++    } else {
++      $Conf{TopDir} = prompt("--> Data directory (full path)", $Conf{TopDir});
++    }
+     last if ( $Conf{TopDir} =~ /^\// );
+ }
+ 
+@@ -295,8 +346,12 @@
+ EOF
+     }
+     while ( 1 ) {
+-        $Conf{CompressLevel}
++        if ($isdeb) {
++	  $Conf{CompressLevel} = 3;
++        } else {
++	  $Conf{CompressLevel}
+                     = prompt("--> Compression level", $Conf{CompressLevel});
++	}
+         last if ( $Conf{CompressLevel} =~ /^\d+$/ );
+     }
+ }
+@@ -313,7 +368,11 @@
+ EOF
+ 
+ while ( 1 ) {
+-    $Conf{CgiDir} = prompt("--> CGI bin directory (full path)", $Conf{CgiDir});
++    if ($isdeb) {
++	$Conf{CgiDir} = "/usr/share/backuppc/cgi-bin";
++    } else {
++        $Conf{CgiDir} = prompt("--> CGI bin directory (full path)", $Conf{CgiDir});
++    }
+     last if ( $Conf{CgiDir} =~ /^\// || $Conf{CgiDir} eq "" );
+ }
+ 
+@@ -333,13 +392,21 @@
+ 
+ EOF
+     while ( 1 ) {
+-	$Conf{CgiImageDir} = prompt("--> Apache image directory (full path)",
++        if ($isdeb) {
++	    $Conf{CgiImageDir} = "/usr/share/backuppc/image";
++        } else {
++            $Conf{CgiImageDir} = prompt("--> Apache image directory (full path)",
+ 					$Conf{CgiImageDir});
++        }
+ 	last if ( $Conf{CgiImageDir} =~ /^\// );
+     }
+     while ( 1 ) {
+-	$Conf{CgiImageDirURL} = prompt("--> URL for image directory (omit http://host; starts with '/')",
++        if ($isdeb) {
++	    $Conf{CgiImageDirURL} = "/backuppc/image";
++        } else {
++	    $Conf{CgiImageDirURL} = prompt("--> URL for image directory (omit http://host; starts with '/')",
+ 					$Conf{CgiImageDirURL});
++        }
+ 	last if ( $Conf{CgiImageDirURL} =~ /^\// );
+     }
+ }
+@@ -355,17 +422,19 @@
+ 
+ EOF
+ 
+-exit unless prompt("--> Do you want to continue?", "y") =~ /y/i;
++if (!$isdeb) {
++    exit unless prompt("--> Do you want to continue?", "y") =~ /y/i;
++}
+ 
+ #
+ # Create install directories
+ #
+ foreach my $dir ( qw(bin lib/BackupPC/Xfer lib/BackupPC/Zip
+ 		     lib/BackupPC/Lang doc) ) {
+-    next if ( -d "$Conf{InstallDir}/$dir" );
+-    mkpath("$Conf{InstallDir}/$dir", 0, 0775);
+-    if ( !-d "$Conf{InstallDir}/$dir"
+-            || !chown($Uid, $Gid, "$Conf{InstallDir}/$dir") ) {
++    next if ( -d "$dd$Conf{InstallDir}/$dir" );
++    mkpath("$dd$Conf{InstallDir}/$dir", 0, 0775);
++    if ( !-d "$dd$Conf{InstallDir}/$dir"
++            || !chown($Uid, $Gid, "$dd$Conf{InstallDir}/$dir") ) {
+         die("Failed to create or chown $Conf{InstallDir}/$dir\n");
+     } else {
+         print("Created $Conf{InstallDir}/$dir\n");
+@@ -376,9 +445,9 @@
+ # Create CGI image directory
+ #
+ foreach my $dir ( ($Conf{CgiImageDir}) ) {
+-    next if ( $dir eq "" || -d $dir );
+-    mkpath($dir, 0, 0775);
+-    if ( !-d $dir || !chown($Uid, $Gid, $dir) ) {
++    next if ( $dir eq "" || -d "$dd$dir" );
++    mkpath("$dd$dir", 0, 0775);
++    if ( !-d "$dd$dir" || !chown($Uid, $Gid, "$dd$dir") ) {
+         die("Failed to create or chown $dir");
+     } else {
+         print("Created $dir\n");
+@@ -389,9 +458,9 @@
+ # Create $TopDir's top-level directories
+ #
+ foreach my $dir ( qw(. conf pool cpool pc trash log) ) {
+-    mkpath("$Conf{TopDir}/$dir", 0, 0750) if ( !-d "$Conf{TopDir}/$dir" );
+-    if ( !-d "$Conf{TopDir}/$dir"
+-            || !chown($Uid, $Gid, "$Conf{TopDir}/$dir") ) {
++    mkpath("$dd$Conf{TopDir}/$dir", 0, 0750) if ( !-d "$dd$Conf{TopDir}/$dir" );
++    if ( !-d "$dd$Conf{TopDir}/$dir"
++            || !chown($Uid, $Gid, "$dd$Conf{TopDir}/$dir") ) {
+         die("Failed to create or chown $Conf{TopDir}/$dir\n");
+     } else {
+         print("Created $Conf{TopDir}/$dir\n");
+@@ -430,10 +499,13 @@
+     }
+ }
+ 
++
+ printf("Making init.d scripts\n");
+ foreach my $init ( qw(gentoo-backuppc gentoo-backuppc.conf linux-backuppc
+ 		      solaris-backuppc debian-backuppc suse-backuppc) ) {
+-    InstallFile("init.d/src/$init", "init.d/$init", 0444);
++    if (!$isdeb) {
++        InstallFile("init.d/src/$init", "init.d/$init", 0444);
++    }
+ }
+ 
+ printf("Installing docs in $Conf{InstallDir}/doc\n");
+@@ -471,7 +543,11 @@
+     if ( $Conf{CgiDir} =~ m{cgi-bin(/.*)} ) {
+ 	$Conf{CgiURL} = "'http://$Conf{ServerHost}/cgi-bin$1/BackupPC_Admin'";
+     } else {
+-	$Conf{CgiURL} = "'http://$Conf{ServerHost}/cgi-bin/BackupPC_Admin'";
++	if ($isdeb) {
++	    $Conf{CgiURL} = "'http://$Conf{ServerHost}/backuppc/index.cgi'";
++	} else {
++	    $Conf{CgiURL} = "'http://$Conf{ServerHost}/cgi-bin/BackupPC_Admin'";
++	}
+     }
+ }
+ 
+@@ -531,7 +607,7 @@
+ }
+ 
+ my $confCopy = "$dest.pre-2.0.2";
+-if ( -f $dest && !-f $confCopy ) {
++if ( -f "$dd$dest" && !-f "$dd$confCopy" ) {
+     #
+     # Make copy of config file, preserving ownership and modes
+     #
+@@ -545,7 +621,7 @@
+                                            unless chown($uid, $gid, $confCopy);
+     die("can't chmod $mode $confCopy\n")   unless chmod($mode, $confCopy);
+ }
+-open(OUT, ">", $dest) || die("can't open $dest for writing\n");
++open(OUT, ">", "$dd$dest") || die("can't open $dest for writing\n");
+ binmode(OUT);
+ my $blockComment;
+ foreach my $var ( @$newConf ) {
+@@ -564,13 +640,13 @@
+ }
+ close(OUT);
+ if ( !defined($oldConf) ) {
+-    die("can't chmod 0640 mode $dest\n")  unless chmod(0640, $dest);
+-    die("can't chown $Uid, $Gid $dest\n") unless chown($Uid, $Gid, $dest);
++    die("can't chmod 0640 mode $dest\n")  unless chmod(0640, "$dd$dest");
++    die("can't chown $Uid, $Gid $dest\n") unless chown($Uid, $Gid, "$dd$dest");
+ }
+ 
+ if ( $Conf{CgiDir} ne "" ) {
+     printf("Installing cgi script BackupPC_Admin in $Conf{CgiDir}\n");
+-    mkpath("$Conf{CgiDir}", 0, 0755);
++    mkpath("$dd$Conf{CgiDir}", 0, 0755);
+     InstallFile("cgi-bin/BackupPC_Admin", "$Conf{CgiDir}/BackupPC_Admin",
+                 04554);
+ }
+@@ -625,7 +701,7 @@
+     my $first = 1;
+     my($uid, $gid) = ($Uid, $Gid);
+ 
+-    if ( -f $dest ) {
++    if ( -f "$dd$dest" ) {
+         #
+         # preserve ownership and modes of files that already exist
+         #
+@@ -636,10 +712,10 @@
+     }
+     unlink($dest) if ( -f $dest );
+     if ( $binary ) {
+-	die("can't copy($prog, $dest)\n") unless copy($prog, $dest);
++	die("can't copy($prog, $dest)\n") unless copy($prog, "$dd$dest");
+     } else {
+ 	open(PROG, $prog)     || die("can't open $prog for reading\n");
+-	open(OUT, ">", $dest) || die("can't open $dest for writing\n");
++	open(OUT, ">", "$dd$dest") || die("can't open $dest for writing\n");
+ 	binmode(PROG);
+ 	binmode(OUT);
+ 	while ( <PROG> ) {
+@@ -660,8 +736,8 @@
+ 	close(PROG);
+ 	close(OUT);
+     }
+-    die("can't chown $uid, $gid $dest") unless chown($uid, $gid, $dest);
+-    die("can't chmod $mode $dest")      unless chmod($mode, $dest);
++    die("can't chown $uid, $gid $dest") unless chown($uid, $gid, "$dd$dest");
++    die("can't chmod $mode $dest")      unless chmod($mode, "$dd$dest");
+ }
+ 
+ sub FindProgram
+diff -urN BackupPC-2.0.2.org/debian/apache.conf BackupPC-2.0.2/debian/apache.conf
+--- BackupPC-2.0.2.org/debian/apache.conf	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/apache.conf	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,15 @@
++Alias /backuppc/ /usr/share/backuppc/cgi-bin/
++
++<Directory /usr/share/backuppc/cgi-bin/>
++	AllowOverride None                                                              
++	Options ExecCGI FollowSymlinks
++	AddHandler cgi-script .cgi
++	DirectoryIndex index.cgi
++
++	AuthGroupFile /etc/backuppc/htgroup
++        AuthUserFile /etc/backuppc/htpasswd
++	AuthType basic
++	AuthName "BackupPC admin"
++	require valid-user
++
++</Directory>
+diff -urN BackupPC-2.0.2.org/debian/backuppc.config BackupPC-2.0.2/debian/backuppc.config
+--- BackupPC-2.0.2.org/debian/backuppc.config	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/backuppc.config	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,14 @@
++#!/bin/sh -e
++
++. /usr/share/debconf/confmodule
++
++db_version 2.0
++
++if [ ! -f /etc/backuppc/htpasswd ]; then
++    db_subst "backuppc/configuration-note" "site" `hostname -f`
++    db_input high "backuppc/configuration-note" || true
++    db_go
++fi
++
++db_stop
++exit 0
+diff -urN BackupPC-2.0.2.org/debian/backuppc.doc-base BackupPC-2.0.2/debian/backuppc.doc-base
+--- BackupPC-2.0.2.org/debian/backuppc.doc-base	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/backuppc.doc-base	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,9 @@
++Document: backuppc
++Title: BackupPC Manual
++Author: Craig Baratt
++Abstract: BackupPC user and administrator's manual
++Section: Apps/Tools
++
++Format: HTML
++Index: /usr/share/doc/backuppc/BackupPC.html
++Files: /usr/share/doc/backuppc/html/*.html
+diff -urN BackupPC-2.0.2.org/debian/backuppc.init BackupPC-2.0.2/debian/backuppc.init
+--- BackupPC-2.0.2.org/debian/backuppc.init	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/backuppc.init	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,51 @@
++#! /bin/sh
++# /etc/init.d/backuppc
++#
++# BackupPC Debian init script
++#
++
++set -e
++
++# Do not change the values below ! Read /usr/share/doc/backuppc/README.Debian !
++BINDIR=/usr/share/backuppc/bin
++DATADIR=/var/lib/backuppc
++USER=backuppc
++#
++NAME=backuppc
++DAEMON=BackupPC
++
++test -x $BINDIR/$DAEMON || exit 0
++
++case "$1" in
++  start)
++    echo -n "Starting $NAME: "
++    start-stop-daemon --start --pidfile $DATADIR/log/BackupPC.pid \
++			    -c $USER --exec $BINDIR/$DAEMON -- -d
++    echo "ok."
++    ;;
++  stop)
++    echo -n "Stopping $NAME: "
++    start-stop-daemon --stop --pidfile $DATADIR/log/BackupPC.pid -u $USER \
++			    --oknodo --retry 30
++    echo "ok."
++      ;;
++  restart)
++    echo -n "Restarting $NAME: "
++    start-stop-daemon --stop --pidfile $DATADIR/log/BackupPC.pid -u $USER \
++			    --oknodo --retry 30
++    start-stop-daemon --start --pidfile $DATADIR/log/BackupPC.pid \
++			    -c $USER --exec $BINDIR/$DAEMON -- -d
++    echo "ok."
++    ;;
++  reload|force-reload)
++    echo "Reloading $NAME configuration files"
++    start-stop-daemon --stop --pidfile $DATADIR/log/BackupPC.pid \
++			    --signal 1
++    ;;
++  *)
++    echo "Usage: /etc/init.d/$NAME {start|stop|restart|reload}"
++    exit 1
++    ;;
++esac
++
++exit 0
+diff -urN BackupPC-2.0.2.org/debian/backuppc.templates BackupPC-2.0.2/debian/backuppc.templates
+--- BackupPC-2.0.2.org/debian/backuppc.templates	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/backuppc.templates	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,9 @@
++Template: backuppc/configuration-note
++Type: note
++_Description: Web administration default user created
++ BackupPC can be managed through its web interface:
++  http://${site}/backuppc/
++ .
++ For that purpose, a web user named 'backuppc' with 'backuppc' as password
++ has been created. You should change this password as soon as possible by
++ running 'htpasswd /etc/backuppc/htpasswd backuppc'.
+diff -urN BackupPC-2.0.2.org/debian/changelog BackupPC-2.0.2/debian/changelog
+--- BackupPC-2.0.2.org/debian/changelog	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/changelog	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,44 @@
++backuppc (2.0.0-5) unstable; urgency=low
++
++  * Added gettext based debconf templates. Closes: Bug#205787
++  * Added fr.po debconf file. Closes: Bug#206592
++  * Added some basic examples
++  * Fixed the default 'hosts' file: 'localhost' is now owned by 'backuppc'
++  * Fixed BackupPC_Admin to be able to display config files in /etc/backuppc
++  * Updated README.debian file. Closes: #203234, #203272
++
++ -- Ludovic Drolez <ldrolez@debian.org>  Mon, 23 Aug 2003 21:34:44 +0200
++
++backuppc (2.0.0-4) unstable; urgency=low
++
++  * set Architecture to all
++  * depends: samba-tng-common or samba-common
++  * Menu file added. Closes: #201148
++  * improved description. Closes: #199170
++  
++ -- Ludovic Drolez <ldrolez@debian.org>  Thu, 26 Jun 2003 21:21:21 +0200
++
++backuppc (2.0.0-3) unstable; urgency=low
++
++  * added --gecos "" to the adduser line on the postinst. Closes: #198814
++  * init script small fix
++
++ -- Ludovic Drolez <ldrolez@debian.org>  Thu, 26 Jun 2003 20:57:53 +0200
++
++backuppc (2.0.0-2) unstable; urgency=low
++
++  * added dependencies: libdigest-md5-perl
++  * packaged libfile-rsyncp-perl: you can now use rsync for backups
++  * images path fixed
++  * documentation path fixed in cgi script
++
++ -- Ludovic Drolez <ldrolez@debian.org>  Wed, 18 Jun 2003 22:08:19 +0200
++
++backuppc (2.0.0-1) unstable; urgency=low
++
++  * Initial Release. Closes: Bug#158874.
++  * modified configure.pl for non-interactive install
++  * modified perl scripts for having main config files in /etc/backuppc
++
++ -- Ludovic Drolez <ldrolez@debian.org>  Mon, 16 Jun 2003 10:43:48 +0200
++
+diff -urN BackupPC-2.0.2.org/debian/control BackupPC-2.0.2/debian/control
+--- BackupPC-2.0.2.org/debian/control	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/control	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,34 @@
++Source: backuppc
++Section: utils
++Priority: optional
++Maintainer: Ludovic Drolez <ldrolez@debian.org>
++Build-Depends-Indep: debhelper (>= 4.1.16), perl (>= 5.6.0)
++Standards-Version: 3.6.0
++
++Package: backuppc
++Architecture: all
++Depends: ${perl:Depends}, libdigest-md5-perl, libcompress-zlib-perl, libarchive-zip-perl, tar (>> 1.13), samba-common | samba-tng-common, adduser (>=3.9), dpkg (>=1.8.3), smbclient, apache (>> 1.3), wwwconfig-common, perl-suid, debconf
++Suggests: rsync, libfile-rsyncp-perl, ssh, exim | sendmail | postfix | mail-transport-agent, www-browser
++Description: A high-performance, enterprise-grade system for backing up PCs
++ BackupPC is disk based and not tape based. This particularity allows 
++ features not found in any other backup solution:
++  * Clever pooling scheme minimizes disk storage and disk I/O. 
++    Identical files across multiple backups of the same or different PC are 
++    stored only once (using hard links), resulting in substantial savings 
++    in disk storage and disk writes.
++  * Optional compression provides additional reductions in storage.
++    CPU impact of compression is low since only new files (those not already
++    in the pool) need to be compressed.
++  * A powerful http/cgi user interface allows administrators to view log files, 
++    configuration, current status and allows users to initiate and cancel 
++    backups and browse and restore files from backups very quickly.
++  * No client-side software is needed. On WinXX the smb protocol is used.
++    On linux or unix clients, rsync or tar (over ssh/rsh/nfs) can be used
++  * Flexible restore options. Single files can be downloaded from any backup 
++    directly from the CGI interface. Zip or Tar archives for selected files 
++    or directories can also be downloaded from the CGI interface.
++  * BackupPC supports mobile environments where laptops are only intermittently 
++    connected to the network and have dynamic IP addresses (DHCP). 
++  * Flexible configuration parameters allow multiple backups to be performed 
++    in parallel.
++  * and more to discover in the manual...  
+diff -urN BackupPC-2.0.2.org/debian/copyright BackupPC-2.0.2/debian/copyright
+--- BackupPC-2.0.2.org/debian/copyright	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/copyright	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,26 @@
++This package was debianized by Ludovic Drolez <ldrolez@debian.org> on
++Mon, 16 Jun 2003 10:43:48 +0200.
++
++It was downloaded from http://sourceforge.net/projects/backuppc/
++
++Upstream Author: Craig Barratt <cbarratt@users.sourceforge.net>
++
++Copyright:
++
++   This package is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; version 2 dated June, 1991.
++
++   This package is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this package; if not, write to the Free Software
++   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++   02111-1307, USA.
++
++On Debian GNU/Linux systems, the complete text of the GNU General
++Public License can be found in `/usr/share/common-licenses/GPL'.
++
+diff -urN BackupPC-2.0.2.org/debian/dirs BackupPC-2.0.2/debian/dirs
+--- BackupPC-2.0.2.org/debian/dirs	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/dirs	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,2 @@
++etc/init.d
++etc/backuppc
+diff -urN BackupPC-2.0.2.org/debian/docs BackupPC-2.0.2/debian/docs
+--- BackupPC-2.0.2.org/debian/docs	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/docs	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,2 @@
++README
++doc/BackupPC.html
+diff -urN BackupPC-2.0.2.org/debian/examples/localhost.pl BackupPC-2.0.2/debian/examples/localhost.pl
+--- BackupPC-2.0.2.org/debian/examples/localhost.pl	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/examples/localhost.pl	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,9 @@
++#
++# Local server backup of /etc as user backuppc
++#
++$Conf{XferMethod} = 'tar';
++
++$Conf{TarShareName} = ['/etc'];
++
++$Conf{TarClientCmd} = '/usr/bin/env LANG=en $tarPath -c -v -f - -C $shareName'
++                        . ' --totals';
+diff -urN BackupPC-2.0.2.org/debian/examples/rsyncd.pl BackupPC-2.0.2/debian/examples/rsyncd.pl
+--- BackupPC-2.0.2.org/debian/examples/rsyncd.pl	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/examples/rsyncd.pl	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,11 @@
++#
++# Rsync Backup (with rsync daemon on the client)
++#
++
++$Conf{XferMethod} = 'rsyncd';
++
++$Conf{RsyncShareName} = ['MyShare'];
++
++# if needed set a user name and password to access the remote shares
++#$Conf{RsyncdUserName} = '';
++#$Conf{RsyncdPasswd} = '';
+diff -urN BackupPC-2.0.2.org/debian/examples/rsyncssh.pl BackupPC-2.0.2/debian/examples/rsyncssh.pl
+--- BackupPC-2.0.2.org/debian/examples/rsyncssh.pl	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/examples/rsyncssh.pl	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,11 @@
++#
++# Rsync backup over ssh
++#
++# You should generate an SSH key pair to allow the local backuppc user
++# to connect as root on the target host.
++# Please refer to the BackupPC's manual for details
++#
++
++$Conf{XferMethod} = 'rsync';
++
++$Conf{RsyncShareName} = [ '/onedir', '/anotherdir' ]; 
+diff -urN BackupPC-2.0.2.org/debian/examples/smb.pl BackupPC-2.0.2/debian/examples/smb.pl
+--- BackupPC-2.0.2.org/debian/examples/smb.pl	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/examples/smb.pl	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,13 @@
++#
++# SMB Backup (for Windows clients)
++#
++
++$Conf{XferMethod} = 'smb';
++
++$Conf{SmbShareName} = ['C$', 'MyShare'];
++
++# if needed set a user name and password to access the remote shares
++#$Conf{SmbShareUserName} = '';
++#$Conf{SmbSharePasswd} = '';
++# if you want anonymous login under XP, you should set $Conf{SmbShareUserName}
++# to something (like 'guest').
+diff -urN BackupPC-2.0.2.org/debian/examples/tarssh.pl BackupPC-2.0.2/debian/examples/tarssh.pl
+--- BackupPC-2.0.2.org/debian/examples/tarssh.pl	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/examples/tarssh.pl	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,11 @@
++#
++# Tar backup over ssh
++#
++# You should generate an SSH key pair to allow the local backuppc user
++# to connect as root on the target host.
++# Please refer to the BackupPC's manual for details
++#
++
++$Conf{XferMethod} = 'tar';
++
++$Conf{BackupFilesOnly} = [ '/onedir', '/anotherdir' ]; 
+diff -urN BackupPC-2.0.2.org/debian/localhost.pl BackupPC-2.0.2/debian/localhost.pl
+--- BackupPC-2.0.2.org/debian/localhost.pl	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/localhost.pl	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,9 @@
++#
++# Local server backup of /etc as user backuppc
++#
++$Conf{XferMethod} = 'tar';
++
++$Conf{TarShareName} = ['/etc'];
++
++$Conf{TarClientCmd} = '/usr/bin/env LANG=en $tarPath -c -v -f - -C $shareName'
++                        . ' --totals';
+diff -urN BackupPC-2.0.2.org/debian/menu BackupPC-2.0.2/debian/menu
+--- BackupPC-2.0.2.org/debian/menu	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/menu	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,4 @@
++?package(backuppc):needs=X11 section=Apps/System\
++ title="View backuppc status" \
++ command="www-browser http://localhost/backuppc/"
++
+diff -urN BackupPC-2.0.2.org/debian/patch BackupPC-2.0.2/debian/patch
+--- BackupPC-2.0.2.org/debian/patch	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/patch	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,92 @@
++diff -Nru backuppc-2.0.0.ori/debian/backuppc.templates backuppc-2.0.0/debian/backuppc.templates
++--- backuppc-2.0.0.ori/debian/backuppc.templates	2003-08-01 09:56:58.000000000 +0200
+++++ backuppc-2.0.0/debian/backuppc.templates	2003-08-06 09:22:15.000000000 +0200
++@@ -1,10 +1,9 @@
++ Template: backuppc/configuration-note
++ Type: note
++-Description: Package configuration note.
++- BackupPC can be managed for the web interface here:
++- .
++- http://${site}/backuppc/
+++_Description: Web administration default user created
+++ BackupPC can be managed through its web interface:
+++  http://${site}/backuppc/
++  .
++  For that purpose, a web user named 'backuppc' with 'backuppc' as password
++- has been created. You should change its password as soon as possible by
++- running 'htpasswd htpasswd backuppc' in /etc/backuppc/.
+++ has been created. You should change this password as soon as possible by
+++ running 'htpasswd /etc/backuppc/htpasswd backuppc'.
++diff -Nru backuppc-2.0.0.ori/debian/control backuppc-2.0.0/debian/control
++--- backuppc-2.0.0.ori/debian/control	2003-08-01 09:56:58.000000000 +0200
+++++ backuppc-2.0.0/debian/control	2003-08-06 09:16:28.000000000 +0200
++@@ -2,7 +2,7 @@
++ Section: utils
++ Priority: optional
++ Maintainer: Ludovic Drolez <ldrolez@debian.org>
++-Build-Depends-Indep: debhelper (>> 3.0.0), perl (>= 5.6.0)
+++Build-Depends-Indep: debhelper (>= 4.1.16), perl (>= 5.6.0)
++ Standards-Version: 3.5.10
++ 
++ Package: backuppc
++@@ -31,4 +31,4 @@
++     connected to the network and have dynamic IP addresses (DHCP). 
++   * Flexible configuration parameters allow multiple backups to be performed 
++     in parallel.
++-  * and more to discover in the manual...  
++\ Pas de fin de ligne à la fin du fichier.
+++  * and more to discover in the manual...  
++diff -Nru backuppc-2.0.0.ori/debian/po/POTFILES.in backuppc-2.0.0/debian/po/POTFILES.in
++--- backuppc-2.0.0.ori/debian/po/POTFILES.in	1970-01-01 01:00:00.000000000 +0100
+++++ backuppc-2.0.0/debian/po/POTFILES.in	2003-08-06 09:16:29.000000000 +0200
++@@ -0,0 +1 @@
+++[type: gettext/rfc822deb] backuppc.templates
++diff -Nru backuppc-2.0.0.ori/debian/po/templates.pot backuppc-2.0.0/debian/po/templates.pot
++--- backuppc-2.0.0.ori/debian/po/templates.pot	1970-01-01 01:00:00.000000000 +0100
+++++ backuppc-2.0.0/debian/po/templates.pot	2003-08-06 09:22:27.000000000 +0200
++@@ -0,0 +1,45 @@
+++#
+++#    Translators, if you are not familiar with the PO format, gettext
+++#    documentation is worth reading, especially sections dedicated to
+++#    this format, e.g. by running:
+++#         info -n '(gettext)PO Files'
+++#         info -n '(gettext)Header Entry'
+++#
+++#    Some information specific to po-debconf are available at
+++#            /usr/share/doc/po-debconf/README-trans
+++#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+++#
+++#    Developers do not need to manually edit POT or PO files.
+++#
+++#, fuzzy
+++msgid ""
+++msgstr ""
+++"Project-Id-Version: PACKAGE VERSION\n"
+++"Report-Msgid-Bugs-To: \n"
+++"POT-Creation-Date: 2003-08-06 09:22+0200\n"
+++"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+++"Language-Team: LANGUAGE <LL@li.org>\n"
+++"MIME-Version: 1.0\n"
+++"Content-Type: text/plain; charset=CHARSET\n"
+++"Content-Transfer-Encoding: 8bit\n"
+++
+++#. Description
+++#: ../backuppc.templates:3
+++msgid "Web administration default user created"
+++msgstr ""
+++
+++#. Description
+++#: ../backuppc.templates:3
+++msgid ""
+++"BackupPC can be managed through its web interface:\n"
+++" http://${site}/backuppc/"
+++msgstr ""
+++
+++#. Description
+++#: ../backuppc.templates:3
+++msgid ""
+++"For that purpose, a web user named 'backuppc' with 'backuppc' as password "
+++"has been created. You should change this password as soon as possible by "
+++"running 'htpasswd /etc/backuppc/htpasswd backuppc'."
+++msgstr ""
+diff -urN BackupPC-2.0.2.org/debian/po/fr.po BackupPC-2.0.2/debian/po/fr.po
+--- BackupPC-2.0.2.org/debian/po/fr.po	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/po/fr.po	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,50 @@
++#
++#    Translators, if you are not familiar with the PO format, gettext
++#    documentation is worth reading, especially sections dedicated to
++#    this format, e.g. by running:
++#         info -n '(gettext)PO Files'
++#         info -n '(gettext)Header Entry'
++#
++#    Some information specific to po-debconf are available at
++#            /usr/share/doc/po-debconf/README-trans
++#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
++#
++#    Developers do not need to manually edit POT or PO files.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: backuppc (2.0.0-4)\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2003-08-06 09:22+0200\n"
++"PO-Revision-Date: 2003-08-06 09:21+0100\n"
++"Last-Translator: Christian Perrier <bubulle@debian.org>\n"
++"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=iso-8859-15\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Description
++#: ../backuppc.templates:3
++msgid "Web administration default user created"
++msgstr "Création de l'utilisateur par défaut pour l'administration Web"
++
++#. Description
++#: ../backuppc.templates:3
++msgid ""
++"BackupPC can be managed through its web interface:\n"
++" http://${site}/backuppc/"
++msgstr ""
++"BackupPC peut être géré avec une interface Web :\n"
++" http://${site}/backuppc/"
++
++#. Description
++#: ../backuppc.templates:3
++msgid ""
++"For that purpose, a web user named 'backuppc' with 'backuppc' as password "
++"has been created. You should change this password as soon as possible by "
++"running 'htpasswd /etc/backuppc/htpasswd backuppc'."
++msgstr ""
++"À cet effet, un utilisateur web nommé « backuppc » a été créé. Son mot de "
++"passe est actuellement « backuppc ». Vous devriez changer ce mot de passe "
++"dès que possible avec la commande « htpasswd /etc/backuppc/htpasswd "
++"backuppc »."
+diff -urN BackupPC-2.0.2.org/debian/po/POTFILES.in BackupPC-2.0.2/debian/po/POTFILES.in
+--- BackupPC-2.0.2.org/debian/po/POTFILES.in	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/po/POTFILES.in	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1 @@
++[type: gettext/rfc822deb] backuppc.templates
+diff -urN BackupPC-2.0.2.org/debian/po/templates.pot BackupPC-2.0.2/debian/po/templates.pot
+--- BackupPC-2.0.2.org/debian/po/templates.pot	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/po/templates.pot	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,45 @@
++#
++#    Translators, if you are not familiar with the PO format, gettext
++#    documentation is worth reading, especially sections dedicated to
++#    this format, e.g. by running:
++#         info -n '(gettext)PO Files'
++#         info -n '(gettext)Header Entry'
++#
++#    Some information specific to po-debconf are available at
++#            /usr/share/doc/po-debconf/README-trans
++#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
++#
++#    Developers do not need to manually edit POT or PO files.
++#
++#, fuzzy
++msgid ""
++msgstr ""
++"Project-Id-Version: PACKAGE VERSION\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2003-08-06 09:22+0200\n"
++"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: LANGUAGE <LL@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Description
++#: ../backuppc.templates:3
++msgid "Web administration default user created"
++msgstr ""
++
++#. Description
++#: ../backuppc.templates:3
++msgid ""
++"BackupPC can be managed through its web interface:\n"
++" http://${site}/backuppc/"
++msgstr ""
++
++#. Description
++#: ../backuppc.templates:3
++msgid ""
++"For that purpose, a web user named 'backuppc' with 'backuppc' as password "
++"has been created. You should change this password as soon as possible by "
++"running 'htpasswd /etc/backuppc/htpasswd backuppc'."
++msgstr ""
+diff -urN BackupPC-2.0.2.org/debian/postinst BackupPC-2.0.2/debian/postinst
+--- BackupPC-2.0.2.org/debian/postinst	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/postinst	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,101 @@
++#!/bin/sh
++# postinst script for backuppc
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postinst> `configure' <most-recently-configured-version>
++#        * <old-postinst> `abort-upgrade' <new version>
++#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
++#          <new-version>
++#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
++#          <failed-install-package> <version> `removing'
++#          <conflicting-package> <version>
++# for details, see http://www.debian.org/doc/debian-policy/ or
++# the debian-policy package
++#
++# quoting from the policy:
++#     Any necessary prompting should almost always be confined to the
++#     post-installation script, and should be protected with a conditional
++#     so that unnecessary prompting doesn't happen if a package's
++#     installation fails and the `postinst' is called with `abort-upgrade',
++#     `abort-remove' or `abort-deconfigure'.
++
++. /usr/share/debconf/confmodule
++db_version 2.0
++
++case "$1" in
++    configure)
++
++			webservers="apache"
++			# Set up web server.
++			for server in $webservers ; do
++				#trustuser=$wwwuser
++				#. /usr/share/wwwconfig-common/exim-trust.sh
++				#test "$status" = "trust" && restart="exim $restart"
++				
++				includefile="/etc/backuppc/apache.conf"
++				. /usr/share/wwwconfig-common/apache-include_all.sh
++				test "$status" = "uncomment" -o "$status" = "include" && restart="$server $restart"
++				
++				#for index in index.pl; do
++				#	. /usr/share/wwwconfig-common/apache-index_all.sh
++				#	test "$status" = "added" && restart="$server $restart"
++				#done
++			done
++
++			# creating backuppc group if he isn't already there
++			if ! getent group backuppc >/dev/null; then
++			    addgroup backuppc >/dev/null
++			fi
++
++			# creating backuppc user if he isn't already there
++			if ! getent passwd backuppc >/dev/null; then
++			    adduser --gecos "" --disabled-password --ingroup backuppc --home /var/lib/backuppc backuppc  >/dev/null
++			fi
++			
++			#usermod -c "BackupPC Daemon" backuppc
++			
++			chown -R backuppc.backuppc /var/lib/backuppc
++			chmod -R 750 /var/lib/backuppc
++
++
++			OVERRIDDEN=`dpkg-statoverride --list /usr/share/backuppc/cgi-bin/index.cgi || true`
++			[ "${OVERRIDDEN}" = "" ] && dpkg-statoverride --update --add backuppc backuppc 4755 /usr/share/backuppc/cgi-bin/index.cgi
++
++			if [ ! -f /etc/backuppc/htpasswd ]; then
++			    touch /etc/backuppc/htpasswd
++			    htpasswd -b /etc/backuppc/htpasswd backuppc backuppc
++			    touch /etc/backuppc/htgroup
++			fi
++			
++			servers="exim apache-ssl apache"
++			. /usr/share/wwwconfig-common/restart.sh
++
++			# update the hostname
++			perl -e "s/XXXXXX/`hostname`/g" -p -i.tmp /etc/backuppc/config.pl
++			rm -f /etc/backuppc/config.pl.tmp
++    ;;
++
++    abort-upgrade|abort-remove|abort-deconfigure)
++
++    ;;
++
++    *)
++        echo "postinst called with unknown argument \`$1'" >&2
++        exit 1
++    ;;
++esac
++
++db_stop
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++exit 0
++
++
+diff -urN BackupPC-2.0.2.org/debian/postrm BackupPC-2.0.2/debian/postrm
+--- BackupPC-2.0.2.org/debian/postrm	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/postrm	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,52 @@
++#!/bin/sh
++# postrm script for backuppc
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postrm> `remove'
++#        * <postrm> `purge'
++#        * <old-postrm> `upgrade' <new-version>
++#        * <new-postrm> `failed-upgrade' <old-version>
++#        * <new-postrm> `abort-install'
++#        * <new-postrm> `abort-install' <old-version>
++#        * <new-postrm> `abort-upgrade' <old-version>
++#        * <disappearer's-postrm> `disappear' <r>overwrit>r> <new-version>
++# for details, see http://www.debian.org/doc/debian-policy/ or
++# the debian-policy package
++
++
++case "$1" in
++    purge)
++
++		webservers="apache"
++		includefile="/etc/backuppc/apache.conf"
++
++		rm -rf /etc/backuppc
++		for server in $webservers ; do
++			conffile="/etc/$server/httpd.conf"
++			. /usr/share/wwwconfig-common/apache-uninclude.sh
++			if [ "$status" = "purge" ] ;
++				then restart="$restart $server"
++			fi
++		done
++
++                servers="exim apache-ssl apache"
++		. /usr/share/wwwconfig-common/restart.sh
++        ;;
++    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
++	;;
++    *)
++        echo "postrm called with unknown argument \`$1'" >&2
++        exit 1
++
++esac
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++exit 0
+diff -urN BackupPC-2.0.2.org/debian/README.Debian BackupPC-2.0.2/debian/README.Debian
+--- BackupPC-2.0.2.org/debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/README.Debian	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,29 @@
++BackupPC for Debian
++-------------------
++
++The Web interface is available at http://myserver/backuppc/. Log in a user
++backuppc with the default password: backuppc. You should change this default
++password as soon as possible by running htpasswd for /etc/backuppc/htpasswd.
++Users in the backuppc htgroup file are also admins.
++
++The default install will backup the local /etc directory using the 'backuppc'
++user, so it will not backup root only files like /etc/shadow. If you want
++to do a local backup as root, you need to use ssh and ssh authentication keys,
++as explained in the manual. The examples/ directory contains some basic host
++configuration files.
++
++If you do not like the default data directory (/var/lib/backuppc/), you
++should move this directory where you want and make a symbolic link from
++the new directory to the default one (all paths are hardcoded so it's the
++easiest way to change the data directory).
++
++
++Modifications:
++
++- Modified Perl scripts for having main config files (hosts and config.pl)
++in /etc/backuppc.
++- Data directory is /var/lib/backuppc/
++
++
++
++ -- Ludovic Drolez <ldrolez@debian.org>, Mon, 16 Jun 2003 10:43:48 +0200
+diff -urN BackupPC-2.0.2.org/debian/rules BackupPC-2.0.2/debian/rules
+--- BackupPC-2.0.2.org/debian/rules	1970-01-01 01:00:00.000000000 +0100
++++ BackupPC-2.0.2/debian/rules	2003-10-17 00:49:21.000000000 +0200
+@@ -0,0 +1,101 @@
++#!/usr/bin/make -f
++# Sample debian/rules that uses debhelper.
++# GNU copyright 1997 to 1999 by Joey Hess.
++
++# Uncomment this to turn on verbose mode.
++#export DH_VERBOSE=1
++
++# This is the debhelper compatibility version to use.
++export DH_COMPAT=3
++
++
++
++ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
++	CFLAGS += -g
++endif
++ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
++	INSTALL_PROGRAM += -s
++endif
++
++configure: configure-stamp
++configure-stamp:
++	dh_testdir
++	# Add here commands to configure the package.
++
++	touch configure-stamp
++
++
++build: build-stamp
++
++build-stamp: configure-stamp 
++	dh_testdir
++
++	# Add here commands to compile the package.
++	#$(MAKE)
++	#/usr/bin/docbook-to-man debian/backuppc.sgml > backuppc.1
++
++	touch build-stamp
++
++clean:
++	dh_testdir
++	dh_testroot
++	rm -f build-stamp configure-stamp
++
++	# Add here commands to clean up after the build process.
++	rm -f init.d/*-backuppc*
++	rm -f backuppc.8*
++
++	dh_clean
++
++install: build
++	dh_testdir
++	dh_testroot
++	dh_clean -k
++	dh_installdirs
++
++	# Add here commands to install the package into debian/backuppc.
++	env DEBIANDEST=$(CURDIR)/debian/backuppc/ perl ./configure.pl
++	pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
++	perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
++	rm -f debian/backuppc/usr/share/backuppc/doc/*
++	mv -f debian/backuppc/var/lib/backuppc/conf/* debian/backuppc/etc/backuppc
++	mv -f debian/backuppc/usr/share/backuppc/cgi-bin/* debian/backuppc/usr/share/backuppc/cgi-bin/index.cgi
++	install --mode=644 conf/hosts debian/backuppc/etc/backuppc
++	install --mode=644 debian/localhost.pl debian/backuppc/etc/backuppc
++	install --mode=644 debian/apache.conf debian/backuppc/etc/backuppc
++	rmdir debian/backuppc/var/lib/backuppc/conf/
++	mkdir debian/backuppc/var/lib/backuppc/pc/localhost/
++	(cd debian/backuppc/usr/share/backuppc/cgi-bin; ln -s ../image)
++# Build architecture-independent files here.
++binary-indep: build install
++# We have nothing to do by default.
++
++# Build architecture-dependent files here.
++binary-arch: build install
++	dh_testdir
++	dh_testroot
++#	dh_installdebconf	
++	dh_installdocs 
++	dh_installexamples debian/examples/*
++	dh_installmenu
++	dh_installinit
++	dh_installcron
++	dh_installman backuppc.8
++	dh_installinfo
++#	dh_undocumented
++	dh_installchangelogs ChangeLog
++	dh_link
++	dh_strip
++	dh_compress
++	dh_fixperms
++	dh_installdebconf
++#	dh_makeshlibs
++	dh_installdeb
++	dh_perl $(CURDIR)/debian/backuppc/usr/share/backuppc/lib/
++	dh_shlibdeps
++	dh_gencontrol
++	dh_md5sums
++	dh_builddeb
++
++binary: binary-indep binary-arch
++.PHONY: build clean binary-indep binary-arch binary install configure
+diff -urN BackupPC-2.0.2.org/lib/BackupPC/Lib.pm BackupPC-2.0.2/lib/BackupPC/Lib.pm
+--- BackupPC-2.0.2.org/lib/BackupPC/Lib.pm	2003-10-17 00:49:12.000000000 +0200
++++ BackupPC-2.0.2/lib/BackupPC/Lib.pm	2003-10-17 00:49:21.000000000 +0200
+@@ -274,9 +274,9 @@
+     my($ret, $mesg, $config, @configs);
+ 
+     $bpc->{Conf} = ();
+-    push(@configs, "$bpc->{TopDir}/conf/config.pl");
+-    push(@configs, "$bpc->{TopDir}/conf/$host.pl")
+-            if ( $host ne "config" && -f "$bpc->{TopDir}/conf/$host.pl" );
++    push(@configs, "/etc/backuppc/config.pl");
++    push(@configs, "/etc/backuppc/$host.pl")
++            if ( $host ne "config" && -f "/etc/backuppc/$host.pl" );
+     push(@configs, "$bpc->{TopDir}/pc/$host/config.pl")
+             if ( defined($host) && -f "$bpc->{TopDir}/pc/$host/config.pl" );
+     foreach $config ( @configs ) {
+@@ -318,7 +318,7 @@
+ sub ConfigMTime
+ {
+     my($bpc) = @_;
+-    return (stat("$bpc->{TopDir}/conf/config.pl"))[9];
++    return (stat("/etc/backuppc/config.pl"))[9];
+ }
+ 
+ #
+@@ -334,9 +334,9 @@
+     my(%hosts, @hdr, @fld);
+     local(*HOST_INFO);
+ 
+-    if ( !open(HOST_INFO, "$bpc->{TopDir}/conf/hosts") ) {
++    if ( !open(HOST_INFO, "/etc/backuppc/hosts") ) {
+         print(STDERR $bpc->timeStamp,
+-                     "Can't open $bpc->{TopDir}/conf/hosts\n");
++                     "Can't open /etc/backuppc/hosts\n");
+         return {};
+     }
+     binmode(HOST_INFO);
+@@ -380,7 +380,7 @@
+ sub HostsMTime
+ {
+     my($bpc) = @_;
+-    return (stat("$bpc->{TopDir}/conf/hosts"))[9];
++    return (stat("/etc/backuppc/hosts"))[9];
+ }
+ 
+ #
