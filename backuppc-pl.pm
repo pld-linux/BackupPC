@@ -339,7 +339,7 @@ $Lang{BackupPC__Queue_Summary} = "BackupPC: Queue Summary";
 $Lang{Backup_Queue_Summary} = <<EOF;
 \${h1("Backup Queue Summary")}
 <br><br>
-\${h2("U¿ytkownik Queue Summary")}
+\${h2("User Queue Summary")}
 <p>
 The following user requests are currently queued:
 </p>
@@ -370,15 +370,15 @@ The following command requests are currently queued:
 <tr class="tableheader"><td> Host </td>
     <td> Req Time </td>
     <td> U¿ytkownik </td>
-    <td> Command </td></tr>
+    <td> Polecenie </td></tr>
 \$strCmd
 </table>
 EOF
 
 # --------------------------------
-$Lang{Backup_PC__Log_File__file} = "BackupPC: File \$file";
+$Lang{Backup_PC__Log_File__file} = "BackupPC: Plik \$file";
 $Lang{Log_File__file__comment} = <<EOF;
-\${h1("File \$file \$comment")}
+\${h1("Plik \$file \$comment")}
 <p>
 EOF
 # --------------------------------
@@ -387,9 +387,9 @@ Contents of file <tt>\$file</tt>, modified \$mtimeStr \$comment
 EOF
 
 # --------------------------------
-$Lang{skipped__skipped_lines} = "[ skipped \$skipped lines ]\n";
+$Lang{skipped__skipped_lines} = "[ Pominiête \$skipped linie ]\n";
 # --------------------------------
-$Lang{_pre___Can_t_open_log_file__file} = "<pre>\nCan\'t open log file \$file\n";
+$Lang{_pre___Can_t_open_log_file__file} = "<pre>\nNie mo¿na otworzyæ pliku loguj±cego \$file\n";
 
 # --------------------------------
 $Lang{BackupPC__Log_File_History} = "BackupPC: Log File History";
@@ -398,8 +398,8 @@ $Lang{Log_File_History__hdr} = <<EOF;
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td align="center"> File </td>
-    <td align="center"> Size </td>
-    <td align="center"> Modification time </td></tr>
+    <td align="center"> Rozmiar </td>
+    <td align="center"> Ostatnia modyfikacja </td></tr>
 \$str
 </table>
 EOF
@@ -426,25 +426,25 @@ $Lang{Restore_Options_for__host} = "BackupPC: Restore Options for \$host";
 $Lang{Restore_Options_for__host2} = <<EOF;
 \${h1("Restore Options for \$host")}
 <p>
-You have selected the following files/directories from
-share \$share, backup number #\$num:
+Wybra³e¶ nastêpuj±ce pliki/katalogi z
+udzia³u \$share, backup number #\$num:
 <ul>
 \$fileListStr
 </ul>
 </p><p>
-You have three choices for restoring these files/directories.
-Please select one of the following options.
+Masz trzy mo¿liwo¶ci odzyskania tych plików/katalogów.
+Wybierz proszê, jedn± z nastêpuj±cych opcji:
 </p>
-\${h2("Option 1: Direct Restore")}
+\${h2("Option 1: Bezpo¶rednie odzyskiwanie")}
 <p>
 EOF
 
 $Lang{Restore_Options_for__host_Option1} = <<EOF;
-You can start a restore that will restore these files directly onto
+Mo¿esz zacz±æ odzyskiwanie, które przywróci te pliki bezpo¶rednio na
 \$host.
 </p><p>
-<b>Warning:</b> any existing files that match the ones you have
-selected will be overwritten!
+<b>Ostrze¿enie:</b> Wszystkie pliki, pasuj±ce do tych, które wybra³e¶
+zostan± nadpisane!
 </p>
 <form action="\$MyURL" method="post" name="direct">
 <input type="hidden" name="host" value="\${EscHTML(\$host)}">
@@ -454,7 +454,7 @@ selected will be overwritten!
 <input type="hidden" value="\$In{action}" name="action">
 <table border="0">
 <tr>
-    <td>Restore the files to host</td>
+    <td>Odzyskiwanie plików komputera</td>
     <td><!--<input type="text" size="40" value="\${EscHTML(\$host)}"
 	 name="hostDest">-->
 	 <select name="hostDest" onChange="document.direct.shareDest.value=''">
@@ -467,7 +467,7 @@ selected will be overwritten!
 	 </script>
 	 <!--<a href="javascript:myOpen('\$MyURL?action=findShares&host='+document.direct.hostDest.options.value)">Search for available shares (NOT IMPLEMENTED)</a>--></td>
 </tr><tr>
-    <td>Restore the files to share</td>
+    <td>Odzyskiwanie plików udzia³u</td>
     <td><input type="text" size="40" value="\${EscHTML(\$share)}"
 	 name="shareDest"></td>
 </tr><tr>
@@ -475,26 +475,27 @@ selected will be overwritten!
     <td valign="top"><input type="text" size="40" maxlength="256"
 	value="\${EscHTML(\$pathHdr)}" name="pathHdr"></td>
 </tr><tr>
-    <td><input type="submit" value="Start Restore" name=""></td>
+    <td><input type="submit" value="Rozpoczêcie odzyskiwania" name=""></td>
 </table>
 </form>
 EOF
 
 $Lang{Restore_Options_for__host_Option1_disabled} = <<EOF;
-Direct restore has been disabled for host \${EscHTML(\$hostDest)}.
-Please select one of the other restore options.
+Bezpo¶rednia przywracanie zosta³o wy³±czone dla komputera \${EscHTML(\$hostDest)}.
+Wybierz jedn± z innych mo¿liwo¶ci:
 EOF
 
 # ------------------------------
 $Lang{Option_2__Download_Zip_archive} = <<EOF;
 <p>
-\${h2("Option 2: Download Zip archive")}
+\${h2("Option 2: ¦ci±gnij archiwum Zip")}
 <p>
-You can download a Zip archive containing all the files/directories you have
-selected.  You can then use a local application, such as WinZip,
-to view or extract any of the files.
+Mo¿esz ¶ci±gn±æ archiwum Zip zawieraj±ce wszystkie pliki/katalogi, które 
+wybra³e¶
+Mo¿esz u¿ywaæ wtedy lokalnych aplikacji takich jak WinZip,
+do przejrzenia lub wypakowania ka¿dego z plików.
 </p><p>
-<b>Warning:</b> depending upon which files/directories you have selected,
+<b>Ostrze¿enie:</b> depending upon which files/directories you have selected,
 this archive might be very very large.  It might take many minutes to
 create and transfer the archive, and you will need enough local disk
 space to store it.
