@@ -1,0 +1,5 @@
+AuthGroupFile %{_sysconfdir}/%{name}/group    # <--- change path as needed
+AuthUserFile %{_sysconfdir}/%{name}/passwd     # <--- change path as needed
+AuthType basic
+AuthName "access"
+require valid-user
