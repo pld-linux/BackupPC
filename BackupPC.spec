@@ -1,8 +1,8 @@
-# TODO:
-# - make it simply build...
-# - make pre/post for apache
-# - add all needed files to %files
+
+%define BPCuser backuppc
+%define BPCgroup backuppc
 %include	/usr/lib/rpm/macros.perl
+
 Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
@@ -12,6 +12,8 @@ License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
 # Source0-md5:	4e201f00842c88cf241e0429643c6ec4
+Source1:	%{name}_apache.conf
+Source2:	%{name}_htaccess
 Patch0:		%{name}-usernotexist.patch
 URL:		http://backuppc.sourceforge.net/
 #BuildRequires:	fakeroot
@@ -23,7 +25,7 @@ Requires:	samba-client
 # lets check if it's really needed
 #Requires:	sperl
 Requires:	tar > 1.13
-Requires:	webserver
+Requires:	apache
 Obsoletes:	BackupPC
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -84,6 +86,7 @@ zapasowych:
 - Wiele wiêcej mo¿na odkryæ w manualu...
 
 %prep
+
 %setup -q -n BackupPC-%{version}
 %patch0 -p1
 
@@ -98,9 +101,10 @@ perl -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backu
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,%{name},httpd/httpd.conf} \
+install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,%{name},httpd/httpd.conf} \
+	$RPM_BUILD_ROOT%{_usr}/share/%{name}/www/html \
 	$RPM_BUILD_ROOT%{_var}/lib/%{name}/pc/localhost \
-	$RPM_BUILD_ROOT%{_datadir}/%{name}/conf/
+	$RPM_BUILD_ROOT%{_datadir}/%{name}/conf
 
 # Does not work, yet... some voodoo-magic is needed
 %{__perl} configure.pl \
@@ -127,24 +131,44 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,%{name},httpd/httpd.conf} \
 	--html-dir-url /BackupPC \
 	--install-dir  %{_usr} \
 	--uid-ignore
-#	--config-path %{_sysconfdir}/backuppc \
+
+#	--config-path
+
+install init.d/linux-backuppc $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/backuppc
+install conf/BackupPC_stnd.css  $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/BackupPC_stnd.css
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/cgi-bin/.htaccess
 
 #mv -f $RPM_BUILD_ROOT/var/lib/backuppc/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
 #mv -f $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/BackupPC_Admin $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin/index.cgi
-#install conf/hosts $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-#install debian/localhost.pl $RPM_BUILD_ROOT%{_sysconfdir}/backuppc
-#install debian/apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 
 # Cleanups:
-#rm -f $RPM_BUILD_ROOT%{_datadir}/backuppc/doc/*
-#rmdir $RPM_BUILD_ROOT/var/lib/backuppc/conf
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
 
-# Linking cgi:
-#cd $RPM_BUILD_ROOT%{_datadir}/backuppc/cgi-bin
-#ln -s ../image
+%pre
+# Add the "backuppc" user and group
+if [ -n "`/usr/bin/getgid %{BPCgroup}`" ]; then
+		if [ "`/usr/bin/getgid %{BPCgroup}`" != "150" ]; then
+			echo "Error: group %{BPCgroup} doesn't have gid=150. Correct this before installing %{name}." 1>&2
+			exit 1
+		fi
+	else
+	/usr/sbin/groupadd -g 150 %{BPCgroup}
+fi
+
+if [ -n "`/bin/id -u %{BPCuser} 2>/dev/null`" ]; then
+		if [ "`/bin/id -u %{BPCuser}`" != 150 ]; then
+			echo "Error: user %{BPCuser} doesn't have uid=150. Correct this before installing %{name}." 1>&2
+			exit 1
+		fi
+	else
+		/usr/sbin/useradd -c "systemowy u¿ytkownik dla %{name}" -u 150 -r -d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser} 1>&2
+fi
+
+
 
 %post
+ln -s %{_var}/lib/%{name}/conf/ %{_sysconfdir}/backuppc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -154,14 +178,19 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %doc %{_usr}/doc/*.html
 %doc %{_usr}/doc/BackupPC.pod
-#%dir %attr(750,root,root) %{_var}/lib/%{name}/
-#%{_var}/lib/%{name}/*
 %dir %{_datadir}/%{name}/cgi-bin/
 %{_datadir}/%{name}/cgi-bin/*
 %dir %{_usr}/share/%{name}/www/html/
 %{_usr}/share/%{name}/www/html/*
 %dir %{_libdir}/BackupPC/
 %{_libdir}/BackupPC/*
-%dir %{_var}/lib/%{name}/conf/
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root)  %{_var}/lib/%{name}/conf/*
-#%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool/
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log/
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc/
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pool/
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash/
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf/
+%attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
+%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
+%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) %{_datadir}/%{name}/cgi-bin/.htaccess
+%config(noreplace) %verify(not md5 size mtime) %attr(640,%{BPCuser},%{BPCgroup})  %{_var}/lib/%{name}/conf/*
