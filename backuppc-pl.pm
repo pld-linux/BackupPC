@@ -5,11 +5,11 @@
 
 # --------------------------------
 
-$Lang{Start_Archive} = "Start Archive";
-$Lang{Stop_Dequeue_Archive} = "Stop/Dequeue Archive";
+$Lang{Start_Archive} = "Start archiwizacji";
+$Lang{Stop_Dequeue_Archive} = "Zatrzymaj/Dequeue archiwizacje";
 $Lang{Start_Full_Backup} = "Uruchom pe³ny Backup";
 $Lang{Start_Incr_Backup} = "Uruchom przyrostowy Backup";
-$Lang{Stop_Dequeue_Backup} = "Stop/Dequeue Backup";
+$Lang{Stop_Dequeue_Backup} = "Zatrzymaj/Dequeue Backup";
 $Lang{Restore} = "Przywróæ";
 
 $Lang{Type_full} = "Pe³ny";
@@ -39,8 +39,8 @@ $Lang{Admin_Options_Page} = <<EOF;
 -->
 EOF
 $Lang{Unable_to_connect_to_BackupPC_server} = "Nie mo¿na uzyskaæ po³±czenia z serwerem BackupPC",
-            "Skrypt CGI (\$MyURL) is unable to connect to the BackupPC"
-          . " server na \$Conf{ServerHost} port \$Conf{ServerPort}.  The error"
+            "Skrypt CGI (\$MyURL) nie mo¿e uzyskaæ po³±czenia z BackupPC"
+          . " server na \$Conf{ServerHost} port \$Conf{ServerPort}. B³±d"
           . " was: \$err.",
             "Byæ mo¿e serwer BackupPC nie jest uruchomiony lub jest to "
           . " b³±d konfiguracji. Zawiadom administratora systemu.";
@@ -75,8 +75,8 @@ $Lang{BackupPC_Server_Status_General_Info}= <<EOF;
         <li>\$numCmdQueue pending command requests,
         \$poolInfo
         <li>Pool file system was recently at \$Info{DUlastValue}%
-            (\$DUlastTime), today\'s max is \$Info{DUDailyMax}% (\$DUmaxTime)
-            and yesterday\'s max was \$Info{DUDailyMaxPrev}%.
+            (\$DUlastTime), dzi¶ maksymalnie jest \$Info{DUDailyMax}% (\$DUmaxTime)
+            wczoraj by³o maksymalnie \$Info{DUDailyMaxPrev}%.
     </ul>
 </ul>
 EOF
@@ -108,17 +108,17 @@ $Lang{BackupPC_Server_Status} = <<EOF;
 <tr class="tableheader"><td align="center"> Host </td>
     <td align="center"> Typ </td>
     <td align="center"> U¿ytkownik </td>
-    <td align="center"> Last Try </td>
+    <td align="center"> Ostatnia próba </td>
     <td align="center"> Szczegó³y </td>
     <td align="center"> Error Time </td>
-    <td> Last error (other than no ping) </td></tr>
+    <td> Ostatni b³±d (inny ni¿ brak ping) </td></tr>
 \$statusStr
 </table>
 EOF
 
 # --------------------------------
 $Lang{BackupPC__Server_Summary} = "BackupPC: Podsumowanie ";
-$Lang{BackupPC__Archive} = "BackupPC: Archive";
+$Lang{BackupPC__Archive} = "BackupPC: Archiwizacja";
 $Lang{BackupPC_Summary} = <<EOF;
 
 \${h1(qq{$Lang{BackupPC__Server_Summary}})}
@@ -126,7 +126,7 @@ $Lang{BackupPC_Summary} = <<EOF;
 Status wygenerowano o \$now.
 </p>
 
-\${h2("Hosts with good Backups")}
+\${h2("Komputery z dobrymi kopiami zapasowymi")}
 <p>
 There are \$hostCntGood hosts that have been backed up, for a total of:
 <ul>
@@ -139,29 +139,29 @@ There are \$hostCntGood hosts that have been backed up, for a total of:
 <table class="tableStnd" border cellpadding="3" cellspacing="1">
 <tr class="tableheader"><td> Komputer </td>
     <td align="center"> U¿ytkownik </td>
-    <td align="center"> #Full </td>
+    <td align="center"> #Pe³ny </td>
     <td align="center"> Full Age/days </td>
     <td align="center"> Wielko¶æ/GB </td>
     <td align="center"> Szybko¶æ MB/sec </td>
-    <td align="center"> #Incr </td>
+    <td align="center"> #Przyrostowy </td>
     <td align="center"> Incr Age/days </td>
     <td align="center"> State </td>
     <td align="center"> Last attempt </td></tr>
 \$strGood
 </table>
 <br><br>
-\${h2("Hosts with no Backups")}
+\${h2("Komputery bez kopi zapasowych")}
 <p>
-There are \$hostCntNone hosts with no backups.
+Jest \$hostCntNone komputerów bez kopii zapasowych.
 <p>
 <table class="tableStnd" border cellpadding="3" cellspacing="1">
-<tr class="tableheader"><td> Host </td>
-    <td align="center"> User </td>
-    <td align="center"> #Full </td>
+<tr class="tableheader"><td> Komputer </td>
+    <td align="center"> U¿ytkownik </td>
+    <td align="center"> #Pe³ny </td>
     <td align="center"> Full Age/days </td>
     <td align="center"> Wielko¶æ/GB </td>
     <td align="center"> Szybko¶æ MB/sec </td>
-    <td align="center"> #Incr </td>
+    <td align="center"> #Przyrostowy </td>
     <td align="center"> Incr Age/days </td>
     <td align="center"> Current State </td>
     <td align="center"> Last backup attempt </td></tr>
@@ -258,7 +258,7 @@ EOF
 
 $Lang{BackupPC_Archive2_parity} = <<EOF;
 <tr>
-    <td>Percentage of Parity Data (0 = disable, 5 = typical)</td>
+    <td>Percentage of Parity Data (0 = wy³±czony 5 = normalny)</td>
     <td><input type="numeric" value="\$ArchivePar" name="par"></td>
 </tr>
 EOF
@@ -266,14 +266,14 @@ EOF
 $Lang{BackupPC_Archive2_split} = <<EOF;
 <tr>
     <td>Split output into</td>
-    <td><input type="numeric" value="\$ArchiveSplit" name="splitsize">Megabytes</td>
+    <td><input type="numeric" value="\$ArchiveSplit" name="splitsize">Megabajtów</td>
 </tr>
 EOF
 
 # -----------------------------------
 $Lang{Pool_Stat} = <<EOF;
-        <li>Pool is \${poolSize}GB comprising \$info->{"\${name}FileCnt"} files
-            and \$info->{"\${name}DirCnt"} directories (as of \$poolTime),
+        <li>Pool is \${poolSize}GB comprising \$info->{"\${name}FileCnt"} plików
+            i \$info->{"\${name}DirCnt"} katalogów (as of \$poolTime),
         <li>Pool hashing gives \$info->{"\${name}FileCntRep"} repeated
             files with longest chain \$info->{"\${name}FileRepMax"},
         <li>Nightly cleanup removed \$info->{"\${name}FileCntRm"} files of
@@ -312,7 +312,7 @@ $Lang{BackupPC__Stop_Backup_Confirm_on__host} = "BackupPC: Stop Backup Confirm o
 # --------------------------------
 $Lang{Are_you_sure_stop} = <<EOF;
 
-\${h1("Are you sure?")}
+\${h1("Czy jeste¶ pewny?")}
 
 <p>
 You are about to stop/dequeue backups on \$host;
@@ -332,21 +332,21 @@ EOF
 # --------------------------------
 $Lang{Only_privileged_users_can_view_queues_} = "Only privileged users can view queues.";
 # --------------------------------
-$Lang{Only_privileged_users_can_archive} = "Only privileged users can Archive.";
+$Lang{Only_privileged_users_can_archive} = "Tylko U¿ytkownik z odpowiednimi uprawnieniami mo¿e archiwizowaæ.";
 # --------------------------------
 $Lang{BackupPC__Queue_Summary} = "BackupPC: Queue Summary";
 # --------------------------------
 $Lang{Backup_Queue_Summary} = <<EOF;
 \${h1("Backup Queue Summary")}
 <br><br>
-\${h2("User Queue Summary")}
+\${h2("U¿ytkownik Queue Summary")}
 <p>
 The following user requests are currently queued:
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td> Host </td>
     <td> Req Time </td>
-    <td> User </td></tr>
+    <td> U¿ytkownik </td></tr>
 \$strUser
 </table>
 <br><br>
@@ -358,7 +358,7 @@ The following background requests are currently queued:
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td> Host </td>
     <td> Req Time </td>
-    <td> User </td></tr>
+    <td> U¿ytkownik </td></tr>
 \$strBg
 </table>
 <br><br>
@@ -369,7 +369,7 @@ The following command requests are currently queued:
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td> Host </td>
     <td> Req Time </td>
-    <td> User </td>
+    <td> U¿ytkownik </td>
     <td> Command </td></tr>
 \$strCmd
 </table>
@@ -616,7 +616,7 @@ $Lang{Host__host_Backup_Summary2} = <<EOF;
 \$statusStr
 </ul>
 </p>
-\${h2("User Actions")}
+\${h2("U¿ytkownik Actions")}
 <p>
 <form action="\$MyURL" method="get">
 <input type="hidden" name="host" value="\$host">
@@ -721,7 +721,7 @@ $Lang{Host__host_Archive_Summary2} = <<EOF;
 \$statusStr
 </ul>
 
-\${h2("User Actions")}
+\${h2("U¿ytkownik Actions")}
 <p>
 <form action="\$MyURL" method="get">
 <input type="hidden" name="archivehost" value="\$host">
@@ -1015,10 +1015,10 @@ $Lang{Hosts_file} = "Hosts file";
 $Lang{Current_queues} = "Current queues";
 $Lang{Documentation} = "Dokumentacja";
 
-#$Lang{Host_or_User_name} = "<small>Host or User name:</small>";
+#$Lang{Host_or_User_name} = "<small>Nazwa Komputera lub U¿ytkownika:</small>";
 $Lang{Go} = "Go";
-$Lang{Hosts} = "Hosts";
-$Lang{Select_a_host} = "Select a host...";
+$Lang{Hosts} = "Komputery";
+$Lang{Select_a_host} = "Wybierz komputer...";
 
 $Lang{There_have_been_no_archives} = "<h2> There have been no archives </h2>\n";
 $Lang{This_PC_has_never_been_backed_up} = "<h2> This PC has never been backed up!! </h2>\n";
@@ -1026,15 +1026,15 @@ $Lang{This_PC_is_used_by} = "<li>This PC is used by \${UserLink(\$user)}";
 
 $Lang{Extracting_only_Errors} = "(Extracting only Errors)";
 $Lang{XferLOG} = "XferLOG";
-$Lang{Errors}  = "Errors";
+$Lang{Errors}  = "B³êdy";
 
 # ------------
 $Lang{Last_email_sent_to__was_at___subject} = <<EOF;
-<li>Last email sent to \${UserLink(\$user)} was at \$mailTime, subject "\$subj".
+<li>Ostatni email wys³any do \${UserLink(\$user)} o \$mailTime, temat "\$subj".
 EOF
 # ------------
 $Lang{The_command_cmd_is_currently_running_for_started} = <<EOF;
-<li>The command \$cmd is currently running for \$host, started \$startTime.
+<li>Polecenie \$cmd jest aktualnie uruchomione na \$host. Uruchomiono o \$startTime.
 EOF
 
 # -----------
