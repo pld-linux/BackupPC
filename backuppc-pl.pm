@@ -7,10 +7,10 @@
 
 $Lang{Start_Archive} = "Start Archive";
 $Lang{Stop_Dequeue_Archive} = "Stop/Dequeue Archive";
-$Lang{Start_Full_Backup} = "Start Full Backup";
-$Lang{Start_Incr_Backup} = "Start Incr Backup";
+$Lang{Start_Full_Backup} = "Uruchom pe³ny Backup";
+$Lang{Start_Incr_Backup} = "Uruchom przyrostowy Backup";
 $Lang{Stop_Dequeue_Backup} = "Stop/Dequeue Backup";
-$Lang{Restore} = "Restore";
+$Lang{Restore} = "Przywróæ";
 
 $Lang{Type_full} = "Pe³ny";
 $Lang{Type_incr} = "przyrostowy";
@@ -18,38 +18,38 @@ $Lang{Type_incr} = "przyrostowy";
 # -----
 
 $Lang{Only_privileged_users_can_view_admin_options} = "Tylko u¿ytkownik posiadaj±cy uprawnienia ma dostep do opcji administracyjnych.";
-$Lang{H_Admin_Options} = "BackupPC Serwer: administracja";
+$Lang{H_Admin_Options} = "BackupPC serwer: administracja";
 $Lang{Admin_Options} = "Administracja";
 $Lang{Admin_Options_Page} = <<EOF;
 \${h1(qq{$Lang{Admin_Options}})}
 <br>
-\${h2("Server Control")}
+\${h2("Kontrola serwera")}
 <form action="\$MyURL" method="get">
 <table class="tableStnd">
-  <!--<tr><td>Stop the server:<td><input type="submit" name="action" value="Stop">-->
-  <tr><td>Reload the server configuration:<td><input type="submit" name="action" value="Reload">
+  <!--<tr><td>Zatrzymaj serwer:<td><input type="submit" name="action" value="Stop">-->
+  <tr><td>Wczytaj ponownie konfiguracje:<td><input type="submit" name="action" value="Reload">
 </table>
 </form>
 <!--
-\${h2("Server Configuration")}
+\${h2("Konfiguracja serwera")}
 <ul>
   <li><i>Other options can go here... e.g.,</i>
-  <li>Edit server configuration
+  <li>Edycja konfiguracji serwera
 </ul>
 -->
 EOF
-$Lang{Unable_to_connect_to_BackupPC_server} = "Unable to connect to BackupPC server",
-            "This CGI script (\$MyURL) is unable to connect to the BackupPC"
-          . " server on \$Conf{ServerHost} port \$Conf{ServerPort}.  The error"
+$Lang{Unable_to_connect_to_BackupPC_server} = "Nie mo¿na uzyskaæ po³±czenia z serwerem BackupPC",
+            "Skrypt CGI (\$MyURL) is unable to connect to the BackupPC"
+          . " server na \$Conf{ServerHost} port \$Conf{ServerPort}.  The error"
           . " was: \$err.",
             "Perhaps the BackupPC server is not running or there is a "
-          . " configuration error.  Please report this to your Sys Admin.";
+          . " B³±d konfiguracji. Zawiadom administratora systemu.";
 $Lang{Admin_Start_Server} = <<EOF;
 \${h1(qq{$Lang{Unable_to_connect_to_BackupPC_server}})}
 <form action="\$MyURL" method="get">
-The BackupPC server at <tt>\$Conf{ServerHost}</tt> port <tt>\$Conf{ServerPort}</tt>
-is not currently running (maybe you just stopped it, or haven't yet started it).<br>
-Do you want to start it?
+BackupPC serwer na <tt>\$Conf{ServerHost}</tt> port <tt>\$Conf{ServerPort}</tt>
+nie jest aktualnie uruchomiony (maybe you just stopped it, or haven't yet started it).<br>
+Czy chcesz uruchomiæ serwer?
 <input type="hidden" name="action" value="startServer">
 <input type="submit" value="Start Server" name="ignore">
 </form>
@@ -57,18 +57,18 @@ EOF
 
 # -----
 
-$Lang{H_BackupPC_Server_Status} = "BackupPC Server Status";
+$Lang{H_BackupPC_Server_Status} = "Status serwera BackupPC";
 
 $Lang{BackupPC_Server_Status_General_Info}= <<EOF;
 \${h2(\"General Server Information\")}
 
 <ul>
-<li> The servers PID is \$Info{pid},  on host \$Conf{ServerHost},
-     version \$Info{Version}, started at \$serverStartTime.
-<li> This status was generated at \$now.
-<li> The configuration was last loaded at \$configLoadTime.
+<li> PID serwera: \$Info{pid}, na komputerze \$Conf{ServerHost},
+     wersja \$Info{Version}, uruchomiony o \$serverStartTime.
+<li> Status wygenerowano o \$now.
+<li> Ostatnie wczytanie konfiguracji: \$configLoadTime.
 <li> PCs will be next queued at \$nextWakeupTime.
-<li> Other info:
+<li> Pozosta³e informacje:
     <ul>
         <li>\$numBgQueue pending backup requests from last scheduled wakeup,
         <li>\$numUserQueue pending user backup requests,
@@ -87,13 +87,13 @@ $Lang{BackupPC_Server_Status} = <<EOF;
 <p>
 \$generalInfo
 
-\${h2("Currently Running Jobs")}
+\${h2("Aktualnie uruchomione zadania")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3">
-<tr class="tableheader"><td> Host </td>
-    <td> Type </td>
-    <td> User </td>
-    <td> Start Time </td>
+<tr class="tableheader"><td> Komputer </td>
+    <td> Typ </td>
+    <td> U¿ytkownik </td>
+    <td> Rozpoczêcie </td>
     <td> Command </td>
     <td align="center"> PID </td>
     <td align="center"> Xfer PID </td>
@@ -106,10 +106,10 @@ $Lang{BackupPC_Server_Status} = <<EOF;
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3">
 <tr class="tableheader"><td align="center"> Host </td>
-    <td align="center"> Type </td>
-    <td align="center"> User </td>
+    <td align="center"> Typ </td>
+    <td align="center"> U¿ytkownik </td>
     <td align="center"> Last Try </td>
-    <td align="center"> Details </td>
+    <td align="center"> Szczegó³y </td>
     <td align="center"> Error Time </td>
     <td> Last error (other than no ping) </td></tr>
 \$statusStr
@@ -117,13 +117,13 @@ $Lang{BackupPC_Server_Status} = <<EOF;
 EOF
 
 # --------------------------------
-$Lang{BackupPC__Server_Summary} = "BackupPC: Host Summary";
+$Lang{BackupPC__Server_Summary} = "BackupPC: Podsumowanie ";
 $Lang{BackupPC__Archive} = "BackupPC: Archive";
 $Lang{BackupPC_Summary} = <<EOF;
 
 \${h1(qq{$Lang{BackupPC__Server_Summary}})}
 <p>
-This status was generated at \$now.
+Status wygenerowano o \$now.
 </p>
 
 \${h2("Hosts with good Backups")}
@@ -137,12 +137,12 @@ There are \$hostCntGood hosts that have been backed up, for a total of:
 </ul>
 </p>
 <table class="tableStnd" border cellpadding="3" cellspacing="1">
-<tr class="tableheader"><td> Host </td>
-    <td align="center"> User </td>
+<tr class="tableheader"><td> Komputer </td>
+    <td align="center"> U¿ytkownik </td>
     <td align="center"> #Full </td>
     <td align="center"> Full Age/days </td>
-    <td align="center"> Full Size/GB </td>
-    <td align="center"> Speed MB/sec </td>
+    <td align="center"> Wielko¶æ/GB </td>
+    <td align="center"> Szybko¶æ MB/sec </td>
     <td align="center"> #Incr </td>
     <td align="center"> Incr Age/days </td>
     <td align="center"> State </td>
@@ -159,8 +159,8 @@ There are \$hostCntNone hosts with no backups.
     <td align="center"> User </td>
     <td align="center"> #Full </td>
     <td align="center"> Full Age/days </td>
-    <td align="center"> Full Size/GB </td>
-    <td align="center"> Speed MB/sec </td>
+    <td align="center"> Wielko¶æ/GB </td>
+    <td align="center"> Szybko¶æ MB/sec </td>
     <td align="center"> #Incr </td>
     <td align="center"> Incr Age/days </td>
     <td align="center"> Current State </td>
@@ -206,9 +206,9 @@ There are \$hostCntGood hosts that have been backed up for a total size of \${fu
 <input type="hidden" name="host" value="\${EscHTML(\$archHost)}">
 <input type="hidden" name="action" value="Archive">
 <table class="tableStnd" border cellpadding="3" cellspacing="1">
-<tr class="tableheader"><td align=center> Host</td>
-    <td align="center"> User </td>
-    <td align="center"> Backup Size </td>
+<tr class="tableheader"><td align=center> Komputer</td>
+    <td align="center"> U¿ytkownik </td>
+    <td align="center"> Wielko¶æ Backup-u </td>
 \$strGood
 \$checkAllHosts
 </table>
@@ -247,9 +247,9 @@ EOF
 
 $Lang{BackupPC_Archive2_compression} = <<EOF;
 <tr>
-    <td>Compression</td>
+    <td>Kompresja</td>
     <td>
-    <input type="radio" value="0" name="compression" \$ArchiveCompNone>None<br>
+    <input type="radio" value="0" name="compression" \$ArchiveCompNone>brak<br>
     <input type="radio" value="1" name="compression" \$ArchiveCompGzip>gzip<br>
     <input type="radio" value="2" name="compression" \$ArchiveCompBzip2>bzip2
     </td>
@@ -742,7 +742,7 @@ $Lang{Error____head} = <<EOF;
 EOF
 
 # -------------------------
-$Lang{NavSectionTitle_} = "Server";
+$Lang{NavSectionTitle_} = "Serwer";
 
 # -------------------------
 $Lang{Backup_browse_for__host} = <<EOF;
@@ -787,7 +787,7 @@ $Lang{Backup_browse_for__host} = <<EOF;
 <li> Enter directory: <input type="text" name="dir" size="50" maxlength="4096" value="\${EscHTML(\$dir)}"> <input type="submit" value="\$Lang->{Go}" name="Submit">
 <li> Click on a directory below to navigate into that directory,
 <li> Click on a file below to restore that file,
-<li> You can view the backup <a href="\$MyURL?action=dirHistory&host=\${EscURI(\$host)}&share=\$shareURI&dir=\$pathURI">history</a> of the current directory.
+<li> You can view the backup <a href="\$MyURL?action=dirHistory&host=\${EscURI(\$host)}&share=\$shareURI&dir=\$pathURI">historia</a> of the current directory.
 </ul>
 </form>
 
@@ -1005,7 +1005,7 @@ $Lang{Archive_requested} = "Archive requested by \$User from \$ENV{REMOTE_ADDR}"
 # -------------------------------------------------
 
 $Lang{Status} = "Status";
-$Lang{PC_Summary} = "Host Summary";
+$Lang{PC_Summary} = "Podsumowanie";
 $Lang{LOG_file} = "LOG file";
 $Lang{LOG_files} = "LOG files";
 $Lang{Old_LOGs} = "Old LOGs";
@@ -1013,7 +1013,7 @@ $Lang{Email_summary} = "Email summary";
 $Lang{Config_file} = "Config file";
 $Lang{Hosts_file} = "Hosts file";
 $Lang{Current_queues} = "Current queues";
-$Lang{Documentation} = "Documentation";
+$Lang{Documentation} = "Dokumentacja";
 
 #$Lang{Host_or_User_name} = "<small>Host or User name:</small>";
 $Lang{Go} = "Go";
@@ -1137,10 +1137,10 @@ $Lang{Restore_Summary} = <<EOF;
 Click on the restore number for more details.
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td align="center"> Restore# </td>
-    <td align="center"> Result </td>
-    <td align="right"> Start Date</td>
+    <td align="center"> Rezultat </td>
+    <td align="right"> Data rozpoczêcia</td>
     <td align="right"> Dur/mins</td>
-    <td align="right"> #files </td>
+    <td align="right"> #plików </td>
     <td align="right"> MB </td>
     <td align="right"> #tar errs </td>
     <td align="right"> #xferErrs </td>
@@ -1153,11 +1153,11 @@ EOF
 $Lang{Archive_Summary} = <<EOF;
 \${h2("Archive Summary")}
 <p>
-Click on the archive number for more details.
+kliknij na numerze wybranego archiwum aby zobaczyæ szczegó³y.
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td align="center"> Archive# </td>
-    <td align="center"> Result </td>
-    <td align="right"> Start Date</td>
+    <td align="center"> Rezultat </td>
+    <td align="right"> Data rozpoczêcia</td>
     <td align="right"> Dur/mins</td>
 </tr>
 \$ArchiveStr
@@ -1165,42 +1165,42 @@ Click on the archive number for more details.
 <p>
 EOF
 
-$Lang{BackupPC__Documentation} = "BackupPC: Documentation";
+$Lang{BackupPC__Documentation} = "BackupPC: Dokumentacja";
 
 $Lang{No} = "no";
 $Lang{Yes} = "yes";
 
 $Lang{The_directory_is_empty} = <<EOF;
-<tr><td bgcolor="#ffffff">The directory \${EscHTML(\$dirDisplay)} is empty
+<tr><td bgcolor="#ffffff">Katalog \${EscHTML(\$dirDisplay)} jest pusty
 </td></tr>
 EOF
 
 #$Lang{on} = "on";
 $Lang{off} = "off";
 
-$Lang{backupType_full}    = "full";
-$Lang{backupType_incr}    = "incr";
-$Lang{backupType_partial} = "partial";
+$Lang{backupType_full}    = "pe³ny";
+$Lang{backupType_incr}    = "przyrostowy";
+$Lang{backupType_partial} = "czê¶ciowy";
 
-$Lang{failed} = "failed";
-$Lang{success} = "success";
-$Lang{and} = "and";
+$Lang{failed} = "nieudany";
+$Lang{success} = "sukces";
+$Lang{and} = "i";
 
 # ------
 # Hosts states and reasons
 $Lang{Status_idle} = "idle";
 $Lang{Status_backup_starting} = "backup starting";
-$Lang{Status_backup_in_progress} = "backup in progress";
+$Lang{Status_backup_in_progress} = "backup w trakcie";
 $Lang{Status_restore_starting} = "restore starting";
 $Lang{Status_restore_in_progress} = "restore in progress";
 $Lang{Status_link_pending} = "link pending";
 $Lang{Status_link_running} = "link running";
 
-$Lang{Reason_backup_done}    = "backup done";
+$Lang{Reason_backup_done}    = "backup ukoñczony";
 $Lang{Reason_restore_done}   = "restore done";
 $Lang{Reason_archive_done}   = "archive done";
 $Lang{Reason_nothing_to_do}  = "nothing to do";
-$Lang{Reason_backup_failed}  = "backup failed";
+$Lang{Reason_backup_failed}  = "backup nieudany";
 $Lang{Reason_restore_failed} = "restore failed";
 $Lang{Reason_archive_failed} = "archive failed";
 $Lang{Reason_no_ping}        = "no ping";
