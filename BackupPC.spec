@@ -1,6 +1,6 @@
 
 # - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
-#TO DO:
+# TODO:
 # - patch for service user - now is static backuppc
 # - polish translation - cvs -z3 -d:pserver:anonymous@cvs.pld-linux.org:/gnomepl co gnomepl/backuppc/pl.pm
 # - edit apache configuration, autorizations - SOURCES: backuppc_apache.conf
