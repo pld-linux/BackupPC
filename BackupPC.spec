@@ -32,6 +32,7 @@ BuildRequires:	perl-base
 BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpmbuild(macros) >= 1.159
 Requires:	apache
+Requires:	apache-mod_perl
 Requires:	samba-client
 Requires:	sperl
 Requires:	tar > 1.13
@@ -240,9 +241,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash
-%dir %{_var}/lib/%{name}/conf
+%dir %attr(755,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
 %dir %{_var}/log/%{name}
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %verify(not md5 size mtime) %{_var}/lib/%{name}/conf/*
+%config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup})  %{_var}/lib/%{name}/conf/*
