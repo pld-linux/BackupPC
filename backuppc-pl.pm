@@ -42,13 +42,13 @@ $Lang{Unable_to_connect_to_BackupPC_server} = "Nie mo¿na uzyskaæ po³±czenia z se
             "Skrypt CGI (\$MyURL) is unable to connect to the BackupPC"
           . " server na \$Conf{ServerHost} port \$Conf{ServerPort}.  The error"
           . " was: \$err.",
-            "Perhaps the BackupPC server is not running or there is a "
-          . " B³±d konfiguracji. Zawiadom administratora systemu.";
+            "Byæ mo¿e serwer BackupPC nie jest uruchomiony lub jest to "
+          . " b³±d konfiguracji. Zawiadom administratora systemu.";
 $Lang{Admin_Start_Server} = <<EOF;
 \${h1(qq{$Lang{Unable_to_connect_to_BackupPC_server}})}
 <form action="\$MyURL" method="get">
 BackupPC serwer na <tt>\$Conf{ServerHost}</tt> port <tt>\$Conf{ServerPort}</tt>
-nie jest aktualnie uruchomiony (maybe you just stopped it, or haven't yet started it).<br>
+nie jest aktualnie uruchomiony (mo¿liwe, ¿e go tylko zatrzyma³e¶ lub jeszcze nie uruchomi³e¶).<br>
 Czy chcesz uruchomiæ serwer?
 <input type="hidden" name="action" value="startServer">
 <input type="submit" value="Start Server" name="ignore">
@@ -60,7 +60,7 @@ EOF
 $Lang{H_BackupPC_Server_Status} = "Status serwera BackupPC";
 
 $Lang{BackupPC_Server_Status_General_Info}= <<EOF;
-\${h2(\"General Server Information\")}
+\${h2(\"Ogólne informacje o serwerze\")}
 
 <ul>
 <li> PID serwera: \$Info{pid}, na komputerze \$Conf{ServerHost},
@@ -281,20 +281,20 @@ $Lang{Pool_Stat} = <<EOF;
 EOF
 
 # --------------------------------
-$Lang{BackupPC__Backup_Requested_on__host} = "BackupPC: Backup Requested on \$host";
+$Lang{BackupPC__Backup_Requested_on__host} = "BackupPC: Tworzenie kopii zapasowej na \$host";
 # --------------------------------
 $Lang{REPLY_FROM_SERVER} = <<EOF;
 \${h1(\$str)}
 <p>
 Reply from server was: \$reply
 <p>
-Go back to <a href="\$MyURL?host=\$host">\$host home page</a>.
+Powrót na <a href="\$MyURL?host=\$host">\$host stronê domow±</a>.
 EOF
 # --------------------------------
-$Lang{BackupPC__Start_Backup_Confirm_on__host} = "BackupPC: Start Backup Confirm on \$host";
+$Lang{BackupPC__Start_Backup_Confirm_on__host} = "BackupPC: Potwierdzenie tworzenia kopii zapasowej na \$host";
 # --------------------------------
 $Lang{Are_you_sure_start} = <<EOF;
-\${h1("Are you sure?")}
+\${h1("Jeste¶ pewien?")}
 <p>
 You are about to start a \$type backup on \$host.
 
