@@ -209,7 +209,7 @@ ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 %preun
 if [ "$1" = "0" ]; then
 	if [ -f /var/lock/subsys/backuppc ]; then
-		/etc/rc.d/init.d/backuppc stop 1>&2
+		/etc/rc.d/init.d/backuppc stop
 	fi
 	/sbin/chkconfig --del backuppc
 fi
@@ -222,10 +222,11 @@ if ![ -f /etc/backuppc/password ]; then
 	echo "Your web pasword is: $PASS ."
 	echo "Change this: htpasswd -b /etc/backuppc/password user password"
 fi
+
 if [ -f /var/lock/subsys/backuppc ]; then
-	/etc/rc.d/init.d/backuppc restart 1>&2
+	/etc/rc.d/init.d/backuppc restart
 else
-	echo "Run \"/etc/rc.d/init.d/backuppc start\" to start Big Sister." 1>&2
+	echo "Run \"/etc/rc.d/init.d/backuppc start\" to start BackupPC." 
 fi
 
 %postun
