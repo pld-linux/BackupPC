@@ -8,6 +8,7 @@
 # - ping not working --bin-path ping=/bin/ping
 # - add patch for encoding web page in iso-8859-2 or utf-8
 # - add patch for error "Unable to open /usr/bin/../doc/BackupPC.html"
+# - correct config file
 
 %define		BPCuser		http
 %define		BPCgroup	http
@@ -34,6 +35,7 @@ BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpmbuild(macros) >= 1.159
 BuildRequires:	sed >= 4.0
 Requires:	apache
+Requires:	perl-File-RsyncP
 Requires:	apache-mod_perl
 Requires:	samba-client
 Requires:	sperl
