@@ -2,11 +2,12 @@
 # - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
 # TODO:
 # - patch for service user - now is static backuppc
-# - edit apache configuration, autorizations - SOURCES: backuppc_apache.conf
 # - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
-# - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540
+# - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540 - directory /var/log/backuppc
 # - change or/and add Requires for  --bin-path sendmail=%{_sbindir}/sendmail
 # - ping not working --bin-path ping=/bin/ping
+# - add patch for encoding web page in iso-8859-2 or utf-8
+# - add patch for error "Unable to open /usr/bin/../doc/BackupPC.html"
 
 %define		BPCuser		http
 %define		BPCgroup	http
@@ -16,7 +17,7 @@ Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
 Version:	2.1.1
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
@@ -119,9 +120,10 @@ pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
 rm -rf $RPM_BUILD_ROOT
 install -d		$RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
 			$RPM_BUILD_ROOT%{_mandir}/man8 \
-			$RPM_BUILD_ROOT%{_datadir}/%{name}/www/{html,cgi-bin} \
+			$RPM_BUILD_ROOT%{_datadir}/%{name}/www/{html,cgi-bin,html/doc} \
 			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/pc/localhost,log} \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
+			$RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
 %{__perl} configure.pl \
 	--batch \
@@ -157,16 +159,20 @@ sed -i -e 's/$Conf{SendmailPath} =/#$Conf{SendmailPath} =/' $RPM_BUILD_ROOT%{_va
 
 install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
-install backuppc.8	$RPM_BUILD_ROOT%{_mandir}/man8
+#install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
+install backuppc.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
-
+install doc/* $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/doc
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
+rm -rdf $RPM_BUILD_ROOT/usr/doc
 
 # symlinks
-cd $RPM_BUILD_ROOT%{_sysconfdir}
-ln -sf %{_var}/lib/%{name}/conf %{name}
+mv $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
+rm -rdf $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
+
+cd $RPM_BUILD_ROOT%{_var}/lib/%{name}
+ln -sf %{_sysconfdir}/%{name} $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
 
 cd $RPM_BUILD_ROOT%{_var}/log
 ln -sf %{_var}/lib/%{name}/log %{name}
@@ -174,8 +180,12 @@ ln -sf %{_var}/lib/%{name}/log %{name}
 cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin
 ln -sf BackupPC_Admin index.cgi
 
-cd $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
-ln -sf %{_datadir}/%{name}/www/html/BackupPC_stnd.css BackupPC_stnd.css
+mv $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/BackupPC_stnd.css \
+	$RPM_BUILD_ROOT/%{_sysconfdir}/%{name}
+
+cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html
+ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
+
 
 %pre
 # Add the "backuppc" user and group
@@ -196,9 +206,27 @@ ln -sf %{_datadir}/%{name}/www/html/BackupPC_stnd.css BackupPC_stnd.css
 #	/usr/sbin/useradd -c "system user for %{name}" -u 150 \
 #		-d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser} 1>&2
 #fi
+%preun
+if [ "$1" = "0" ]; then
+	if [ -f /var/lock/subsys/backuppc ]; then
+		/etc/rc.d/init.d/backuppc stop 1>&2
+	fi
+	/sbin/chkconfig --del backuppc
+fi
+
 
 %post
-/etc/init.d/backuppc restart
+if ![ -f /etc/backuppc/password ]; then
+	openssl rand -base64 6 > $PASS
+	/usr/bin/htpasswd -cb /etc/backuppc/password admin $PASS
+	echo "Your web pasword is: $PASS ."
+	echo "Change this: htpasswd -b /etc/backuppc/password user password"
+fi
+if [ -f /var/lock/subsys/backuppc ]; then
+	/etc/rc.d/init.d/backuppc restart 1>&2
+else
+	echo "Run \"/etc/rc.d/init.d/backuppc start\" to start Big Sister." 1>&2
+fi
 
 %postun
 if [ "$1" = "0" ]; then
@@ -212,11 +240,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/*
-%doc %{_usr}/doc/*.html
-%doc %{_usr}/doc/BackupPC.pod
 %attr(755,root,root) %{_datadir}/%{name}/www/cgi-bin/BackupPC_Admin
-%config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/cgi-bin/.htaccess
+#%config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/cgi-bin/.htaccess
 %dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/www/html/doc
+%{_datadir}/%{name}/www/html/doc/*
 %dir %{_datadir}/%{name}/www
 %dir %{_datadir}/%{name}/www/html
 %dir %{_datadir}/%{name}/www/cgi-bin
@@ -231,7 +259,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/BackupPC/CGI
 %{_libdir}/BackupPC/Xfer
 %{_libdir}/BackupPC/Zip
-%dir %{_libdir}/BackupPC/Lang
+%dir %attr(755,%{BPCuser},%{BPCgroup}) %{_libdir}/BackupPC/Lang
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
 %lang(fr) %{_libdir}/BackupPC/Lang/fr.pm
@@ -239,16 +267,17 @@ rm -rf $RPM_BUILD_ROOT
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
 %lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pc
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/pool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
-%dir %{_var}/log/%{name}
-%attr(754,root,root) /etc/rc.d/init.d/backuppc
+%dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/log/%{name}
+%attr(750,root,root) /etc/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
-%dir %{_var}/lib/%{name}
-%config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup})  %{_var}/lib/%{name}/conf/*
+%config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup})  %{_sysconfdir}/%{name}/*
+#%config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
 %{_mandir}/man8/backuppc*
