@@ -32,7 +32,7 @@ BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
 BuildRequires:	perl-devel >= 1:5.6.0
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sed >= 4.0
 Requires:	apache
 Requires:	perl-File-RsyncP >= 0.52
@@ -193,25 +193,14 @@ cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html
 ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 
 
+%if 0
+# was commented out, glen, 2005-05-01
 %pre
 # Add the "backuppc" user and group
-#if [ -n "`/usr/bin/getgid %{BPCgroup}`" ]; then
-#	if [ "`/usr/bin/getgid %{BPCgroup}`" != "150" ]; then
-#		echo "Error: group %{BPCgroup} doesn't have gid=150. Correct this before installing %{name}." 1>&2
-#		exit 1
-#	fi
-#else
-#	/usr/sbin/groupadd -g 150 %{BPCgroup}
-#fi
-#if [ -n "`/bin/id -u %{BPCuser} 2>/dev/null`" ]; then
-#	if [ "`/bin/id -u %{BPCuser}`" != 150 ]; then
-#		echo "Error: user %{BPCuser} doesn't have uid=150. Correct this before installing %{name}." 1>&2
-#		exit 1
-#	fi
-#else
-#	/usr/sbin/useradd -c "system user for %{name}" -u 150 \
-#		-d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser} 1>&2
-#fi
+%groupadd -g 150 %{BPCgroup}
+%useradd -c "system user for %{name}" -u 150 -d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser}
+%endif
+
 %preun
 if [ "$1" = "0" ]; then
 	if [ -f /var/lock/subsys/backuppc ]; then
@@ -222,7 +211,8 @@ fi
 
 
 %post
-if ![ -f /etc/backuppc/password ]; then
+if [ ! -f /etc/backuppc/password ]; then
+# FIXME? $PASS variable cames from?
 	openssl rand -base64 6 > $PASS
 	/usr/bin/htpasswd -cb /etc/backuppc/password admin $PASS
 	echo "Your web pasword is: $PASS ."
