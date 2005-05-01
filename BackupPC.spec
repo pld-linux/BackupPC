@@ -18,7 +18,7 @@ Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
 Version:	2.1.1
-Release:	0.2
+Release:	0.3
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
@@ -35,7 +35,11 @@ BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpmbuild(macros) >= 1.159
 BuildRequires:	sed >= 4.0
 Requires:	apache
-Requires:	perl-File-RsyncP
+Requires:	perl-File-RsyncP >= 0.52
+Requires:	perl-Compress-Zlib
+Requires:	perl-Archive-Zip
+Requires:	perl-Compress-Bzip2
+Requires:	rsync
 Requires:	apache-mod_perl
 Requires:	samba-client
 Requires:	sperl
