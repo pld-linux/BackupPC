@@ -1,0 +1,5 @@
+- BR: sed 4.0
+- unified
+- fixed perms for init script
+- missing dir
+- removed "-m 755" from %install
