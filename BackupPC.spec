@@ -55,25 +55,24 @@ BackupPC is disk based and not tape based. This particularity allows
 features not found in any other backup solution:
 - Clever pooling scheme minimizes disk storage and disk I/O. Identical
   files across multiple backups of the same or different PC are stored
-  only once (using hard links), resulting in substantial savings in
-  disk storage and disk writes.
+  only once (using hard links), resulting in substantial savings in disk
+  storage and disk writes.
 - Optional compression provides additional reductions in storage. CPU
   impact of compression is low since only new files (those not already
   in the pool) need to be compressed.
 - A powerful http/cgi user interface allows administrators to view log
-  files, configuration, current status and allows users to initiate
-  and cancel backups and browse and restore files from backups very
-  quickly.
+  files, configuration, current status and allows users to initiate and
+  cancel backups and browse and restore files from backups very quickly.
 - No client-side software is needed. On WinXX the SMB protocol is
-  used. On Linux or unix clients, rsync or tar (over ssh/rsh/NFS) can
-  be used.
+  used. On Linux or unix clients, rsync or tar (over ssh/rsh/NFS) can be
+  used.
 - Flexible restore options. Single files can be downloaded from any
   backup directly from the CGI interface. Zip or Tar archives for
   selected files or directories can also be downloaded from the CGI
   interface.
 - BackupPC supports mobile environments where laptops are only
-  intermittently connected to the network and have dynamic IP
-  addresses (DHCP).
+  intermittently connected to the network and have dynamic IP addresses
+  (DHCP).
 - Flexible configuration parameters allow multiple backups to be
   performed in parallel.
 - and more to discover in the manual...
@@ -90,16 +89,16 @@ zapasowych:
   Obci±¿enie procesora jest ma³e, poniewa¿ tylko nowe pliki musz± byæ
   kompresowane.
 - Potê¿ny interfejs u¿ytkownika HTTP/CGI pozwala administratorom
-  przegl±daæ pliki logów, konfiguracjê i aktualny stan oraz
-  u¿ytkownikom rozpoczynaæ lub przerywaæ tworzenie kopii oraz szybko
-  przegl±daæ i odtwarzaæ pliki z kopii zapasowych.
+  przegl±daæ pliki logów, konfiguracjê i aktualny stan oraz u¿ytkownikom
+  rozpoczynaæ lub przerywaæ tworzenie kopii oraz szybko przegl±daæ i
+  odtwarzaæ pliki z kopii zapasowych.
 - Nie jest wymagane oprogramowanie po stronie klienta. Na WinXX
   u¿ywany jest protokó³ SMB lub rsync (specjalnie przygotowana wersja
   pod cygwinem). Na klientach linuksowych lub uniksowych mo¿na u¿ywaæ
   rsynca lub tara (po ssh/rsh/NFS).
 - Dostêpne s± elastyczne opcje odzyskiwania. Mo¿na ¶ci±gaæ pojedyncze
-  pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub
-  tar z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
+  pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub tar
+  z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
   interfejsu CGI.
 - BackupPC obs³uguje ¶rodowiska przeno¶ne, gdzie laptopy s± pod³±czane
   do sieci tylko z przerwami i maj± dynamiczne adresy IP (z DHCP).
@@ -222,7 +221,7 @@ fi
 if [ -f /var/lock/subsys/backuppc ]; then
 	/etc/rc.d/init.d/backuppc restart
 else
-	echo "Run \"/etc/rc.d/init.d/backuppc start\" to start BackupPC." 
+	echo "Run \"/etc/rc.d/init.d/backuppc start\" to start BackupPC."
 fi
 
 %postun
@@ -246,7 +245,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/%{name}/www/html
 %dir %{_datadir}/%{name}/www/cgi-bin
 %{_datadir}/%{name}/www/html/*.gif
-%config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/html/BackupPC_stnd.css
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/www/html/BackupPC_stnd.css
 %dir %{_libdir}/BackupPC
 %{_libdir}/BackupPC/Attrib.pm
 %{_libdir}/BackupPC/FileZIO.pm
@@ -272,9 +271,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/trash
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/log/%{name}
-%attr(750,root,root) /etc/rc.d/init.d/backuppc
+%attr(754,root,root) /etc/rc.d/init.d/backuppc
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup})  %{_sysconfdir}/%{name}/*
+%config(noreplace) %verify(not md5 mtime size) %attr(644,%{BPCuser},%{BPCgroup})  %{_sysconfdir}/%{name}/*
 #%config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
 %{_mandir}/man8/backuppc*
