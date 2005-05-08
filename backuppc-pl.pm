@@ -17,7 +17,7 @@ $Lang{Type_incr} = "przyrostowy";
 
 # -----
 
-$Lang{Only_privileged_users_can_view_admin_options} = "Tylko u¿ytkownik posiadaj±cy uprawnienia ma dostep do opcji administracyjnych.";
+$Lang{Only_privileged_users_can_view_admin_options} = "Tylko u¿ytkownik posiadaj±cy uprawnienia ma dostêp do opcji administracyjnych.";
 $Lang{H_Admin_Options} = "BackupPC serwer: administracja";
 $Lang{Admin_Options} = "Administracja";
 $Lang{Admin_Options_Page} = <<EOF;
@@ -70,7 +70,7 @@ $Lang{BackupPC_Server_Status_General_Info}= <<EOF;
 <li> Komputery sprawdzaj± obecno¶æ nowych zleceñ co \$nextWakeupTime.
 <li> Pozosta³e informacje:
     <ul>
-        <li>\$numBgQueue oczekuj±ce zlecenia archiwizacji from last scheduled wakeup,
+        <li>\$numBgQueue oczekuj±ce zlecenia archiwizacji od ostatniego scheduled wakeup,
         <li>\$numUserQueue oczekuj±ce zlecenia u¿ytkownika,
         <li>\$numCmdQueue oczekuj±ce zlecenia,
         \$poolInfo
@@ -240,7 +240,7 @@ EOF
 
 $Lang{BackupPC_Archive2_location} = <<EOF;
 <tr>
-    <td>Archive Location/Device</td>
+    <td>Po³o¿enie Archiwum/Urz±dzenie</td>
     <td><input type="text" value="\$ArchiveDest" name="archive_device"></td>
 </tr>
 EOF
@@ -356,7 +356,7 @@ Aktualnie w kolejce czekaj± nastêpuj±ce zlecenia u¿ytkownika:
 The following background requests are currently queued:
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr class="tableheader"><td> Host </td>
+<tr class="tableheader"><td> Komputer </td>
     <td> Req Time </td>
     <td> U¿ytkownik </td></tr>
 \$strBg
@@ -367,7 +367,7 @@ The following background requests are currently queued:
 Aktualnie w kolejce oczekuj± nastêpuj±ce polecenia:
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr class="tableheader"><td> Host </td>
+<tr class="tableheader"><td> Komputer </td>
     <td> Req Time </td>
     <td> U¿ytkownik </td>
     <td> Polecenie </td></tr>
@@ -409,7 +409,7 @@ $Lang{Recent_Email_Summary} = <<EOF;
 \${h1("Recent Email Summary (Reverse time order)")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr class="tableheader"><td align="center"> Recipient </td>
+<tr class="tableheader"><td align="center"> Adresat </td>
     <td align="center"> Komputer </td>
     <td align="center"> Czas </td>
     <td align="center"> Temat </td></tr>
@@ -419,7 +419,7 @@ EOF
 
 
 # ------------------------------
-$Lang{Browse_backup__num_for__host} = "BackupPC: Browse backup \$num for \$host";
+$Lang{Browse_backup__num_for__host} = "BackupPC: Przegl±danie kopii \$num dla \$host";
 
 # ------------------------------
 $Lang{Restore_Options_for__host} = "BackupPC: Opcje przywracania dla \$host";
@@ -433,7 +433,7 @@ udzia³u \$share, numer archiwum #\$num:
 </ul>
 </p><p>
 Masz trzy mo¿liwo¶ci odzyskania tych plików/katalogów.
-Wybierz proszê, jedn± z nastêpuj±cych opcji:
+Wybierz, jedn± z nastêpuj±cych opcji:
 </p>
 \${h2("Option 1: Bezpo¶rednie odzyskiwanie")}
 <p>
@@ -856,116 +856,117 @@ the backups:
 
 <br>
 <table cellspacing="2" cellpadding="3">
-<tr class="fviewheader"><td>Backup number</td>\$backupNumStr</tr>
+<tr class="fviewheader"><td>Numer kopii</td>\$backupNumStr</tr>
 <tr class="fviewheader"><td>Backup time</td>\$backupTimeStr</tr>
 \$fileStr
 </table>
 EOF
 
 # ------------------------------
-$Lang{Restore___num_details_for__host} = "BackupPC: Restore #\$num details for \$host";
+$Lang{Restore___num_details_for__host} = "BackupPC: Odzyskiwanie #\$num szczegó³y dla \$host";
 
 $Lang{Restore___num_details_for__host2} = <<EOF;
-\${h1("Restore #\$num Details for \$host")}
+\${h1("Odzyskiwanie#\$num szczegó³y dla \$host")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="90%">
-<tr><td class="tableheader"> Number </td><td class="border"> \$Restores[\$i]{num} </td></tr>
+<tr><td class="tableheader"> Numer </td><td class="border"> \$Restores[\$i]{num} </td></tr>
 <tr><td class="tableheader"> Requested by </td><td class="border"> \$RestoreReq{user} </td></tr>
 <tr><td class="tableheader"> Request time </td><td class="border"> \$reqTime </td></tr>
-<tr><td class="tableheader"> Result </td><td class="border"> \$Restores[\$i]{result} </td></tr>
-<tr><td class="tableheader"> Error Message </td><td class="border"> \$Restores[\$i]{errorMsg} </td></tr>
-<tr><td class="tableheader"> Source host </td><td class="border"> \$RestoreReq{hostSrc} </td></tr>
+<tr><td class="tableheader"> Rezultat </td><td class="border"> \$Restores[\$i]{result} </td></tr>
+<tr><td class="tableheader"> Wiadomo¶c o b³êdzie </td><td class="border"> \$Restores[\$i]{errorMsg} </td></tr>
+<tr><td class="tableheader"> ¬ród³owy komputer </td><td class="border"> \$RestoreReq{hostSrc} </td></tr>
 <tr><td class="tableheader"> Source backup num </td><td class="border"> \$RestoreReq{num} </td></tr>
-<tr><td class="tableheader"> Source share </td><td class="border"> \$RestoreReq{shareSrc} </td></tr>
-<tr><td class="tableheader"> Destination host </td><td class="border"> \$RestoreReq{hostDest} </td></tr>
-<tr><td class="tableheader"> Destination share </td><td class="border"> \$RestoreReq{shareDest} </td></tr>
-<tr><td class="tableheader"> Start time </td><td class="border"> \$startTime </td></tr>
-<tr><td class="tableheader"> Duration </td><td class="border"> \$duration min </td></tr>
-<tr><td class="tableheader"> Number of files </td><td class="border"> \$Restores[\$i]{nFiles} </td></tr>
+<tr><td class="tableheader"> ¬ród³owy udzia³ </td><td class="border"> \$RestoreReq{shareSrc} </td></tr>
+<tr><td class="tableheader"> Docelowy komputer </td><td class="border"> \$RestoreReq{hostDest} </td></tr>
+<tr><td class="tableheader"> Docelowy udzia³ </td><td class="border"> \$RestoreReq{shareDest} </td></tr>
+<tr><td class="tableheader"> Czas rozpoczêcia </td><td class="border"> \$startTime </td></tr>
+<tr><td class="tableheader"> Czas trwania </td><td class="border"> \$duration min </td></tr>
+<tr><td class="tableheader"> Liczba plików </td><td class="border"> \$Restores[\$i]{nFiles} </td></tr>
 <tr><td class="tableheader"> Total size </td><td class="border"> \${MB} MB </td></tr>
 <tr><td class="tableheader"> Transfer rate </td><td class="border"> \$MBperSec MB/sec </td></tr>
 <tr><td class="tableheader"> TarCreate errors </td><td class="border"> \$Restores[\$i]{tarCreateErrs} </td></tr>
 <tr><td class="tableheader"> Xfer errors </td><td class="border"> \$Restores[\$i]{xferErrs} </td></tr>
 <tr><td class="tableheader"> Xfer log file </td><td class="border">
 <a href="\$MyURL?action=view&type=RestoreLOG&num=\$Restores[\$i]{num}&host=\$host">View</a>,
-<a href="\$MyURL?action=view&type=RestoreErr&num=\$Restores[\$i]{num}&host=\$host">Errors</a>
+<a href="\$MyURL?action=view&type=RestoreErr&num=\$Restores[\$i]{num}&host=\$host">B³êdy</a>
 </tr></tr>
 </table>
 </p>
 \${h1("lista plików/katalogów")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="100%">
-<tr class="tableheader"><td>Original file/dir</td><td>Restored to</td></tr>
+<tr class="tableheader"><td>Orginalny plik/katalog</td><td>Restored to</td></tr>
 \$fileListStr
 </table>
 EOF
 
 # ------------------------------
-$Lang{Archive___num_details_for__host} = "BackupPC: Archive #\$num details for \$host";
+$Lang{Archive___num_details_for__host} = "BackupPC: Archiwum #\$num szczegó³y dla \$host";
 
 $Lang{Archive___num_details_for__host2 } = <<EOF;
-\${h1("Archive #\$num Details for \$host")}
+\${h1("Archiwum #\$num Szczegó³y dla \$host")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr><td class="tableheader"> Number </td><td class="border"> \$Archives[\$i]{num} </td></tr>
+<tr><td class="tableheader"> Numer </td><td class="border"> \$Archives[\$i]{num} </td></tr>
 <tr><td class="tableheader"> Requested by </td><td class="border"> \$ArchiveReq{user} </td></tr>
 <tr><td class="tableheader"> Request time </td><td class="border"> \$reqTime </td></tr>
-<tr><td class="tableheader"> Result </td><td class="border"> \$Archives[\$i]{result} </td></tr>
-<tr><td class="tableheader"> Error Message </td><td class="border"> \$Archives[\$i]{errorMsg} </td></tr>
-<tr><td class="tableheader"> Start time </td><td class="border"> \$startTime </td></tr>
-<tr><td class="tableheader"> Duration </td><td class="border"> \$duration min </td></tr>
-<tr><td class="tableheader"> Xfer log file </td><td class="border">
+<tr><td class="tableheader"> Rezultat </td><td class="border"> \$Archives[\$i]{result} </td></tr>
+<tr><td class="tableheader"> Wiadomo¶æ o b³êdzie </td><td class="border"> \$Archives[\$i]{errorMsg} </td></tr>
+<tr><td class="tableheader"> Czas rozpoczêcia </td><td class="border"> \$startTime </td></tr>
+<tr><td class="tableheader"> Czas trwania </td><td class="border"> \$duration min </td></tr>
+<tr><td class="tableheader">Plik logu Xfer </td><td class="border">
 <a href="\$MyURL?action=view&type=ArchiveLOG&num=\$Archives[\$i]{num}&host=\$host">View</a>,
-<a href="\$MyURL?action=view&type=ArchiveErr&num=\$Archives[\$i]{num}&host=\$host">Errors</a>
+<a href="\$MyURL?action=view&type=ArchiveErr&num=\$Archives[\$i]{num}&host=\$host">B³êdy</a>
 </tr></tr>
 </table>
 <p>
 \${h1("Host list")}
 <p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr class="tableheader"><td>Host</td><td>Backup Number</td></tr>
+<tr class="tableheader"><td>Komputer</td><td>Numer kopii</td></tr>
 \$HostListStr
 </table>
 EOF
 
 # -----------------------------------
-$Lang{Email_Summary} = "BackupPC: Email Summary";
+$Lang{Email_Summary} = "BackupPC: Podsumowanie Poczty";
 
 # -----------------------------------
 #  !! ERROR messages !!
 # -----------------------------------
-$Lang{BackupPC__Lib__new_failed__check_apache_error_log} = "BackupPC::Lib->new failed: check apache error_log\n";
+$Lang{BackupPC__Lib__new_failed__check_apache_error_log} = "BackupPC::Lib->new failed: sprawd¼ logi z b³êdami APACHE\n";
 $Lang{Wrong_user__my_userid_is___} =
-              "Niew³a¶ciwy u¿ytkownik: my userid is \$>, instead of \$uid"
+              "Niew³a¶ciwy u¿ytkownik: my userid jest \$>, instead of \$uid"
             . "(\$Conf{BackupPCUser})\n";
-# $Lang{Only_privileged_users_can_view_PC_summaries} = "Only privileged users can view PC summaries.";
+# $Lang{Only_privileged_users_can_view_PC_summaries} = "Tylko uprzywilejowany u¿ytkowmik mo¿e ogladac podsumowanie dla komputerów.";
 $Lang{Only_privileged_users_can_stop_or_start_backups} =
-                  "Only privileged users can stop or start backups on"
+                  "Tylko uprzywilejowany u¿ytkowmik mo¿e zatrzymaæ lub uruchomiæ sporz±dzanie kopii na"
 		. " \${EscHTML(\$host)}.";
 $Lang{Invalid_number__num} = "Niepoprawny numer \$num";
-$Lang{Unable_to_open__file__configuration_problem} = "Unable to open \$file: configuration problem?";
-$Lang{Only_privileged_users_can_view_log_or_config_files} = "Only privileged users can view log or config files.";
-$Lang{Only_privileged_users_can_view_log_files} = "Only privileged users can view log files.";
-$Lang{Only_privileged_users_can_view_email_summaries} = "Only privileged users can view email summaries.";
-$Lang{Only_privileged_users_can_browse_backup_files} = "Only privileged users can browse backup files"
+$Lang{Unable_to_open__file__configuration_problem} = "nie mo¿na odczytaæ \$file: problem z konfiguracj±?";
+$Lang{Only_privileged_users_can_view_log_or_config_files} = "Tylko uprzywilejowany u¿ytkowmik mo¿e ogladac pliki z logami lub konfiguracyjne.";
+$Lang{Only_privileged_users_can_view_log_files} = "Tylko uprzywilejowany u¿ytkowmik mo¿e ogladac pliki konfiguracyjne.";
+$Lang{Only_privileged_users_can_view_email_summaries} = "Tylko uprzywilejowany u¿ytkowmik mo¿e ogl±daæ podsumowanie poczty.";
+$Lang{Only_privileged_users_can_browse_backup_files} = "
+Tylko uprzywilejowany u¿ytkowmik mo¿e ogladac pliki kopii zapasowych."
                 . " dla komputera \${EscHTML(\$In{host})}.";
 $Lang{Empty_host_name} = "Pusta nazwa komputera.";
 $Lang{Directory___EscHTML} = "Katalog \${EscHTML(\"\$TopDir/pc/\$host/\$num\")}"
 		    . " jest pusty";
 $Lang{Can_t_browse_bad_directory_name2} = "Can\'t browse bad directory name"
 	            . " \${EscHTML(\$relDir)}";
-$Lang{Only_privileged_users_can_restore_backup_files} = "Only privileged users can restore backup files"
-                . " for host \${EscHTML(\$In{host})}.";
-$Lang{Bad_host_name} = "Bad host name \${EscHTML(\$host)}";
-$Lang{You_haven_t_selected_any_files__please_go_Back_to} = "You haven\'t selected any files; please go Back to"
+$Lang{Only_privileged_users_can_restore_backup_files} = "Tylko uprzywilejowany u¿ytkowmik mo¿e odzyskaæ pliki z kopii zapasowej"
+                . " dla komputera \${EscHTML(\$In{host})}.";
+$Lang{Bad_host_name} = "z³a nazwa hosta \${EscHTML(\$host)}";
+$Lang{You_haven_t_selected_any_files__please_go_Back_to} = "Nie zosta³y wybrane ¿adne pliki. Wróæ i popraw"
                 . " wybierz pliki.";
-$Lang{You_haven_t_selected_any_hosts} = "You haven\'t selected any hosts; please go Back to"
+$Lang{You_haven_t_selected_any_hosts} = "Nie zosta³ wybrany ¿aden komputer. Wróæ i popraw."
                 . " wybierz komputery.";
 $Lang{Nice_try__but_you_can_t_put} = "Nice try, but you can\'t put \'..\' in any of the file names";
-$Lang{Host__doesn_t_exist} = "Host \${EscHTML(\$In{hostDest})} doesn\'t exist";
+$Lang{Host__doesn_t_exist} = "Komputer \${EscHTML(\$In{hostDest})} nie istnieje";
 $Lang{You_don_t_have_permission_to_restore_onto_host} = "You don\'t have permission to restore onto host"
 		    . " \${EscHTML(\$In{hostDest})}";
-$Lang{Can_t_open_create} = "Can\'t open/create "
+$Lang{Can_t_open_create} = "Nie moge otworzyæ/utworzyæ "
                     . "\${EscHTML(\"\$TopDir/pc/\$hostDest/\$reqFileName\")}";
 $Lang{Only_privileged_users_can_restore_backup_files2} = "Only privileged users can restore backup files"
                 . " dla komputera \${EscHTML(\$host)}.";
@@ -1011,8 +1012,8 @@ $Lang{LOG_file} = "LOG file";
 $Lang{LOG_files} = "LOG files";
 $Lang{Old_LOGs} = "Old LOGs";
 $Lang{Email_summary} = "Email summary";
-$Lang{Config_file} = "Config file";
-$Lang{Hosts_file} = "Hosts file";
+$Lang{Config_file} = "Plik konfiguracji";
+$Lang{Hosts_file} = "Plik z komputerami";
 $Lang{Current_queues} = "Current queues";
 $Lang{Documentation} = "Dokumentacja";
 
@@ -1022,7 +1023,7 @@ $Lang{Hosts} = "Komputery";
 $Lang{Select_a_host} = "Wybierz komputer...";
 
 $Lang{There_have_been_no_archives} = "<h2> There have been no archives </h2>\n";
-$Lang{This_PC_has_never_been_backed_up} = "<h2> This PC has never been backed up!! </h2>\n";
+$Lang{This_PC_has_never_been_backed_up} = "<h2> Ten komputer nigdy nie mia³ sporzadzanych kopii bezpieczeñstwa!! </h2>\n";
 $Lang{This_PC_is_used_by} = "<li>Komputer jest u¿ywany przez \${UserLink(\$user)}";
 
 $Lang{Extracting_only_Errors} = "(Poka¿ tylko b³êdy)";
@@ -1050,22 +1051,22 @@ EOF
 
 # ---------
 $Lang{A_command_for_host_is_on_the_command_queue_will_run_soon} = <<EOF;
-<li>A command for \$host is on the command queue (will run soon).
+<li>Polecenie dla \$host is on the command queue (will run soon).
 EOF
 
 # --------
 $Lang{Last_status_is_state_StatusHost_state_reason_as_of_startTime} = <<EOF;
-<li>Last status is state \"\$Lang->{\$StatusHost{state}}\"\$reason as of \$startTime.
+<li>Ostatni znany status to \"\$Lang->{\$StatusHost{state}}\"\$reason o \$startTime.
 EOF
 
 # --------
 $Lang{Last_error_is____EscHTML_StatusHost_error} = <<EOF;
-<li>Last error is \"\${EscHTML(\$StatusHost{error})}\".
+<li>Ostatni b³±d to \"\${EscHTML(\$StatusHost{error})}\".
 EOF
 
 # ------
 $Lang{Pings_to_host_have_failed_StatusHost_deadCnt__consecutive_times} = <<EOF;
-<li>Pings to \$host have failed \$StatusHost{deadCnt} consecutive times.
+<li>Pingi do \$host utracone kolejno \$StatusHost{deadCnt} razy.
 EOF
 
 # -----
@@ -1073,13 +1074,12 @@ $Lang{Prior_to_that__pings} = "Prior to that, pings";
 
 # -----
 $Lang{priorStr_to_host_have_succeeded_StatusHostaliveCnt_consecutive_times} = <<EOF;
-<li>\$priorStr to \$host have succeeded \$StatusHost{aliveCnt}
-        consecutive times.
+<li>\$priorStr do \$host dosz³y kolejno \$StatusHost{aliveCnt} razy.
 EOF
 
 $Lang{Because__host_has_been_on_the_network_at_least__Conf_BlackoutGoodCnt_consecutive_times___} = <<EOF;
-<li>Because \$host has been on the network at least \$Conf{BlackoutGoodCnt}
-consecutive times, it will not be backed up from \$blackoutStr.
+<li>Poniewa¿ \$host nie by³ obecny w sieci kolejno \$Conf{BlackoutGoodCnt}
+razy, nie bêd± podejmowane próby sporz±dzenia kopii do \$blackoutStr.
 EOF
 
 $Lang{__time0_to__time1_on__days} = "\$t0 to \$t1 on \$days";
@@ -1103,7 +1103,7 @@ EOF
 
 $Lang{checkAllHosts} = <<EOF;
 <tr><td class="fviewborder">
-<input type="checkbox" name="allFiles" onClick="return checkAll('allFiles');">&nbsp;Select all
+<input type="checkbox" name="allFiles" onClick="return checkAll('allFiles');">&nbsp;Zaznacz wszystkie
 </td><td colspan="2" align="center" class="fviewborder">
 <input type="submit" name="Submit" value="Archive selected hosts">
 </td></tr>
@@ -1120,9 +1120,9 @@ $Lang{fileHeader} = <<EOF;
 EOF
 
 $Lang{Home} = "Home";
-$Lang{Browse} = "Browse backups";
-$Lang{Last_bad_XferLOG} = "Last bad XferLOG";
-$Lang{Last_bad_XferLOG_errors_only} = "Last bad XferLOG (errors&nbsp;only)";
+$Lang{Browse} = "Przegl±d kopii";
+$Lang{Last_bad_XferLOG} = "Ostatni b³êdny XferLOG";
+$Lang{Last_bad_XferLOG_errors_only} = "ostatni b³êdny XferLOG (errors&nbsp;only)";
 
 $Lang{This_display_is_merged_with_backup} = <<EOF;
 <li> This display is merged with backup #\$numF.
@@ -1135,16 +1135,16 @@ EOF
 $Lang{Restore_Summary} = <<EOF;
 \${h2("Restore Summary")}
 <p>
-Click on the restore number for more details.
+Kliknij na numer aby uzyskaæ wiêcej szczegó³ów.
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr class="tableheader"><td align="center"> Restore# </td>
+<tr class="tableheader"><td align="center"> Odzyskiwanie# </td>
     <td align="center"> Rezultat </td>
     <td align="right"> Data rozpoczêcia</td>
     <td align="right"> Dur/mins</td>
     <td align="right"> #plików </td>
     <td align="right"> MB </td>
-    <td align="right"> #tar errs </td>
-    <td align="right"> #xferErrs </td>
+    <td align="right"> #b³êdy tar</td>
+    <td align="right"> #b³êdy xfer</td>
 </tr>
 \$restoreStr
 </table>
@@ -1153,10 +1153,9 @@ EOF
 
 $Lang{Archive_Summary} = <<EOF;
 \${h2("Archive Summary")}
-<p>
-kliknij na numerze wybranego archiwum aby zobaczyæ szczegó³y.
+<p>kliknij na numerze wybranego archiwum aby zobaczyæ szczegó³y.
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
-<tr class="tableheader"><td align="center"> Archive# </td>
+<tr class="tableheader"><td align="center"> Archiwum# </td>
     <td align="center"> Rezultat </td>
     <td align="right"> Data rozpoczêcia</td>
     <td align="right"> Dur/mins</td>
@@ -1189,40 +1188,41 @@ $Lang{and} = "i";
 
 # ------
 # Hosts states and reasons
-$Lang{Status_idle} = "idle";
-$Lang{Status_backup_starting} = "backup starting";
-$Lang{Status_backup_in_progress} = "backup w trakcie";
-$Lang{Status_restore_starting} = "restore starting";
-$Lang{Status_restore_in_progress} = "restore in progress";
+$Lang{Status_idle} = "bezczynny";
+$Lang{Status_backup_starting} = "rozpoczêto sporz±dzanie kopii";
+$Lang{Status_backup_in_progress} = "sporz±dzanie kopi w trakcie";
+$Lang{Status_restore_starting} = "rozpoczêto odzyskiwanie";
+$Lang{Status_restore_in_progress} = "odzyskiwanie w trakcie";
 $Lang{Status_link_pending} = "link pending";
 $Lang{Status_link_running} = "link running";
 
-$Lang{Reason_backup_done}    = "backup ukoñczony";
+$Lang{Reason_backup_done}    = "ukoñczony sporz±dzanie kopie";
 $Lang{Reason_restore_done}   = "odzyskiwanie ukoñczone";
 $Lang{Reason_archive_done}   = "archiwizacja ukoñczona";
-$Lang{Reason_nothing_to_do}  = "nothing to do";
+$Lang{Reason_nothing_to_do}  = "nie ma nic do zrobienia";
 $Lang{Reason_backup_failed}  = "backup nie powiód³ siê";
 $Lang{Reason_restore_failed} = "odzyskiwanie nie powiod³o siê";
 $Lang{Reason_archive_failed} = "archiwizacja nie powiod³a siê";
-$Lang{Reason_no_ping}        = "no ping";
-$Lang{Reason_backup_canceled_by_user}  = "backup przerwany przez u¿ytkownika";
-$Lang{Reason_restore_canceled_by_user} = "restore canceled by user";
-$Lang{Reason_archive_canceled_by_user} = "archive canceled by user";
+$Lang{Reason_no_ping}        = "brak ping";
+$Lang{Reason_backup_canceled_by_user}  = "sporz±dzanie kopii przerwane przez u¿ytkownika";
+$Lang{Reason_restore_canceled_by_user} = "odzyskiwanie przerwane przez u¿ytkownika";
+$Lang{Reason_archive_canceled_by_user} = "archiwizowanie przerwane przez u¿ytkownika";
 
 # ---------
 # Email messages
 
 # No backup ever
-$Lang{EMailNoBackupEverSubj} = "BackupPC: no backups of \$host have succeeded";
+$Lang{EMailNoBackupEverSubj} = "BackupPC: brak kopii zapasowych z \$host ";
 $Lang{EMailNoBackupEverMesg} = <<'EOF';
 To: $user$domain
 cc:
 Subject: $subj
 
-Dear $userName,
+Szanowny $userName,
 
-Your PC ($host) has never been successfully backed up by our
-PC backup software.  PC backups should occur automatically
+Twój komputer ($host) nie jest aktualnie zabezpieczony przed utrat± danych
+ successfully backed up by ourPC backup software.
+ PC backups should occur automatically
 when your PC is connected to the network.  You should contact
 computer support if:
 
@@ -1302,6 +1302,6 @@ http://backuppc.sourceforge.net
 EOF
 
 $Lang{howLong_not_been_backed_up} = "not been backed up successfully";
-$Lang{howLong_not_been_backed_up_for_days_days} = "not been backed up for \$days days";
+$Lang{howLong_not_been_backed_up_for_days_days} = "not been backed up for \$days dni";
 
 #end of lang_pl.pm
