@@ -1,0 +1,23 @@
+diff -uNr BackupPC-2.1.1.orig/lib/BackupPC/CGI/Lib.pm BackupPC-2.1.1/lib/BackupPC/CGI/Lib.pm
+--- BackupPC-2.1.1.orig/lib/BackupPC/CGI/Lib.pm	2005-03-13 18:15:48.000000000 +0100
++++ BackupPC-2.1.1/lib/BackupPC/CGI/Lib.pm	2005-05-13 15:33:16.000000000 +0200
+@@ -429,6 +429,7 @@
+     print <<EOF;
+ <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+ <html><head>
++<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <title>$title</title>
+ <link rel=stylesheet type="text/css" href="$Conf{CgiImageDirURL}/$Conf{CgiCSSFile}" title="CSSFile">
+ $Conf{CgiHeaders}
+diff -uNr BackupPC-2.1.1.orig/lib/BackupPC/CGI/View.pm BackupPC-2.1.1/lib/BackupPC/CGI/View.pm
+--- BackupPC-2.1.1.orig/lib/BackupPC/CGI/View.pm	2005-03-13 18:15:48.000000000 +0100
++++ BackupPC-2.1.1/lib/BackupPC/CGI/View.pm	2005-05-13 15:39:49.000000000 +0200
+@@ -84,7 +84,7 @@
+                     if ( $host ne "config" && -f "$TopDir/conf/$host.pl"
+                                            && !-f $file );
+     } elsif ( $type eq "docs" ) {
+-        $file = "$BinDir/../doc/BackupPC.html";
++        $file = "$BinDir/../lib/backuppc/www/html/doc/BackupPC.html";
+     } elsif ( $type eq "config" ) {
+         $file = "$TopDir/conf/config.pl";
+     } elsif ( $type eq "hosts" ) {
