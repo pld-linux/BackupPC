@@ -5,9 +5,6 @@
 # - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
 # - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540 - directory /var/log/backuppc
 # - change or/and add Requires for  --bin-path sendmail=%{_sbindir}/sendmail
-# - ping not working --bin-path ping=/bin/ping
-# - add patch for encoding web page in iso-8859-2 or utf-8
-# - add patch for error "Unable to open /usr/bin/../doc/BackupPC.html"
 # - correct config file
 
 %define		BPCuser		http
@@ -18,7 +15,7 @@ Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
 Version:	2.1.1
-Release:	0.3
+Release:	1
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
@@ -27,6 +24,7 @@ Source1:	%{name}_apache.conf
 Source2:	%{name}_htaccess
 Source3:	%{name}-pl.pm
 Patch0:		%{name}-usernotexist.patch
+Patch1:		%{name}-pathtodoc.patch
 URL:		http://backuppc.sourceforge.net/
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
@@ -109,6 +107,7 @@ zapasowych:
 %prep
 %setup -q -n BackupPC-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
@@ -193,7 +192,7 @@ ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 
 
 %if 0
-# was commented out, glen, 2005-05-01
+
 %pre
 # Add the "backuppc" user and group
 %groupadd -g 150 %{BPCgroup}
@@ -275,5 +274,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %attr(644,%{BPCuser},%{BPCgroup})  %{_sysconfdir}/%{name}/*
-#%config(noreplace) %verify(not md5 size mtime) %attr(644,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
 %{_mandir}/man8/backuppc*
