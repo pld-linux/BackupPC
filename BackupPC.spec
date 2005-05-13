@@ -24,7 +24,7 @@ Source1:	%{name}_apache.conf
 Source2:	%{name}_htaccess
 Source3:	%{name}-pl.pm
 Patch0:		%{name}-usernotexist.patch
-Patch1:		%{name}-pathtodoc.patch
+Patch1:		%{name}-pathtodocs.patch
 URL:		http://backuppc.sourceforge.net/
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
