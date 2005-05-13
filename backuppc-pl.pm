@@ -67,7 +67,7 @@ $Lang{BackupPC_Server_Status_General_Info}= <<EOF;
      wersja \$Info{Version}, uruchomiony o \$serverStartTime.
 <li> Status wygenerowano o \$now.
 <li> Ostatnie wczytanie konfiguracji: \$configLoadTime.
-<li> Komputery sprawdzaj± obecno¶æ nowych zleceñ co \$nextWakeupTime.
+<li> Sprawdzenie obecno¶ci nowych zleceñ o \$nextWakeupTime.
 <li> Pozosta³e informacje:
     <ul>
         <li>\$numBgQueue oczekuj±ce zlecenia archiwizacji od ostatniego scheduled wakeup,
