@@ -28,8 +28,8 @@ Patch1:		%{name}-pathtodocs.patch
 URL:		http://backuppc.sourceforge.net/
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
-BuildRequires:	perl-base
 BuildRequires:	perl-devel >= 1:5.6.0
+BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sed >= 4.0
 Requires:	apache
