@@ -208,7 +208,7 @@ Jest \$hostCntGood komputerów, na których dokonano archiwizacji, ³±cznie: \${ful
 <table class="tableStnd" border cellpadding="3" cellspacing="1">
 <tr class="tableheader"><td align=center> Komputer</td>
     <td align="center"> U¿ytkownik </td>
-    <td align="center"> Wielko¶æ Backup-u </td>
+    <td align="center"> Wielko¶æ archiwum </td>
 \$strGood
 \$checkAllHosts
 </table>
@@ -232,7 +232,7 @@ Archiwizacja nastêpuj±cych komputerów
 <table class="tableStnd" border cellspacing="1" cellpadding="3">
 \$paramStr
 <tr>
-    <td colspan=2><input type="submit" value="Start the Archive" name=""></td>
+    <td colspan=2><input type="submit" value="Rozpoczêcie archiwizacji" name=""></td>
 </tr>
 </form>
 </table>
@@ -320,7 +320,7 @@ Zatrzymanie archiwizacji dla \$host;
 <form action="\$MyURL" method="get">
 <input type="hidden" name="host" value="\$host">
 <input type="hidden" name="doit" value="1">
-Also, please don\'t start another backup for
+Nie rozpoczynaj archiwizacji przez okres
 <input type="text" name="backoff" size="10" value="\$backoff"> godzin.
 <p>
 Czy na prawdê chcesz to zrobiæ?
@@ -353,7 +353,7 @@ Aktualnie w kolejce czekaj± nastêpuj±ce zlecenia u¿ytkownika:
 
 \${h2("Background Queue Summary")}
 <p>
-The following background requests are currently queued:
+W tle skolejkowane s± nastêpuj±ce zlecenia::
 </p>
 <table class="tableStnd" border cellspacing="1" cellpadding="3" width="80%">
 <tr class="tableheader"><td> Komputer </td>
@@ -465,17 +465,17 @@ zostan± nadpisane!
 		window.open(URL,'','width=500,height=400');
 	 }
 	 </script>
-	 <!--<a href="javascript:myOpen('\$MyURL?action=findShares&host='+document.direct.hostDest.options.value)">Search for available shares (NOT IMPLEMENTED)</a>--></td>
+	 <!--<a href="javascript:myOpen('\$MyURL?action=findShares&host='+document.direct.hostDest.options.value)">Szukanie dostêpnych udzia³ów (NIE ZAIMPLEMENTOWANE)</a>--></td>
 </tr><tr>
     <td>Odzyskiwanie plików udzia³u</td>
     <td><input type="text" size="40" value="\${EscHTML(\$share)}"
 	 name="shareDest"></td>
 </tr><tr>
-    <td>Restore the files below dir<br>(relative to share)</td>
+    <td>Przywracanie plików katalogu poni¿ej<br>(relative to share)</td>
     <td valign="top"><input type="text" size="40" maxlength="256"
 	value="\${EscHTML(\$pathHdr)}" name="pathHdr"></td>
 </tr><tr>
-    <td><input type="submit" value="Rozpoczêcie odzyskiwania" name=""></td>
+    <td><input type="submit" value="Rozpoczêcie przywracania" name=""></td>
 </table>
 </form>
 EOF
@@ -550,11 +550,11 @@ dysku, aby je przechowaæ.
 <input type="hidden" name="type" value="1">
 \$hiddenStr
 <input type="hidden" value="\$In{action}" name="action">
-<input type="checkbox" value="1" name="relative" checked> Make archive relative
+<input type="checkbox" value="1" name="relative" checked> Tworzenie archiwum relative
 to \${EscHTML(\$pathHdr eq "" ? "/" : \$pathHdr)}
-(otherwise archive will contain full paths).
+(w przeciwnym razie archiwum bêdzie zawiera³o pe³ne ¶cie¿ki).
 <br>
-<input type="submit" value="Download Tar File" name="">
+<input type="submit" value="Pobieranie pliku Tar" name="">
 </form>
 EOF
 
@@ -617,7 +617,7 @@ $Lang{Host__host_Backup_Summary2} = <<EOF;
 \$statusStr
 </ul>
 </p>
-\${h2("U¿ytkownik Actions")}
+\${h2("User Actions")}
 <p>
 <form action="\$MyURL" method="get">
 <input type="hidden" name="host" value="\$host">
@@ -722,7 +722,7 @@ $Lang{Host__host_Archive_Summary2} = <<EOF;
 \$statusStr
 </ul>
 
-\${h2("U¿ytkownik Actions")}
+\${h2("User Actions")}
 <p>
 <form action="\$MyURL" method="get">
 <input type="hidden" name="archivehost" value="\$host">
@@ -747,7 +747,7 @@ $Lang{NavSectionTitle_} = "Serwer";
 
 # -------------------------
 $Lang{Backup_browse_for__host} = <<EOF;
-\${h1("Backup browse for \$host")}
+\${h1("Poszukiwanie archiwum dla \$host")}
 
 <script language="javascript" type="text/javascript">
 <!--
@@ -782,17 +782,17 @@ $Lang{Backup_browse_for__host} = <<EOF;
 <input type="hidden" name="share" value="\${EscHTML(\$share)}">
 <input type="hidden" name="action" value="browse">
 <ul>
-<li> You are browsing backup #\$num, which started around \$backupTime
-        (\$backupAge days ago),
+<li> Przeszukujesz archiwum #\$num, którego tworzenie zosta³o rozpoczête o \$backupTime
+        (\$backupAge dni temu),
 \$filledBackup
 <li> Enter directory: <input type="text" name="dir" size="50" maxlength="4096" value="\${EscHTML(\$dir)}"> <input type="submit" value="\$Lang->{Go}" name="Submit">
 <li> Click on a directory below to navigate into that directory,
-<li> Click on a file below to restore that file,
-<li> You can view the backup <a href="\$MyURL?action=dirHistory&host=\${EscURI(\$host)}&share=\$shareURI&dir=\$pathURI">historia</a> of the current directory.
+<li> Kliknij na plik poni¿ej w celu jego przywrócenia,
+<li> Mo¿esz obejrzeæ arhichiwum <a href="\$MyURL?action=dirHistory&host=\${EscURI(\$host)}&share=\$shareURI&dir=\$pathURI">historia</a> aktualnego katalogu.
 </ul>
 </form>
 
-\${h2("Contents of \${EscHTML(\$dirDisplay)}")}
+\${h2("Zawarto¶æ ${EscHTML(\$dirDisplay)}")}
 <form name="form1" method="post" action="\$MyURL">
 <input type="hidden" name="num" value="\$num">
 <input type="hidden" name="host" value="\$host">
@@ -818,7 +818,7 @@ $Lang{Backup_browse_for__host} = <<EOF;
 <br>
 <!--
 This is now in the checkAll row
-<input type="submit" name="Submit" value="Restore selected files">
+<input type="submit" name="Submit" value="Przywróæ zaznaczone pliki">
 -->
 </form>
 EOF
