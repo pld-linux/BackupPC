@@ -14,12 +14,12 @@
 Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
-Version:	2.1.1
+Version:	2.1.2
 Release:	1
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
-# Source0-md5:	fadbce1c3d4679dffc98514e48ed7917
+# Source0-md5:	72fc0f09084f44c42ba5d22451cfe29b
 Source1:	%{name}_apache.conf
 Source2:	%{name}_htaccess
 Source3:	%{name}-pl.pm
@@ -194,9 +194,9 @@ ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 %if 0
 
 %pre
-# Add the "backuppc" user and group
+# Add the "backuppc" user and "http" group
 %groupadd -g 150 %{BPCgroup}
-%useradd -c "system user for %{name}" -u 150 -d /home/services/BackupPC -s /bin/false -g %{BPCgroup} %{BPCuser}
+%useradd -c "system user for %{name}" -u 150 -d /var/lib/backuppc -s /bin/false -g %{BPCgroup} %{BPCuser}
 %endif
 
 %preun
