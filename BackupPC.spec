@@ -16,7 +16,7 @@ Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
 Version:	2.1.2
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
@@ -40,6 +40,7 @@ Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
 Requires:	rsync
 Requires:	apache-mod_perl
+Requires:	par2cmdline
 Requires:	samba-client
 Requires:	sperl
 Requires:	tar > 1.13
@@ -141,6 +142,7 @@ install -d		$RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
 	--bin-path df=/bin/df \
 	--bin-path ssh=%{_bindir}/ssh \
 	--bin-path sendmail=%{_sbindir}/sendmail \
+	--bin-path par2=%{_bindir}/par \
 	--bin-path hostname=/bin/hostname \
 	--bin-path split=%{_bindir}/split \
 	--bin-path cat=/bin/cat \
@@ -262,7 +264,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
-%lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
+#%lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
