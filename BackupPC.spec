@@ -1,6 +1,7 @@
 
 # - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
 # TODO:
+# - polish translation in SOURCE/backuppc-pl.pm
 # - patch for service user - now is static backuppc
 # - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
 # - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540 - directory /var/log/backuppc
@@ -165,7 +166,7 @@ install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 #install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
 install backuppc.8 $RPM_BUILD_ROOT%{_mandir}/man8
-install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
+#install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
 install doc/* $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/doc
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
