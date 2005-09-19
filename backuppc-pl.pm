@@ -792,7 +792,7 @@ $Lang{Backup_browse_for__host} = <<EOF;
 </ul>
 </form>
 
-\${h2("Zawarto¶æ ${EscHTML(\$dirDisplay)}")}
+\${h2("Zawarto¶æ \${EscHTML(\$dirDisplay)}")}
 <form name="form1" method="post" action="\$MyURL">
 <input type="hidden" name="num" value="\$num">
 <input type="hidden" name="host" value="\$host">
