@@ -40,6 +40,7 @@ Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
 Requires:	rsync
 Requires:	apache-mod_perl
+Requires:	apache-mod_auth
 Requires:	par2cmdline
 Requires:	samba-client
 Requires:	sperl
