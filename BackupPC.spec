@@ -169,7 +169,7 @@ install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 #install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
 install backuppc.8 $RPM_BUILD_ROOT%{_mandir}/man8
-#install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
+install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
 install doc/* $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/doc
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
@@ -265,7 +265,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
-#%lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
+%lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
