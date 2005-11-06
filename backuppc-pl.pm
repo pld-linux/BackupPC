@@ -1221,20 +1221,19 @@ Subject: $subj
 Szanowny $userName,
 
 Twój komputer ($host) nie jest aktualnie zabezpieczony przed utrat± danych
- successfully backed up by ourPC backup software.
- PC backups should occur automatically
-when your PC is connected to the network.  You should contact
-computer support if:
+przez nasze oprogramowanie BackupPC.
+Archiwizacja przez BackupPC sporz±dzana jest automatycznie gdy Twój PC jest 
+pod³±czony do sieci. Powiniene¶ skontaktowaæ siê z dzia³em IT je¶li:
 
-  - Your PC has been regularly connected to the network, meaning
-    there is some configuration or setup problem preventing
-    backups from occurring.
+  - Twój komputer by³ regularnie pod³±czony do sieci, tzn
+    wystêpuje problem w konfiguracji uniemo¿liwiaj±cy wykonywanie
+	kopii zapasowych.
 
-  - You don't want your PC backed up and you want these email
-    messages to stop.
+  - Nie chcesz aby Twój PC by³ archiwizowany i nie chcesz otrzymywaæ 
+    tych emaili.
 
-Otherwise, please make sure your PC is connected to the network
-next time you are in the office.
+W innym przypadku zadbaj o to aby Twój PC by³ pod³±czony do sieci gdy 
+przebywasz w biurze.
 
 Regards,
 BackupPC Genie
@@ -1301,7 +1300,7 @@ BackupPC Genie
 http://backuppc.sourceforge.net
 EOF
 
-$Lang{howLong_not_been_backed_up} = "not been backed up successfully";
-$Lang{howLong_not_been_backed_up_for_days_days} = "not been backed up for \$days dni";
+$Lang{howLong_not_been_backed_up} = "nie sporz±dzono kopii poprawnie";
+$Lang{howLong_not_been_backed_up_for_days_days} = "nie sporz±dzono kopi przez \$days dni";
 
 #end of lang_pl.pm
