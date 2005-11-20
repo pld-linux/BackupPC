@@ -33,14 +33,14 @@ BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sed >= 4.0
-Requires:	apache
+Requires:	apache >= 2.0
 Requires:	perl-File-RsyncP >= 0.52
 Requires:	perl-Compress-Zlib
 Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
 Requires:	rsync
 Requires:	apache-mod_perl
-Requires:	apache-mod_auth
+Requires:	apache(mod_auth)
 Requires:	par2cmdline
 Requires:	samba-client
 Requires:	sperl
