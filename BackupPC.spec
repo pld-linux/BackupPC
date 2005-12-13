@@ -33,9 +33,9 @@ BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sed >= 4.0
-Requires:	apache >= 2.0
 Requires:	apache(mod_auth)
 Requires:	apache-mod_perl
+Requires:	apache >= 2.0
 Requires:	par2cmdline
 Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
