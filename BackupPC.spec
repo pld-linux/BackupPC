@@ -16,7 +16,7 @@ Summary:	A high-performance, enterprise-grade system for backing up PCs
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
 Name:		backuppc
 Version:	2.1.2
-Release:	2
+Release:	3
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
@@ -24,8 +24,9 @@ Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
 Source1:	%{name}_apache.conf
 Source2:	%{name}_htaccess
 Source3:	%{name}-pl.pm
-Patch0:		%{name}-usernotexist.patch
-Patch1:		%{name}-pathtodocs.patch
+Patch0:		%{name}-%{version}pl0.patch
+Patch1:		%{name}-usernotexist.patch
+Patch2:		%{name}-pathtodocs.patch
 URL:		http://backuppc.sourceforge.net/
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
@@ -111,6 +112,7 @@ zapasowych:
 %setup -q -n BackupPC-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1 
 
 %build
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
