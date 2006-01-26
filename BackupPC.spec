@@ -106,6 +106,7 @@ zapasowych:
   do sieci tylko z przerwami i maj± dynamiczne adresy IP (z DHCP).
 - Elastyczna konfiguracja parametrów pozwala na wykonywanie wielu
   kopii równolegle.
+- Istnieje mo¿liwo¶æ nagrywania backupu na no¶niki przeno¶ne
 - Wiele wiêcej mo¿na odkryæ w manualu...
 
 %prep
