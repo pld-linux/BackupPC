@@ -12,8 +12,8 @@
 %define		BPCgroup	http
 %include	/usr/lib/rpm/macros.perl
 
-Summary:	A high-performance, enterprise-grade system for backing up PCs
-Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych z PC
+Summary:	A high-performance, enterprise-grade system for backing up
+Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
 Name:		backuppc
 Version:	2.1.2
 Release:	3
@@ -106,7 +106,8 @@ zapasowych:
   do sieci tylko z przerwami i maj± dynamiczne adresy IP (z DHCP).
 - Elastyczna konfiguracja parametrów pozwala na wykonywanie wielu
   kopii równolegle.
-- Istnieje mo¿liwo¶æ nagrywania backupu na no¶niki przeno¶ne
+- Istnieje mo¿liwo¶æ nagrywania backupu na inne no¶niki (tasmy, 
+  DVD-R/RW, CD-R/RW i inne)
 - Wiele wiêcej mo¿na odkryæ w manualu...
 
 %prep
