@@ -116,20 +116,17 @@ zapasowych:
 %patch1 -p1
 %patch2 -p1
 
-%build
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
 sed -i -e 's#!/bin/perl#!%{__perl}#' {bin,cgi-bin,doc}/*
 sed -i -e 's#!/bin/perl#!%{__perl}#' */src/*
 sed -i -e 's#!/bin/perl#!%{__perl}#' */*/*/*.pm
-
-
 
 pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
 %{__perl} -e "s/.IX Title.*/.SH NAME\nbackuppc \\- BackupPC manual/g" -p -i.tmp backuppc.8
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d		$RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
 			$RPM_BUILD_ROOT%{_mandir}/man8 \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/www/{html,cgi-bin,html/doc} \
 			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/pc/localhost,log} \
@@ -198,6 +195,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/BackupPC_stnd.css \
 cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html
 ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 
+touch $RPM_BUILD_ROOT%{_sysconfdir}/backuppc/password
 
 %if 0
 %pre
@@ -207,13 +205,6 @@ ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 %endif
 
 %post
-if [ ! -f %{_sysconfdir}/backuppc/password ]; then
-# FIXME? $PASS variable cames from?
-	openssl rand -base64 6 > $PASS
-	%{_bindir}/htpasswd -cb %{_sysconfdir}/backuppc/password admin $PASS
-	echo "Your web password is: $PASS."
-	echo "Change this: htpasswd -b %{_sysconfdir}/backuppc/password user password"
-fi
 %service backuppc restart "BackupPC"
 
 %preun
@@ -235,7 +226,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_datadir}/%{name}/www/cgi-bin/BackupPC_Admin
-#%config(noreplace) %verify(not md5 size mtime) %{_datadir}/%{name}/www/cgi-bin/.htaccess
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}/www/html/doc
 %{_datadir}/%{name}/www/html/doc/*
@@ -273,4 +263,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %attr(644,%{BPCuser},%{BPCgroup})  %{_sysconfdir}/%{name}/*
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{_sysconfdir}/backuppc/password
 %{_mandir}/man8/backuppc*
