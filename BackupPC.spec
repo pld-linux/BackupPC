@@ -34,9 +34,9 @@ BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sed >= 4.0
+Requires:	apache >= 2.0
 Requires:	apache(mod_auth)
 Requires:	apache-mod_perl
-Requires:	apache >= 2.0
 Requires:	par2cmdline
 Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
@@ -106,7 +106,7 @@ zapasowych:
   do sieci tylko z przerwami i maj± dynamiczne adresy IP (z DHCP).
 - Elastyczna konfiguracja parametrów pozwala na wykonywanie wielu
   kopii równolegle.
-- Istnieje mo¿liwo¶æ nagrywania backupu na inne no¶niki (tasmy, 
+- Istnieje mo¿liwo¶æ nagrywania backupu na inne no¶niki (tasmy,
   DVD-R/RW, CD-R/RW i inne)
 - Wiele wiêcej mo¿na odkryæ w manualu...
 
@@ -114,7 +114,7 @@ zapasowych:
 %setup -q -n BackupPC-%{version}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1 
+%patch2 -p1
 
 %build
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
@@ -177,7 +177,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
 install doc/* $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/doc
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
-rm -rdf $RPM_BUILD_ROOT/usr/doc
+rm -rdf $RPM_BUILD_ROOT%{_prefix}/doc
 
 # symlinks
 mv $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
@@ -200,35 +200,26 @@ ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 
 
 %if 0
-
 %pre
 # Add the "backuppc" user and "http" group
 %groupadd -g 150 %{BPCgroup}
 %useradd -c "system user for %{name}" -u 150 -d /var/lib/backuppc -s /bin/false -g %{BPCgroup} %{BPCuser}
 %endif
 
-%preun
-if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/backuppc ]; then
-		/etc/rc.d/init.d/backuppc stop
-	fi
-	/sbin/chkconfig --del backuppc
-fi
-
-
 %post
-if [ ! -f /etc/backuppc/password ]; then
+if [ ! -f %{_sysconfdir}/backuppc/password ]; then
 # FIXME? $PASS variable cames from?
 	openssl rand -base64 6 > $PASS
-	/usr/bin/htpasswd -cb /etc/backuppc/password admin $PASS
-	echo "Your web pasword is: $PASS ."
-	echo "Change this: htpasswd -b /etc/backuppc/password user password"
+	%{_bindir}/htpasswd -cb %{_sysconfdir}/backuppc/password admin $PASS
+	echo "Your web password is: $PASS."
+	echo "Change this: htpasswd -b %{_sysconfdir}/backuppc/password user password"
 fi
+%service backuppc restart "BackupPC"
 
-if [ -f /var/lock/subsys/backuppc ]; then
-	/etc/rc.d/init.d/backuppc restart
-else
-	echo "Run \"/etc/rc.d/init.d/backuppc start\" to start BackupPC."
+%preun
+if [ "$1" = "0" ]; then
+	%service backuppc stop
+	/sbin/chkconfig --del backuppc
 fi
 
 %postun
