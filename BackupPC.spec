@@ -33,6 +33,7 @@ BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
+Requires(post,preun):	/sbin/chkconfig
 Requires:	apache(mod_auth)
 Requires:	apache(mod_perl)
 Requires:	par2cmdline
@@ -40,6 +41,7 @@ Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
 Requires:	perl-Compress-Zlib
 Requires:	perl-File-RsyncP >= 0.52
+Requires:	rc-scripts
 Requires:	rsync
 Requires:	samba-client
 Requires:	sperl
