@@ -22,8 +22,7 @@ Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
 # Source0-md5:	72fc0f09084f44c42ba5d22451cfe29b
 Source1:	%{name}_apache.conf
-Source2:	%{name}_htaccess
-Source3:	%{name}-pl.pm
+Source2:	%{name}-pl.pm
 Patch0:		%{name}-%{version}pl0.patch
 Patch1:		%{name}-usernotexist.patch
 Patch2:		%{name}-pathtodocs.patch
@@ -32,11 +31,10 @@ BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpm-perlprov
-BuildRequires:	rpmbuild(macros) >= 1.202
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
-Requires:	apache >= 2.0
 Requires:	apache(mod_auth)
-Requires:	apache-mod_perl
+Requires:	apache(mod_perl)
 Requires:	par2cmdline
 Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
@@ -46,11 +44,15 @@ Requires:	rsync
 Requires:	samba-client
 Requires:	sperl
 Requires:	tar > 1.13
+Requires:	webapps
 Provides:	group(%{BPCgroup})
 Provides:	user(%{BPCuser})
 Obsoletes:	BackupPC
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
 
 %description
 BackupPC is disk based and not tape based. This particularity allows
@@ -167,10 +169,8 @@ sed -i -e "s#'backuppc';#'%{BPCuser}';#" $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
 sed -i -e 's/$Conf{SendmailPath} =/#$Conf{SendmailPath} =/' $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/config.pl
 
 install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
-#install %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin/.htaccess
 install backuppc.8 $RPM_BUILD_ROOT%{_mandir}/man8
-install %{SOURCE3} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
+install %{SOURCE2} $RPM_BUILD_ROOT%{_libdir}/BackupPC/Lang/pl.pm
 install doc/* $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/doc
 # Cleanups:
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
@@ -195,7 +195,10 @@ mv $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/BackupPC_stnd.css \
 cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html
 ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
 
-touch $RPM_BUILD_ROOT%{_sysconfdir}/backuppc/password
+install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
+touch $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/htpasswd
 
 %if 0
 %pre
@@ -260,8 +263,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/conf
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/log/%{name}
 %attr(754,root,root) /etc/rc.d/init.d/backuppc
-%{_sysconfdir}/httpd/httpd.conf/93_backuppc.conf
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %verify(not md5 mtime size) %attr(644,%{BPCuser},%{BPCgroup})  %{_sysconfdir}/%{name}/*
-%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{_sysconfdir}/backuppc/password
 %{_mandir}/man8/backuppc*
+%config(noreplace) %verify(not md5 mtime size) %attr(644,%{BPCuser},%{BPCgroup}) %{_sysconfdir}/%{name}/*
+%dir %attr(750,root,http) %{_webapps}/%{_webapp}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/httpd.conf
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webapps}/%{_webapp}/htpasswd
