@@ -1,5 +1,0 @@
-AuthGroupFile /etc/backuppc/group    # <--- change path as needed
-AuthUserFile /etc/backuppc/passwd     # <--- change path as needed
-AuthType basic
-AuthName "access"
-require valid-user
