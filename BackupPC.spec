@@ -16,14 +16,14 @@ Summary:	A high-performance, enterprise-grade system for backing up
 Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
 Name:		backuppc
 Version:	2.1.2
-Release:	3
+Release:	4
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
 # Source0-md5:	72fc0f09084f44c42ba5d22451cfe29b
 Source1:	%{name}_apache.conf
 Source2:	%{name}-pl.pm
-Patch0:		%{name}-%{version}pl0.patch
+Patch0:		%{name}-%{version}pl2.patch
 Patch1:		%{name}-usernotexist.patch
 Patch2:		%{name}-pathtodocs.patch
 URL:		http://backuppc.sourceforge.net/
