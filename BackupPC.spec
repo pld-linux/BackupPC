@@ -192,7 +192,7 @@ cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin
 ln -sf BackupPC_Admin index.cgi
 
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/BackupPC_stnd.css \
-	$RPM_BUILD_ROOT/%{_sysconfdir}/%{name}
+	$RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
 cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html
 ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
