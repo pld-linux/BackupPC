@@ -1,0 +1,3 @@
+- started update to 2.1.0 (based on Michał Panasiewicz
+  wolvverine <at> tarchomin <dot> pl spec sent to PLD-list). Needs patch to be not
+  fatal if user does not exists to let it be finished.
