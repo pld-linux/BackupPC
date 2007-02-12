@@ -13,7 +13,7 @@
 %include	/usr/lib/rpm/macros.perl
 
 Summary:	A high-performance, enterprise-grade system for backing up
-Summary(pl):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
+Summary(pl.UTF-8):   Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
 Name:		backuppc
 Version:	2.1.2
 Release:	4
@@ -83,36 +83,36 @@ features not found in any other backup solution:
   performed in parallel.
 - and more to discover in the manual...
 
-%description -l pl
-BackupPC jest oparty na dyskach, a nie ta¶mach. Ta osobliwo¶æ daje
-mo¿liwo¶ci, których nie maj± inne rozwi±zania problemu kopii
+%description -l pl.UTF-8
+BackupPC jest oparty na dyskach, a nie taÅ›mach. Ta osobliwoÅ›Ä‡ daje
+moÅ¼liwoÅ›ci, ktÃ³rych nie majÄ… inne rozwiÄ…zania problemu kopii
 zapasowych:
-- Inteligentny schemat ¶ci±gania minimalizuje zajmowane miejsce i
-  ilo¶æ operacji wej¶cia/wyj¶cia na dysku. Takie same pliki s±
-  przechowywane tylko raz (przy u¿yciu twardych dowi±zañ), co daje
-  znacz±c± oszczêdno¶æ w miejscu na dysku i czasie zapisu.
+- Inteligentny schemat Å›ciÄ…gania minimalizuje zajmowane miejsce i
+  iloÅ›Ä‡ operacji wejÅ›cia/wyjÅ›cia na dysku. Takie same pliki sÄ…
+  przechowywane tylko raz (przy uÅ¼yciu twardych dowiÄ…zaÅ„), co daje
+  znaczÄ…cÄ… oszczÄ™dnoÅ›Ä‡ w miejscu na dysku i czasie zapisu.
 - Opcjonalna kompresja pozwala na dalsze ograniczenie rozmiaru.
-  Obci±¿enie procesora jest ma³e, poniewa¿ tylko nowe pliki musz± byæ
+  ObciÄ…Å¼enie procesora jest maÅ‚e, poniewaÅ¼ tylko nowe pliki muszÄ… byÄ‡
   kompresowane.
-- Potê¿ny interfejs u¿ytkownika HTTP/CGI pozwala administratorom
-  przegl±daæ pliki logów, konfiguracjê i aktualny stan oraz u¿ytkownikom
-  rozpoczynaæ lub przerywaæ tworzenie kopii oraz szybko przegl±daæ i
-  odtwarzaæ pliki z kopii zapasowych.
+- PotÄ™Å¼ny interfejs uÅ¼ytkownika HTTP/CGI pozwala administratorom
+  przeglÄ…daÄ‡ pliki logÃ³w, konfiguracjÄ™ i aktualny stan oraz uÅ¼ytkownikom
+  rozpoczynaÄ‡ lub przerywaÄ‡ tworzenie kopii oraz szybko przeglÄ…daÄ‡ i
+  odtwarzaÄ‡ pliki z kopii zapasowych.
 - Nie jest wymagane oprogramowanie po stronie klienta. Na WinXX
-  u¿ywany jest protokó³ SMB lub rsync (specjalnie przygotowana wersja
-  pod cygwinem). Na klientach linuksowych lub uniksowych mo¿na u¿ywaæ
+  uÅ¼ywany jest protokÃ³Å‚ SMB lub rsync (specjalnie przygotowana wersja
+  pod cygwinem). Na klientach linuksowych lub uniksowych moÅ¼na uÅ¼ywaÄ‡
   rsynca lub tara (po ssh/rsh/NFS).
-- Dostêpne s± elastyczne opcje odzyskiwania. Mo¿na ¶ci±gaæ pojedyncze
-  pliki z kopii bezpo¶rednio z interfejsu CGI. Tak¿e archiwa zip lub tar
-  z wybranymi plikami lub katalogami mog± byæ ¶ci±gane z poziomu
+- DostÄ™pne sÄ… elastyczne opcje odzyskiwania. MoÅ¼na Å›ciÄ…gaÄ‡ pojedyncze
+  pliki z kopii bezpoÅ›rednio z interfejsu CGI. TakÅ¼e archiwa zip lub tar
+  z wybranymi plikami lub katalogami mogÄ… byÄ‡ Å›ciÄ…gane z poziomu
   interfejsu CGI.
-- BackupPC obs³uguje ¶rodowiska przeno¶ne, gdzie laptopy s± pod³±czane
-  do sieci tylko z przerwami i maj± dynamiczne adresy IP (z DHCP).
-- Elastyczna konfiguracja parametrów pozwala na wykonywanie wielu
-  kopii równolegle.
-- Istnieje mo¿liwo¶æ nagrywania backupu na inne no¶niki (tasmy,
+- BackupPC obsÅ‚uguje Å›rodowiska przenoÅ›ne, gdzie laptopy sÄ… podÅ‚Ä…czane
+  do sieci tylko z przerwami i majÄ… dynamiczne adresy IP (z DHCP).
+- Elastyczna konfiguracja parametrÃ³w pozwala na wykonywanie wielu
+  kopii rÃ³wnolegle.
+- Istnieje moÅ¼liwoÅ›Ä‡ nagrywania backupu na inne noÅ›niki (tasmy,
   DVD-R/RW, CD-R/RW i inne)
-- Wiele wiêcej mo¿na odkryæ w manualu...
+- Wiele wiÄ™cej moÅ¼na odkryÄ‡ w manualu...
 
 %prep
 %setup -q -n BackupPC-%{version}
