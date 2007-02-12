@@ -13,7 +13,7 @@
 %include	/usr/lib/rpm/macros.perl
 
 Summary:	A high-performance, enterprise-grade system for backing up
-Summary(pl.UTF-8):   Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
+Summary(pl.UTF-8):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
 Name:		backuppc
 Version:	2.1.2
 Release:	4
