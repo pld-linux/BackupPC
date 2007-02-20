@@ -23,9 +23,8 @@ Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
 # Source0-md5:	b6f9845b5c32d817f0c5c4102a781fc3
 Source1:	%{name}_apache.conf
 Source2:	%{name}-pl.pm
-#Patch0:		%{name}-%{version}pl2.patch
-Patch1:		%{name}-usernotexist.patch
-Patch2:		%{name}-pathtodocs.patch
+Patch0:		%{name}-usernotexist.patch
+Patch1:		%{name}-pathtodocs.patch
 URL:		http://backuppc.sourceforge.net/
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
@@ -116,9 +115,8 @@ zapasowych:
 
 %prep
 %setup -q -n BackupPC-%{version}
-#%patch0 -p1
+%patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
 sed -i -e 's#!/bin/perl#!%{__perl}#' {bin,cgi-bin,doc}/*
