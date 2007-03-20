@@ -54,6 +54,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_webapps	/etc/webapps
 %define		_webapp		%{name}
+%define		_libdir		/usr/lib
 
 %description
 BackupPC is disk based and not tape based. This particularity allows
