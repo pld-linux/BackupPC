@@ -1,30 +1,30 @@
 
 # - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
 # TODO:
+# - trigers
 # - polish translation in SOURCE/backuppc-pl.pm
-# - patch for service user - now is static backuppc
 # - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
-# - compliant to FHS - http://sourceforge.net/mailarchive/forum.php?thread_id=5602342&forum_id=17540 - directory /var/log/backuppc
 # - change or/and add Requires for  --bin-path sendmail=%{_sbindir}/sendmail
 # - correct config file
 
+%define		oldname		backuppc
 %define		BPCuser		http
 %define		BPCgroup	http
 %include	/usr/lib/rpm/macros.perl
 
 Summary:	A high-performance, enterprise-grade system for backing up
 Summary(pl.UTF-8):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
-Name:		backuppc
-Version:	2.1.3
-Release:	1
+Name:		BackupPC
+Version:	3.0.0
+Release:	0.1
 License:	GPL
 Group:		Networking/Utilities
-Source0:	http://dl.sourceforge.net/backuppc/BackupPC-%{version}.tar.gz
-# Source0-md5:	b6f9845b5c32d817f0c5c4102a781fc3
-Source1:	%{name}_apache.conf
-Source2:	%{name}-pl.pm
-Patch0:		%{name}-usernotexist.patch
-Patch1:		%{name}-pathtodocs.patch
+Source0:	http://dl.sourceforge.net/backuppc/%{name}-%{version}.tar.gz
+# Source0-md5:	dc37728c1dc9225354523f279045f3f3
+Source1:	%{oldname}_apache.conf
+Source2:	%{oldname}-pl.pm
+Patch0:		%{oldname}-usernotexist.patch
+Patch1:		%{oldname}-pathtodocs.patch
 URL:		http://backuppc.sourceforge.net/
 BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
@@ -49,6 +49,7 @@ Requires:	webapps
 Provides:	group(%{BPCgroup})
 Provides:	user(%{BPCuser})
 Obsoletes:	BackupPC
+Obsoletes:      backuppc
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -115,9 +116,7 @@ zapasowych:
 - Wiele więcej można odkryć w manualu...
 
 %prep
-%setup -q -n BackupPC-%{version}
-%patch0 -p1
-%patch1 -p1
+%setup -q
 
 sed -i -e 's#!/bin/perl#!%{__perl}#' configure.pl
 sed -i -e 's#!/bin/perl#!%{__perl}#' {bin,cgi-bin,doc}/*
@@ -131,8 +130,8 @@ pod2man --section=8 --center="BackupPC manual" doc/BackupPC.pod backuppc.8
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
 			$RPM_BUILD_ROOT%{_mandir}/man8 \
-			$RPM_BUILD_ROOT%{_datadir}/%{name}/www/{html,cgi-bin,html/doc} \
-			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/pc/localhost,log} \
+			$RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/doc \
+			$RPM_BUILD_ROOT%{_var}/{lib/%{name}/{pc/localhost,log},log} \
 			$RPM_BUILD_ROOT%{_datadir}/%{name}/conf \
 			$RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
@@ -160,14 +159,19 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,httpd/httpd.conf} \
 	--html-dir %{_datadir}/%{name}/www/html \
 	--html-dir-url /BackupPC \
 	--install-dir %{_usr} \
-	--uid-ignore
-#	--config-path
+	--uid-ignore \
+	--no-set-perms \
+	--fhs \
+	--dest-dir $RPM_BUILD_ROOT \
+	--compress-level=3 \
+	--backuppc-user=%{BPCuser}
+#	--config-path=%{_sysconfdir}/%{name}/config.pl
 
 #change user in init script
 sed -i -e 's#--user backuppc#--user %{BPCuser}#' init.d/linux-backuppc
 #change user in config file
-sed -i -e "s#'backuppc';#'%{BPCuser}';#" $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/config.pl
-sed -i -e 's/$Conf{SendmailPath} =/#$Conf{SendmailPath} =/' $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/config.pl
+#sed -i -e "s#'backuppc';#'%{BPCuser}';#" $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/config.pl
+#sed -i -e 's/$Conf{SendmailPath} =/#$Conf{SendmailPath} =/' $RPM_BUILD_ROOTT%{_sysconfdir}/%{name}/config.pl
 
 install init.d/linux-backuppc $RPM_BUILD_ROOT/etc/rc.d/init.d/backuppc
 install backuppc.8 $RPM_BUILD_ROOT%{_mandir}/man8
@@ -178,9 +182,6 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/CVS
 rm -rdf $RPM_BUILD_ROOT%{_prefix}/doc
 
 # symlinks
-mv $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf/* $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
-rm -rdf $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
-
 cd $RPM_BUILD_ROOT%{_var}/lib/%{name}
 ln -sf %{_sysconfdir}/%{name} $RPM_BUILD_ROOT%{_var}/lib/%{name}/conf
 
@@ -190,11 +191,12 @@ ln -sf %{_var}/lib/%{name}/log %{name}
 cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/cgi-bin
 ln -sf BackupPC_Admin index.cgi
 
-mv $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/BackupPC_stnd.css \
+mv $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html/*.css \
 	$RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
 cd $RPM_BUILD_ROOT%{_datadir}/%{name}/www/html
 ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC_stnd.css
+ln -sf %{_sysconfdir}/%{name}/BackupPC_stnd.css BackupPC.css
 
 install -d $RPM_BUILD_ROOT%{_webapps}/%{_webapp}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
@@ -236,17 +238,22 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/%{name}/www
 %dir %{_datadir}/%{name}/www/html
 %dir %{_datadir}/%{name}/www/cgi-bin
+%{_datadir}/%{name}/www/html/*.png
 %{_datadir}/%{name}/www/html/*.gif
-%config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/www/html/BackupPC_stnd.css
-%dir %{_libdir}/BackupPC
-%{_libdir}/BackupPC/Attrib.pm
-%{_libdir}/BackupPC/FileZIO.pm
-%{_libdir}/BackupPC/Lib.pm
-%{_libdir}/BackupPC/PoolWrite.pm
-%{_libdir}/BackupPC/View.pm
-%{_libdir}/BackupPC/CGI
-%{_libdir}/BackupPC/Xfer
-%{_libdir}/BackupPC/Zip
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/www/html/*.css
+%dir %{_libdir}/%{name}
+%{_libdir}/%{name}/CGI/*
+%{_libdir}/%{name}/Xfer/*
+%{_libdir}/%{name}/Storage/*
+%{_libdir}/%{name}/Zip/*
+%{_libdir}/%{name}/Config/*
+%{_libdir}/%{name}/Attrib.pm
+%{_libdir}/%{name}/Config.pm
+%{_libdir}/%{name}/FileZIO.pm
+%{_libdir}/%{name}/Lib.pm
+%{_libdir}/%{name}/PoolWrite.pm
+%{_libdir}/%{name}/Storage.pm
+%{_libdir}/%{name}/View.pm
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_libdir}/BackupPC/Lang
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
@@ -255,6 +262,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
 %lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
+%lang(pt_br) %{_libdir}/BackupPC/Lang/pt_br.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
