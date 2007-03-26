@@ -244,8 +244,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/CGI/*
 %{_libdir}/%{name}/Xfer/*
+%dir %{_libdir}/%{name}/Storage
 %{_libdir}/%{name}/Storage/*
 %{_libdir}/%{name}/Zip/*
+%dir %{_libdir}/%{name}/Config
 %{_libdir}/%{name}/Config/*
 %{_libdir}/%{name}/Attrib.pm
 %{_libdir}/%{name}/Config.pm
