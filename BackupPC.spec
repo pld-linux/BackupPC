@@ -40,7 +40,7 @@ Requires:	par2cmdline
 Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
 Requires:	perl-Compress-Zlib
-Requires:	perl-File-RsyncP >= 0.52
+Requires:	perl-File-RsyncP >= 0.68
 Requires:	rc-scripts
 Requires:	rsync
 Requires:	samba-client
