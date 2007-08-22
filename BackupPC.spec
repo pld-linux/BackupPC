@@ -1,7 +1,6 @@
 
 # - now path in browser is  http://localhost/cgi/BackupPC/BackupPC_Admin
 # TODO:
-# - sync Name with spec filename
 # - trigers
 # - polish translation in SOURCE/backuppc-pl.pm
 # - patch at user and gid/uid user - http://sourceforge.net/mailarchive/forum.php?thread_id=6201024&forum_id=17540
