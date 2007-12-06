@@ -15,12 +15,12 @@
 Summary:	A high-performance, enterprise-grade system for backing up
 Summary(pl.UTF-8):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
 Name:		BackupPC
-Version:	3.0.0
+Version:	3.1.0
 Release:	0.1
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/%{name}-%{version}.tar.gz
-# Source0-md5:	dc37728c1dc9225354523f279045f3f3
+# Source0-md5:	84b4471852ef910768eae9963ef932d2
 Source1:	%{oldname}_apache.conf
 Source2:	%{oldname}-pl.pm
 Patch0:		%{oldname}-usernotexist.patch
@@ -232,6 +232,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_datadir}/%{name}/www/cgi-bin/BackupPC_Admin
+%attr(755,root,root) %{_datadir}/%{name}/www/cgi-bin/index.cgi
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}/www/html/doc
 %{_datadir}/%{name}/www/html/doc/*
@@ -240,6 +241,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/%{name}/www/cgi-bin
 %{_datadir}/%{name}/www/html/*.png
 %{_datadir}/%{name}/www/html/*.gif
+%{_datadir}/%{name}/www/html/sorttable.js
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/www/html/*.css
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/CGI/*
@@ -265,6 +267,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
 %lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
 %lang(pt_br) %{_libdir}/BackupPC/Lang/pt_br.pm
+%lang(zh_CN) %{_libdir}/BackupPC/Lang/zh_CN.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/log
