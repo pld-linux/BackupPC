@@ -261,12 +261,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_libdir}/BackupPC/Lang
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
-%lang(fr) %{_libdir}/BackupPC/Lang/fr.pm
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
+%lang(fr) %{_libdir}/BackupPC/Lang/fr.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
 %lang(nl) %{_libdir}/BackupPC/Lang/nl.pm
 %lang(pl) %{_libdir}/BackupPC/Lang/pl.pm
-%lang(pt_br) %{_libdir}/BackupPC/Lang/pt_br.pm
+%lang(pt_BR) %{_libdir}/BackupPC/Lang/pt_br.pm
 %lang(zh_CN) %{_libdir}/BackupPC/Lang/zh_CN.pm
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}
 %dir %attr(750,%{BPCuser},%{BPCgroup}) %{_var}/lib/%{name}/cpool
