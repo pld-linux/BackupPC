@@ -16,7 +16,7 @@ Summary:	A high-performance, enterprise-grade system for backing up
 Summary(pl.UTF-8):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
 Name:		BackupPC
 Version:	3.1.0
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/%{name}-%{version}.tar.gz
@@ -244,20 +244,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/www/html/sorttable.js
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/www/html/*.css
 %dir %{_libdir}/%{name}
+%{_libdir}/%{name}/Attrib.pm
+%dir %{_libdir}/%{name}/CGI
 %{_libdir}/%{name}/CGI/*
-%{_libdir}/%{name}/Xfer/*
-%dir %{_libdir}/%{name}/Storage
-%{_libdir}/%{name}/Storage/*
-%{_libdir}/%{name}/Zip/*
+%{_libdir}/%{name}/Config.pm
 %dir %{_libdir}/%{name}/Config
 %{_libdir}/%{name}/Config/*
-%{_libdir}/%{name}/Attrib.pm
-%{_libdir}/%{name}/Config.pm
 %{_libdir}/%{name}/FileZIO.pm
 %{_libdir}/%{name}/Lib.pm
 %{_libdir}/%{name}/PoolWrite.pm
 %{_libdir}/%{name}/Storage.pm
+%dir %{_libdir}/%{name}/Storage
+%{_libdir}/%{name}/Storage/*
 %{_libdir}/%{name}/View.pm
+%dir %{_libdir}/%{name}/Xfer
+%{_libdir}/%{name}/Xfer/*
+%dir %{_libdir}/%{name}/Zip
+%{_libdir}/%{name}/Zip/*
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_libdir}/BackupPC/Lang
 %lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
