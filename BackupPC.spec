@@ -71,7 +71,7 @@ features not found in any other backup solution:
   files, configuration, current status and allows users to initiate and
   cancel backups and browse and restore files from backups very quickly.
 - No client-side software is needed. On WinXX the SMB protocol is
-  used. On Linux or unix clients, rsync or tar (over ssh/rsh/NFS) can be
+  used. On Linux or Unix clients, rsync or tar (over ssh/rsh/NFS) can be
   used.
 - Flexible restore options. Single files can be downloaded from any
   backup directly from the CGI interface. Zip or Tar archives for
