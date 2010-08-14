@@ -15,18 +15,15 @@
 Summary:	A high-performance, enterprise-grade system for backing up
 Summary(pl.UTF-8):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
 Name:		BackupPC
-Version:	3.1.0
-Release:	0.2
+Version:	3.2.0
+Release:	0.1
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://dl.sourceforge.net/backuppc/%{name}-%{version}.tar.gz
-# Source0-md5:	84b4471852ef910768eae9963ef932d2
+# Source0-md5:	4b77610d8d1130daf0892fc7134be985
 Source1:	%{oldname}_apache.conf
 Source2:	%{oldname}-pl.pm
-Patch0:		%{oldname}-usernotexist.patch
-Patch1:		%{oldname}-pathtodocs.patch
 URL:		http://backuppc.sourceforge.net/
-BuildRequires:	perl-Compress-Zlib
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-devel >= 1:5.6.0
 BuildRequires:	rpm-perlprov
@@ -39,7 +36,7 @@ Requires:	par2cmdline
 Requires:	perl-Archive-Zip
 Requires:	perl-Compress-Bzip2
 Requires:	perl-Compress-Zlib
-Requires:	perl-File-RsyncP >= 0.68
+Requires:	perl-File-RsyncP >= 0.70
 Requires:	rc-scripts
 Requires:	rsync
 Requires:	samba-client
@@ -243,6 +240,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/www/html/*.gif
 %{_datadir}/%{name}/www/html/sorttable.js
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/www/html/*.css
+%dir %{_libdir}/Net/FTP
+%{_libdir}/Net/FTP/AutoReconnect.pm
+%{_libdir}/Net/FTP/RetrHandle.pm
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/Attrib.pm
 %dir %{_libdir}/%{name}/CGI
@@ -257,13 +257,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}/Storage
 %{_libdir}/%{name}/Storage/*
 %{_libdir}/%{name}/View.pm
+%{_libdir}/%{name}/Xfer.pm
 %dir %{_libdir}/%{name}/Xfer
 %{_libdir}/%{name}/Xfer/*
 %dir %{_libdir}/%{name}/Zip
 %{_libdir}/%{name}/Zip/*
 %dir %attr(755,%{BPCuser},%{BPCgroup}) %{_libdir}/BackupPC/Lang
-%lang(en) %{_libdir}/BackupPC/Lang/en.pm
+%lang(cz) %{_libdir}/BackupPC/Lang/cz.pm
 %lang(de) %{_libdir}/BackupPC/Lang/de.pm
+%lang(en) %{_libdir}/BackupPC/Lang/en.pm
 %lang(es) %{_libdir}/BackupPC/Lang/es.pm
 %lang(fr) %{_libdir}/BackupPC/Lang/fr.pm
 %lang(it) %{_libdir}/BackupPC/Lang/it.pm
