@@ -40,7 +40,6 @@ Requires:	perl-File-RsyncP >= 0.70
 Requires:	rc-scripts
 Requires:	rsync
 Requires:	samba-client
-Requires:	sperl
 Requires:	tar > 1.13
 Requires:	webapps
 Provides:	group(%{BPCgroup})
@@ -240,6 +239,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/www/html/*.gif
 %{_datadir}/%{name}/www/html/sorttable.js
 %config(noreplace) %verify(not md5 mtime size) %{_datadir}/%{name}/www/html/*.css
+%dir %{_libdir}/Net
 %dir %{_libdir}/Net/FTP
 %{_libdir}/Net/FTP/AutoReconnect.pm
 %{_libdir}/Net/FTP/RetrHandle.pm
