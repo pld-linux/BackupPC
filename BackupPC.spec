@@ -10,7 +10,6 @@
 %define		oldname		backuppc
 %define		BPCuser		http
 %define		BPCgroup	http
-%include	/usr/lib/rpm/macros.perl
 
 Summary:	A high-performance, enterprise-grade system for backing up
 Summary(pl.UTF-8):	Wysoko wydajny, profesjonalnej klasy system do kopii zapasowych
